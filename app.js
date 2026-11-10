@@ -4,7 +4,7 @@
 import { CALC, GRUPOS } from './calculos.js';
 import { T, IDIOMAS, idioma, fijarIdioma, idiomaInicial } from './textos.js';
 
-const VERSION = 'v0.5';
+const VERSION = 'v0.6';
 const $ = (s, r = document) => r.querySelector(s);
 const COL = ['#b566ff', '#00b4ff', '#e100ff', '#ff4d5e', '#00ff04', '#ffb000'];
 const porId = (id) => CALC.find(c => c.id === id) || CALC[0];

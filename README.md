@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v0.5 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v0.6 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -28,7 +28,7 @@ La consola tiene tres zonas, como la de SCREENS: los calculadores a la izquierda
 
 En audio, SYSTEMS recomienda y calcula solo con tres marcas: **RCF** (altavoces), **Sennheiser** (micrófonos) y **Nureva** (audio para salas de reunión). La carpeta `catalogo/` guarda los productos de cada marca con sus características, tomadas de la web oficial de cada fabricante, para que todo funcione sin conexión.
 
-Estado del catálogo en la v0.5: es una primera tanda (13 productos de RCF, 15 micrófonos de Sennheiser y 3 sistemas de Nureva) y **todavía no está conectado a los calculadores**. Falta completar las gamas y enlazarlo.
+Estado del catálogo en la v0.6: es una primera tanda (13 productos de RCF, 15 micrófonos de Sennheiser y 3 sistemas de Nureva) y **todavía no está conectado a los calculadores**. Falta completar las gamas y enlazarlo.
 
 ## Avisos
 
@@ -44,9 +44,9 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v0.5)
+## Cambios de la versión actual (v0.6)
 
-- Las otras apps de AVHUB, a mano: en la cabecera, junto al logo de AVHUB, los logos pequeños de SCREENS, NEWS, VJSHOW y MSGAME, cada uno enlazado a su web. Van en tinta mate, como grabados en el frontal, y recuperan su color al pasar el cursor. En móvil y tablet pasan a una línea encima del pie.
+- Las otras apps de AVHUB, a mano: en la cabecera, a los dos lados del logo de AVHUB y centrados en el hueco libre, los logos pequeños de SCREENS, NEWS, VJSHOW y MSGAME, cada uno enlazado a su web. Van en tinta mate, como grabados en el frontal, y recuperan su color al pasar el cursor. En móvil y tablet pasan a una línea encima del pie.
 
 Sigue de la v0.4:
 
@@ -60,4 +60,4 @@ Versiones anteriores: v0.3, SYSTEMS pasa a su repositorio propio como app indepe
 Código abierto bajo la licencia **GNU GPL v3**.
 
 ---
-*SYSTEMS v0.5 es un proyecto hecho con 𑣲 by [mediaservi.com](https://mediaservi.com)*
+*SYSTEMS v0.6 es un proyecto hecho con 𑣲 by [mediaservi.com](https://mediaservi.com)*

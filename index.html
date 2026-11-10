@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
   SYSTEMS · AUDIO Y ESCENARIO — calculadores de refuerzo sonoro, electrónica de audio, cableado, iluminación, electricidad y música.
-  Apartado SYSTEMS de AVHUB (mediaservi.com; hasta la v0.1 se llamó «Hardware»). Versión v0.5 (beta, en pruebas). Misma consola de 3 zonas que SCREENS:
+  Apartado SYSTEMS de AVHUB (mediaservi.com; hasta la v0.1 se llamó «Hardware»). Versión v0.6 (beta, en pruebas). Misma consola de 3 zonas que SCREENS:
   dos columnas fijas («calculadores» y «datos», con CALCULAR al pie) y el centro desplazable con las cifras, las gráficas y las tablas.
   Módulos: calculos.js (fórmulas), textos.js (es/en/ca) y app.js (interfaz). Estilos base de AVHUB en base.css. Catálogo de marcas en catalogo/ (datos oficiales guardados para funcionar sin conexión).
   Licencia GPL-3.0 · mediaservi.com
@@ -19,9 +19,9 @@
 </head>
 <body class="hw">
   <header class="cab">
-    <div class="cab-izq"><a class="hw-marca" href="./" data-accion="inicio" aria-label="SYSTEMS"><img src="assets/systems-logo.svg" alt="SYSTEMS" width="440" height="120"><span id="hw-lema">Audio y escenario</span></a></div>
-    <div class="cab-centro"><a href="https://avhub.mediaservi.com/" target="_blank" rel="noopener" aria-label="AVHUB"><img src="assets/avhub-logo.svg" alt="AVHUB"></a><nav class="fam" aria-label="Apps de AVHUB"><a href="https://screens.mediaservi.com/" target="_blank" rel="noopener" aria-label="SCREENS"><img src="assets/fam/screens-logo.svg" alt="SCREENS"></a><a href="https://charmex.net/productos/esp/promociones" target="_blank" rel="noopener" aria-label="NEWS"><img src="assets/fam/news-logo.svg" alt="NEWS"></a><a href="https://vjshow.mediaservi.com/" target="_blank" rel="noopener" aria-label="VJSHOW"><img src="assets/fam/vjshow-logo.svg" alt="VJSHOW"></a><a href="https://msgame.mediaservi.com/" target="_blank" rel="noopener" aria-label="MSGAME"><img src="assets/fam/msgame-logo.svg" alt="MSGAME"></a></nav></div>
-    <div class="cab-der">
+    <div class="cab-izq"><a class="hw-marca" href="./" data-accion="inicio" aria-label="SYSTEMS"><img src="assets/systems-logo.svg" alt="SYSTEMS" width="440" height="120"><span id="hw-lema">Audio y escenario</span></a><nav class="fam fam-l" aria-label="Apps de AVHUB"><a href="https://screens.mediaservi.com/" target="_blank" rel="noopener" aria-label="SCREENS"><img src="assets/fam/screens-logo.svg" alt="SCREENS"></a><a href="https://charmex.net/productos/esp/promociones" target="_blank" rel="noopener" aria-label="NEWS"><img src="assets/fam/news-logo.svg" alt="NEWS"></a></nav></div>
+    <div class="cab-centro"><a href="https://avhub.mediaservi.com/" target="_blank" rel="noopener" aria-label="AVHUB"><img src="assets/avhub-logo.svg" alt="AVHUB"></a></div>
+    <div class="cab-der"><nav class="fam fam-r" aria-label="Apps de AVHUB"><a href="https://vjshow.mediaservi.com/" target="_blank" rel="noopener" aria-label="VJSHOW"><img src="assets/fam/vjshow-logo.svg" alt="VJSHOW"></a><a href="https://msgame.mediaservi.com/" target="_blank" rel="noopener" aria-label="MSGAME"><img src="assets/fam/msgame-logo.svg" alt="MSGAME"></a></nav>
       <button type="button" class="hdr-btn" data-accion="inicio" id="btn-inicio" aria-label="Inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></button>
       <button type="button" class="hdr-btn" data-accion="idioma" id="btn-idioma">ES</button>
     </div>
