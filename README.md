@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v0.3 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v0.4 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -28,7 +28,7 @@ La consola tiene tres zonas, como la de SCREENS: los calculadores a la izquierda
 
 En audio, SYSTEMS recomienda y calcula solo con tres marcas: **RCF** (altavoces), **Sennheiser** (micrófonos) y **Nureva** (audio para salas de reunión). La carpeta `catalogo/` guarda los productos de cada marca con sus características, tomadas de la web oficial de cada fabricante, para que todo funcione sin conexión.
 
-Estado del catálogo en la v0.3: es una primera tanda (13 productos de RCF, 15 micrófonos de Sennheiser y 3 sistemas de Nureva) y **todavía no está conectado a los calculadores**. Falta completar las gamas y enlazarlo.
+Estado del catálogo en la v0.4: es una primera tanda (13 productos de RCF, 15 micrófonos de Sennheiser y 3 sistemas de Nureva) y **todavía no está conectado a los calculadores**. Falta completar las gamas y enlazarlo.
 
 ## Avisos
 
@@ -44,16 +44,16 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v0.3)
+## Cambios de la versión actual (v0.4)
 
-- SYSTEMS pasa a su repositorio propio y es una app independiente: lleva sus estilos, sus fuentes y sus iconos.
-- Primera tanda del catálogo de RCF, Sennheiser y Nureva en `catalogo/`.
+- SYSTEMS estrena logo propio: el isotipo del conector (un aro con tres pines unidos en triángulo) en azul y el nombre en la letra común de la familia AVHUB. Va en la cabecera y en el icono de la pestaña.
+- Los archivos están en `assets/`: `systems-logo.svg` (isotipo y nombre) y `systems-icono.svg` (isotipo solo).
 
-Versiones anteriores: v0.2, el apartado pasa a llamarse SYSTEMS (antes Hardware); v0.1, los 26 calculadores.
+Versiones anteriores: v0.3, SYSTEMS pasa a su repositorio propio como app independiente y llega la primera tanda del catálogo de RCF, Sennheiser y Nureva; v0.2, el apartado pasa a llamarse SYSTEMS (antes Hardware); v0.1, los 26 calculadores.
 
 ## Licencia
 
 Código abierto bajo la licencia **GNU GPL v3**.
 
 ---
-*SYSTEMS v0.3 es un proyecto hecho con 𑣲 by [mediaservi.com](https://mediaservi.com)*
+*SYSTEMS v0.4 es un proyecto hecho con 𑣲 by [mediaservi.com](https://mediaservi.com)*
