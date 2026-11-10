@@ -4,7 +4,10 @@
 import { CALC, GRUPOS } from './calculos.js';
 import { T, IDIOMAS, idioma, fijarIdioma, idiomaInicial } from './textos.js';
 
-const VERSION = 'v0.7';
+const VERSION = 'v0.8';
+// v0.8 · la línea de crédito es la común de AVHUB (credito.js): se edita en AVHUB ADMIN y es la misma en todas las apps
+const pintarPie = () => { const p = document.querySelector('#pie'); if (p) p.innerHTML = window.AVCREDITO ? window.AVCREDITO.html('SYSTEMS', VERSION, idioma()) : `SYSTEMS ${VERSION} ${new Date().getFullYear()} ${T('es un proyecto hecho con')} by <a href="https://mediaservi.com" target="_blank" rel="noopener">mediaservi.com</a>`; };
+if (window.AVCREDITO) window.AVCREDITO.alCambiar(pintarPie);
 const $ = (s, r = document) => r.querySelector(s);
 const COL = ['#b566ff', '#00b4ff', '#e100ff', '#ff4d5e', '#00ff04', '#ffb000'];
 const porId = (id) => CALC.find(c => c.id === id) || CALC[0];
@@ -143,7 +146,7 @@ function pintarTodo() {
   $('#btn-idioma').textContent = idioma().toUpperCase(); $('#btn-idioma').setAttribute('aria-label', T('Idioma')); $('#btn-inicio').setAttribute('aria-label', T('Inicio')); $('#hw-lema').textContent = T('Audio y escenario');
   if (!$('#panelA')) $('#app').innerHTML = `<div class="trabajo z3"><aside class="panel zona" id="panelA" data-zona="a"></aside><aside class="panel zona" id="panelB" data-zona="b"></aside><main class="vista"><div class="res" id="res"></div></main></div>`;
   pintarConsola(); pintarZonas(); pintarResultado();
-  $('#pie').innerHTML = `SYSTEMS ${VERSION} ${new Date().getFullYear()} ${T('es un proyecto hecho con')} <i class="ic ic-footer" aria-hidden="true"></i> by <a href="https://mediaservi.com" target="_blank" rel="noopener">mediaservi.com</a>`;
+  pintarPie();
   guardar();
 }
 // los textos de una sola línea nunca tocan el borde: si no caben, se reduce la letra
