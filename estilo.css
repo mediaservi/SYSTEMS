@@ -1,0 +1,55 @@
+/* SYSTEMS · estilos propios. La base (paleta AVHUB, botones, casillas, bloques y las 3 zonas) viene de base.css */
+.hw-marca { display: flex; flex-direction: column; gap: 3px; text-decoration: none; min-width: 0; line-height: 1; }
+.hw-marca b { font: 900 24px/1 var(--sans); letter-spacing: .04em; color: #ccff00; text-shadow: 0 0 10px rgba(204,255,0,.35), 0 1px 0 #000; font-style: italic; }
+.hw-marca span { font-size: 9.5px; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: var(--tenue); white-space: nowrap; }
+
+/* consola: los 9 grupos de calculadores y, a la derecha, la pantalla LCD ámbar */
+.hw-consola { grid-template-columns: minmax(0, 1fr) auto; }
+.hw-grupos { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 5px; padding: 4px; border-radius: 10px; background: var(--hundido); border: 1px solid #000; box-shadow: inset 0 2px 6px rgba(0,0,0,.5); min-width: 0; }
+.hw-grupos .tog { min-height: 40px; padding: 4px 6px; font-size: 10.5px; letter-spacing: .06em; line-height: 1.15; white-space: normal; text-wrap: balance; }
+.hw-lcd { display: flex; align-items: center; height: 48px; padding: 0 14px; border-radius: 8px; background: #141006; border: 1px solid rgba(255,176,0,.45); box-shadow: inset 0 2px 8px rgba(0,0,0,.7); font: 400 14px/1 var(--mono); letter-spacing: .14em; color: #ffb000; text-shadow: 0 0 8px rgba(255,176,0,.5); white-space: nowrap; }
+
+/* columna A: la lista de calculadores del grupo */
+.hw-lista { display: grid; gap: 6px; }
+.hw-lista .tog { min-height: 40px; justify-content: flex-start; text-align: left; padding: 6px 12px; white-space: normal; line-height: 1.2; font-size: 11.5px; letter-spacing: .05em; }
+.hw-lista .tog i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: #3a3a3f; margin-right: 9px; box-shadow: inset 0 1px 2px rgba(0,0,0,.6); }
+.hw-lista .tog.on i { background: var(--verde); box-shadow: 0 0 7px rgba(0,255,4,.7); }
+.hw-sel { display: none; }
+.zona .sel { width: 100%; }
+.hw-tap { min-height: 54px; font-size: 15px; letter-spacing: .2em; }
+.hw-tap.pulso { box-shadow: 0 0 0 2px var(--verde), 0 0 18px rgba(0,255,4,.5); }
+.hw-nombre { font: 900 15px/1.25 var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--txt); margin: 0; text-wrap: balance; }
+
+/* centro */
+.hw .res { border-top: 0; }
+.hw-cab { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px; padding: 2px 2px 0; }
+.hw-cab small { font-size: var(--t-lab); font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--violeta-txt, #b566ff); }
+.hw .tar .v { white-space: normal; overflow-wrap: anywhere; }
+.hw .tar .t { white-space: normal; line-height: 1.25; }
+.hw-grafs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 10px; align-items: start; }
+.hw-graf { background: #1d1d20; border: 1px solid #0b0b0c; border-radius: 10px; padding: 9px 10px 10px; display: grid; gap: 7px; min-width: 0; }
+.hw-graf.ancho { grid-column: 1 / -1; }
+.hw-graf h3 { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: var(--t-lab); font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--txt); }
+.hw-graf h3 small { font: 400 12px/1 var(--mono); letter-spacing: 0; color: var(--tenue); text-transform: none; }
+.hw-graf svg, .hw-graf canvas { display: block; width: 100%; height: auto; border-radius: 6px; background: #141416; }
+.hw-graf.ancho svg { max-height: 300px; }   /* en pantallas anchas, una gráfica de línea no se come el centro entero */
+.hw-graf svg text { font-family: var(--mono); fill: var(--tenue); }
+.hw-ley { display: flex; flex-wrap: wrap; gap: 4px 14px; font: 400 11.5px/1.3 var(--mono); color: var(--txt-2); }
+.hw-ley i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+.hw-escala { display: flex; align-items: center; gap: 8px; font: 400 11px/1 var(--mono); color: var(--tenue); }
+.hw-escala span.b { flex: 1; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #0b1030, #1244c4, #00b4ff, #00ff04, #ffe100, #ff4d5e); }
+.hw-muestra { height: 120px; border-radius: 8px; border: 1px solid #000; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+.hw-notas { margin: 0; padding: 10px 12px; display: grid; gap: 6px; background: #1d1d20; border: 1px solid #0b0b0c; border-radius: 10px; font-size: 12.5px; line-height: 1.5; color: #c9c9ce; }
+.hw-notas p { margin: 0; } .hw-notas p.av { color: var(--tenue); font-size: 11.5px; }
+.hw .tabla td { white-space: normal; }
+
+@media (min-width: 1024px) { .hw .trabajo.z3 .vista { display: block; } .hw .res { min-height: 100%; align-content: start; } }
+@media (max-width: 1279px) { .hw-grupos { grid-template-columns: repeat(5, minmax(0, 1fr)); } .hw-consola { grid-template-columns: minmax(0, 1fr); } .hw-lcd { display: none; } }
+@media (max-width: 1023px) {
+  .hw .consola { grid-template-columns: minmax(0, 1fr); }
+  .hw-lista { display: none; } .hw-sel { display: block; }   /* en móvil, la lista pasa a ser un desplegable: menos camino hasta los datos */
+  .hw .res { padding: 10px; }
+}
+@media (max-width: 600px) { .hw .tabla th, .hw .tabla td { padding: 5px; font-size: 11px; white-space: normal; } .hw .tabla th { font-size: 8.5px; letter-spacing: .05em; }
+  .hw-grupos { grid-template-columns: repeat(3, minmax(0, 1fr)); } .hw-marca b { font-size: 20px; } .hw .cab { grid-template-columns: 1fr auto; } }
+@media (max-height: 500px) and (orientation: landscape) { .hw-grupos { grid-template-columns: repeat(9, minmax(0, 1fr)); } .hw-grupos .tog { min-height: 34px; font-size: 9.5px; } .hw .consola { grid-template-columns: minmax(0, 1fr); } }

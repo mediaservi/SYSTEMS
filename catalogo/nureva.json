@@ -1,0 +1,51 @@
+{
+ "marca": "Nureva",
+ "tipo": "audio para salas de reunión",
+ "recogido": "2026-11-10",
+ "origen": "web oficial del fabricante",
+ "completo": false,
+ "productos": [
+  {
+   "m": "HDL200",
+   "sala": "5.5 x 5.5 m (18' x 18')",
+   "comp": "1 barra de micrófonos y altavoces",
+   "mics": "10 MEMS omnidireccionales; Microphone Mist",
+   "alt": "2 x 20 W, 3.25\" gama completa",
+   "hz": "micrófonos 100 Hz - 7 kHz; altavoces 125 Hz - 20 kHz",
+   "con": "USB 2.0 tipo B",
+   "alim": "100-240 V CA; < 25 W",
+   "dim": "1179 x 122 x 91 mm",
+   "kg": 4.5,
+   "plataformas": "Microsoft Teams, Zoom, Google Meet, GoTo, Webex, BlueJeans, Lifesize, RingCentral",
+   "fuente": "https://www.nureva.com/products/hdl-series/hdl200"
+  },
+  {
+   "m": "HDL310",
+   "sala": "9.1 x 9.1 m (30' x 30')",
+   "comp": "1 barra de micrófonos y altavoces + módulo connect",
+   "mics": "12 MEMS omnidireccionales; Microphone Mist",
+   "alt": "2 x 20 W, cono de aluminio de 4\"",
+   "hz": "100 Hz - 7 kHz (a 94 dB SPL)",
+   "con": "USB 2.0 tipo B; aux 3.5 mm entrada y salida; 2 RJ45 a la barra; RJ45 de red",
+   "alim": "100-240 V CA; < 30 W",
+   "dim": "1524 x 149 x 90 mm",
+   "kg": 8.2,
+   "plataformas": "Microsoft Teams, Zoom",
+   "fuente": "https://www.nureva.com/products/hdl-series/hdl310"
+  },
+  {
+   "m": "HDL410",
+   "sala": "10.7 x 16.8 m (35' x 55')",
+   "comp": "2 barras de micrófonos y altavoces + módulo connect",
+   "mics": "24 MEMS omnidireccionales (12 por barra); Microphone Mist",
+   "alt": "4 x 20 W (2 por barra), cono de aluminio",
+   "hz": "100 Hz - 7 kHz (a 94 dB SPL)",
+   "con": "USB 2.0 tipo B; aux 3.5 mm entrada y salida; 2 RJ45 a las barras; RJ45 de red",
+   "alim": "100-240 V CA; < 30 W",
+   "dim": "1524 x 149 x 90 mm por barra",
+   "kg": "8.2 por barra",
+   "plataformas": "Microsoft Teams, Zoom",
+   "fuente": "https://www.nureva.com/products/hdl-series/hdl410"
+  }
+ ]
+}
