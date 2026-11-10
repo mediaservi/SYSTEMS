@@ -53,3 +53,15 @@
 @media (max-width: 600px) { .hw .tabla th, .hw .tabla td { padding: 5px; font-size: 11px; white-space: normal; } .hw .tabla th { font-size: 8.5px; letter-spacing: .05em; }
   .hw-grupos { grid-template-columns: repeat(3, minmax(0, 1fr)); } .hw-marca img { height: 26px; } .hw-marca span { padding-left: 32px; } .hw .cab { grid-template-columns: 1fr auto; } }
 @media (max-height: 500px) and (orientation: landscape) { .hw-grupos { grid-template-columns: repeat(9, minmax(0, 1fr)); } .hw-grupos .tog { min-height: 34px; font-size: 9.5px; } .hw .consola { grid-template-columns: minmax(0, 1fr); } }
+
+/* familia AVHUB: logos pequeños de las otras apps junto al de AVHUB, en la tinta mate grabada de la landing; al pasar el cursor recuperan su brillo.
+   En pantallas estrechas, donde el centro de la cabecera se oculta, pasan a una línea encima del pie. */
+@media (min-width: 1024px) { .cab-centro { display: flex; align-items: center; gap: 22px; min-width: 0; } }
+.fam { display: flex; align-items: center; gap: 18px; }
+.fam a { display: block; line-height: 0; border-radius: 3px; }
+.cab-centro .fam img, .fam img { height: 17px; width: auto; display: block; opacity: .88; filter: saturate(.66) brightness(.68) drop-shadow(0 -1px 0 #000) drop-shadow(0 1px 0 rgba(255,255,255,.09)); transition: filter .2s, opacity .2s; }
+@media (hover: hover) { .fam a:hover img { opacity: 1; filter: none; } }
+.fam a:focus-visible { outline: 1px solid var(--verde); outline-offset: 4px; } .fam a:focus-visible img, .fam a:active img { opacity: 1; filter: none; }
+.fam-pie { display: none; flex: none; justify-content: center; flex-wrap: wrap; gap: 8px 18px; padding: 8px 10px 4px; background: var(--bg); border-top: 1px solid #000; }
+@media (max-width: 1023px) { .cab-centro .fam { display: none; } .fam-pie { display: flex; } .fam-pie + .pie { border-top: 0; padding-top: 2px; } .fam-pie img { height: 15px; } }
+@media print { .fam-pie { display: none !important; } }
