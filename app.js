@@ -4,7 +4,7 @@
 import { CALC, GRUPOS } from './calculos.js';
 import { T, IDIOMAS, idioma, fijarIdioma, idiomaInicial } from './textos.js';
 
-const VERSION = 'v0.9';
+const VERSION = 'v0.10';
 // v0.8 · la línea de crédito es la común de AVHUB (credito.js): se edita en AVHUB ADMIN y es la misma en todas las apps
 const pintarPie = () => { const p = document.querySelector('#pie'); if (p) p.innerHTML = window.AVCREDITO ? window.AVCREDITO.html('SYSTEMS', VERSION, idioma()) : `SYSTEMS ${VERSION} ${new Date().getFullYear()} ${T('es un proyecto hecho con')} by <a href="https://mediaservi.com" target="_blank" rel="noopener">mediaservi.com</a>`; };
 if (window.AVCREDITO) window.AVCREDITO.alCambiar(pintarPie);

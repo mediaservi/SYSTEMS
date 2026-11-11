@@ -1,6 +1,7 @@
 /* AVHUB · línea de crédito común a todas las apps (SCREENS, SYSTEMS, ADPOSTER, VJSHOW y MSGAME).
    El texto se edita en AVHUB ADMIN → Ajustes y cada app lo recoge al abrirse; mientras no llega, usa el último que vio o el de fábrica.
    {APP}, {VERSION} y {AÑO} los pone cada app · * es el icono · [texto](https://…) es un enlace.
+   Detrás de la línea va el enlace «Aviso legal», que abre el aviso común (gratuito, hecho por afición, sin garantías); avisoHTML() lo da para incrustarlo en las ventanas de información.
    Licencia GPL-3.0 · mediaservi.com */
 (function () {
   'use strict';
@@ -9,15 +10,48 @@
   var HECHO = { es: 'es un proyecto hecho con', en: 'is a project made with', ca: 'és un projecte fet amb', gl: 'é un proxecto feito con', eu: '-(e)k egindako proiektua da, honekin:', pt: 'é um projeto feito com' };
   /* icono «settings_heart» de Material Symbols (Apache-2.0), a la altura del texto y de su mismo color */
   var ICONO = '<svg class="cred-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="display:inline-block;width:1.15em;height:1.15em;vertical-align:-.22em;fill:currentColor"><path d="M12.05,16l3.5-3.5q0.43-0.43 0.55-1.04t-0.13-1.19T15.23,9.35T14.1,9T12.98,9.39T12.05,10.2Q11.6,9.77 11.11,9.39T10,9T8.86,9.34T8.1,10.25T7.99,11.44T8.55,12.5l3.5,3.5Zm-2.8,6l-0.4-3.2q-0.32-0.13-0.61-0.3T7.68,18.13L4.7,19.38L1.95,14.63l2.58-1.95Q4.5,12.5 4.5,12.34q0-0.16 0-0.34t0-0.34t0.03-0.34L1.95,9.38L4.7,4.63L7.68,5.88Q7.95,5.68 8.25,5.5t0.6-0.3L9.25,2h5.5l0.4,3.2q0.33,0.13 0.61,0.3t0.56,0.38L19.3,4.63l2.75,4.75l-2.57,1.95q0.02,0.18 0.02,0.34t0,0.34t0,0.34t-0.05,0.34l2.57,1.95l-2.75,4.75l-2.95-1.25q-0.27,0.2-0.57,0.38t-0.6,0.3L14.75,22H9.25ZM11,20h1.98l0.35-2.65q0.78-0.2 1.44-0.59t1.21-0.94l2.47,1.03l0.98-1.7l-2.15-1.63q0.13-0.35 0.17-0.74T17.5,12t-0.05-0.79q-0.05-0.39-0.17-0.74l2.15-1.63l-0.98-1.7L15.98,8.2q-0.55-0.57-1.21-0.96T13.33,6.65L13,4H11.03L10.68,6.65Q9.9,6.85 9.24,7.24T8.03,8.17L5.55,7.15L4.58,8.85l2.15,1.6Q6.6,10.83 6.55,11.2T6.5,12q0,0.4 0.05,0.77t0.17,0.75L4.58,15.15l0.98,1.7L8.03,15.8q0.55,0.58 1.21,0.96t1.44,0.59L11,20Zm1-8Z"/></svg>';
+  /* aviso legal común, en lenguaje llano: [título, entrada, [[negrita, texto]…], cierre, enlace, cerrar, versión de una línea] */
+  var AVISO = {
+    es: ['Aviso importante (es corto, léelo)', '{APP} es software gratuito y de código abierto, hecho con pasión por un aficionado en su tiempo libre. No es un producto profesional ni lo desarrolla una empresa de software.', [
+      ['Se ofrece «tal cual», sin garantías de ningún tipo.', 'Puede tener errores, fallar, cambiar o dejar de estar disponible sin previo aviso. No se garantiza que funcione de forma continua ni que sirva para un fin concreto.'],
+      ['Los resultados son orientativos.', 'Cálculos, medidas, pesos, consumos, compatibilidades y recomendaciones pueden contener errores. Compruébalos siempre con tu propio método o con un técnico cualificado antes de presupuestar, comprar, instalar o montar nada.'],
+      ['No sustituye a un profesional ni a la normativa.', 'La seguridad eléctrica, de cargas y estructuras, de aforo y cualquier otra norma aplicable son responsabilidad tuya.'],
+      ['La usas bajo tu propia responsabilidad.', 'Hasta donde lo permita la ley aplicable, el autor no responde de daños, pérdidas, gastos o perjuicios de ningún tipo, directos o indirectos, derivados de usar la aplicación o de no poder usarla. Esto incluye los de un evento, una instalación o un presupuesto.'],
+      ['Tus derechos irrenunciables se respetan.', 'Nada de lo anterior limita los derechos que la ley de tu país te reconozca y a los que no se pueda renunciar. Si alguna parte de este aviso no fuera válida donde vives, el resto sigue en vigor.'],
+      ['Marcas y productos', 'citados pertenecen a sus dueños y se nombran solo como referencia. No hay relación comercial ni aval de esas marcas.'],
+      ['Licencia y ley.', 'Se distribuye bajo licencia GPL-3.0, que ya excluye garantías y responsabilidad (secciones 15 y 16). Este aviso se rige por la ley española, sin perjuicio de las normas imperativas de tu país.']],
+      '¿Has visto un fallo? Cuéntanoslo con el botón rojo: lo miraremos con mucho gusto, pero sin compromiso de plazo. Usar la aplicación significa que aceptas este aviso.', 'Aviso legal', 'Cerrar', 'Software gratuito hecho por afición, sin garantías: comprueba siempre los resultados. Uso bajo tu responsabilidad.'],
+    en: ['Important notice (it is short, please read it)', '{APP} is free, open-source software, made with passion by a hobbyist in his spare time. It is not a professional product and it is not developed by a software company.', [
+      ['It is provided “as is”, with no warranties of any kind.', 'It may contain errors, fail, change or become unavailable without notice. There is no guarantee that it will work continuously or that it is fit for any particular purpose.'],
+      ['Results are for guidance only.', 'Calculations, measurements, weights, power figures, compatibilities and recommendations may contain errors. Always check them with your own method or with a qualified technician before quoting, buying, installing or rigging anything.'],
+      ['It does not replace a professional or the regulations.', 'Electrical safety, loads and structures, capacity and any other applicable rules are your responsibility.'],
+      ['You use it at your own risk.', 'To the fullest extent permitted by applicable law, the author is not liable for any damage, loss, cost or harm of any kind, direct or indirect, arising from using the app or from being unable to use it. This includes those related to an event, an installation or a quote.'],
+      ['Your non-waivable rights are respected.', 'Nothing above limits the rights that the law of your country grants you and that cannot be waived. If any part of this notice is not valid where you live, the rest remains in force.'],
+      ['Brands and products', 'mentioned belong to their owners and are named for reference only. There is no commercial relationship with those brands and no endorsement by them.'],
+      ['Licence and law.', 'It is distributed under the GPL-3.0 licence, which already excludes warranties and liability (sections 15 and 16). This notice is governed by Spanish law, without prejudice to the mandatory rules of your country.']],
+      'Found a bug? Tell us with the red button: we will gladly look at it, but with no commitment on timing. Using the app means that you accept this notice.', 'Legal notice', 'Close', 'Free software made as a hobby, with no warranties: always check the results. Use at your own risk.'],
+    ca: ['Avís important (és curt, llegeix-lo)', '{APP} és programari gratuït i de codi obert, fet amb passió per un aficionat en el seu temps lliure. No és un producte professional ni el desenvolupa una empresa de programari.', [
+      ['S’ofereix «tal com és», sense garanties de cap mena.', 'Pot tenir errors, fallar, canviar o deixar d’estar disponible sense avís previ. No es garanteix que funcioni de manera contínua ni que serveixi per a una finalitat concreta.'],
+      ['Els resultats són orientatius.', 'Càlculs, mides, pesos, consums, compatibilitats i recomanacions poden contenir errors. Comprova’ls sempre amb el teu propi mètode o amb un tècnic qualificat abans de pressupostar, comprar, instal·lar o muntar res.'],
+      ['No substitueix un professional ni la normativa.', 'La seguretat elèctrica, de càrregues i estructures, d’aforament i qualsevol altra norma aplicable són responsabilitat teva.'],
+      ['La fas servir sota la teva responsabilitat.', 'Fins on ho permeti la llei aplicable, l’autor no respon de danys, pèrdues, despeses o perjudicis de cap mena, directes o indirectes, derivats de fer servir l’aplicació o de no poder-la fer servir. Això inclou els d’un esdeveniment, una instal·lació o un pressupost.'],
+      ['Els teus drets irrenunciables es respecten.', 'Res de l’anterior limita els drets que la llei del teu país et reconegui i als quals no es pugui renunciar. Si alguna part d’aquest avís no fos vàlida on vius, la resta continua en vigor.'],
+      ['Marques i productes', 'esmentats pertanyen als seus propietaris i es citen només com a referència. No hi ha relació comercial ni aval d’aquestes marques.'],
+      ['Llicència i llei.', 'Es distribueix sota llicència GPL-3.0, que ja exclou garanties i responsabilitat (seccions 15 i 16). Aquest avís es regeix per la llei espanyola, sens perjudici de les normes imperatives del teu país.']],
+      'Has vist un error? Explica’ns-ho amb el botó vermell: ens el mirarem de bon grat, però sense compromís de termini. Fer servir l’aplicació vol dir que acceptes aquest avís.', 'Avís legal', 'Tancar', 'Programari gratuït fet per afició, sense garanties: comprova sempre els resultats. Ús sota la teva responsabilitat.']
+  };
   var texto = DEF, oyentes = [];
   try { var g = localStorage.getItem(CLAVE); if (g && g.length < 400) texto = g; } catch (e) {}
+  var av = function (l) { l = String(l || 'es').slice(0, 2).toLowerCase(); return AVISO[l] || AVISO.en; };
   var esc = function (x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   /* html(app, version, idioma, opciones): la línea ya montada. opciones.sinEnlaces deja los enlaces en texto (pantallas, PDF) */
   function html(app, version, idioma, o) {
     var l = String(idioma || 'es').slice(0, 2).toLowerCase(), t = texto;
     if (l !== 'es' && HECHO[l]) t = t.replace(HECHO.es, HECHO[l]);
     t = esc(t).replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, o && o.sinEnlaces ? '$1' : '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return t.replace(/\{APP\}/g, esc(app || '')).replace(/\{VERSION\}/g, esc(version || '')).replace(/\{A(Ñ|N)O\}|\{YEAR\}/g, new Date().getFullYear()).replace(/\*|\{ICONO\}/g, ICONO).replace(/\s{2,}/g, ' ');
+    t = t.replace(/\{APP\}/g, esc(app || '')).replace(/\{VERSION\}/g, esc(version || '')).replace(/\{A(Ñ|N)O\}|\{YEAR\}/g, new Date().getFullYear()).replace(/\*|\{ICONO\}/g, ICONO).replace(/\s{2,}/g, ' ');
+    if (!(o && (o.sinEnlaces || o.sinAviso))) t += ' · <a href="#aviso" class="cred-aviso" data-aviso="' + esc(app || 'AVHUB') + '" data-idioma="' + esc(l) + '">' + esc(av(l)[4]) + '</a>';
+    return t;
   }
   /* plano(app, version, idioma): [antes del icono, después del icono], sin etiquetas (para pies de impresión) */
   function plano(app, version, idioma) {
@@ -29,5 +63,18 @@
       texto = t; try { localStorage.setItem(CLAVE, t); } catch (e) {} oyentes.forEach(function (f) { try { f(); } catch (e) {} });
     }).catch(function () {});
   } catch (e) {}
-  window.AVCREDITO = { html: html, plano: plano, icono: ICONO, alCambiar: function (f) { oyentes.push(f); }, texto: function () { return texto; } };
+  /* avisoHTML(app, idioma): el aviso completo, para incrustarlo en una ventana de información · avisoCorto(idioma): una sola línea · abrirAviso(app, idioma): lo abre en una ventana propia */
+  function avisoHTML(app, idioma) { var a = av(idioma); return '<div class="av-aviso"><h3>' + esc(a[0]) + '</h3><p><b>' + esc(a[1].replace('{APP}', app || 'AVHUB')) + '</b></p><ol>' + a[2].map(function (x) { return '<li><b>' + esc(x[0]) + '</b> ' + esc(x[1]) + '</li>'; }).join('') + '</ol><p>' + esc(a[3]) + '</p></div>'; }
+  function abrirAviso(app, idioma) {
+    if (document.querySelector('.av-ov')) return;
+    if (!document.getElementById('av-css')) { var st = document.createElement('style'); st.id = 'av-css'; st.textContent = '.av-ov{position:fixed;inset:0;z-index:2147483002;display:grid;place-items:center;padding:12px;box-sizing:border-box;background:rgba(4,4,8,.74);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}' +
+      '.av-win{width:min(38rem,100%);max-height:calc(100dvh - 24px);overflow:auto;box-sizing:border-box;border-radius:14px;background:linear-gradient(180deg,#2b2c31,#1b1c20);border:1px solid #000;box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 1.4rem 3rem rgba(0,0,0,.7);padding:18px 20px 16px;color:#d6dbe2;font:500 14.5px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;text-align:left;letter-spacing:0;text-transform:none}' +
+      '.av-win h3{margin:0 0 10px;font:800 1.1rem/1.25 inherit;color:#fff}.av-win p{margin:0 0 10px}.av-win ol{margin:0 0 12px;padding-left:1.3em}.av-win li{margin:0 0 7px}.av-win b{color:#fff;font-weight:700}' +
+      '.av-win button{display:block;margin:6px 0 0 auto;padding:10px 18px;border-radius:9px;border:1px solid #000;font:800 .8rem/1 inherit;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;color:#e9ecf1;background:linear-gradient(180deg,#4a4c54,#2e3036);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 0 #000}.av-win button:focus-visible{outline:2px solid #fff;outline-offset:2px}'; document.head.appendChild(st); }
+    var antes = document.activeElement, ov = document.createElement('div'); ov.className = 'av-ov'; ov.innerHTML = '<div class="av-win" role="dialog" aria-modal="true">' + avisoHTML(app, idioma) + '<button type="button"></button></div>'; var b = ov.querySelector('button'); b.textContent = av(idioma)[5];
+    var cerrar = function () { document.removeEventListener('keydown', tecla, true); ov.remove(); try { if (antes && antes.focus) antes.focus(); } catch (e) {} }, tecla = function (e) { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); cerrar(); } };
+    document.addEventListener('keydown', tecla, true); b.onclick = cerrar; ov.addEventListener('mousedown', function (e) { if (e.target === ov) cerrar(); }); document.body.appendChild(ov); try { b.focus(); } catch (e) {}
+  }
+  document.addEventListener('click', function (e) { var a = e.target && e.target.closest ? e.target.closest('[data-aviso]') : null; if (!a) return; e.preventDefault(); e.stopPropagation(); abrirAviso(a.getAttribute('data-aviso'), a.getAttribute('data-idioma') || document.documentElement.lang); }, true);
+  window.AVCREDITO = { html: html, plano: plano, icono: ICONO, alCambiar: function (f) { oyentes.push(f); }, texto: function () { return texto; }, avisoHTML: avisoHTML, avisoCorto: function (l) { return av(l)[6]; }, abrirAviso: abrirAviso };
 })();
