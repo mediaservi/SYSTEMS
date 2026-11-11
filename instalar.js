@@ -61,19 +61,23 @@
   window.addEventListener('online', refresca); window.addEventListener('offline', refresca);
 
   /* ---------- la ventana ---------- */
-  function pinta() { if (!dlg || !opc) return; var x = tx(opc.idioma ? opc.idioma() : 'es'), w = dlg.querySelector('.avi-w'), app = opc.app || 'AVHUB', ya = enApp(), sin = navigator.onLine === false;
+  function pinta() { if (!dlg || !opc) return; var fa = document.activeElement, foco = fa && dlg.contains(fa) ? (fa.classList.contains('avi-2') ? '.avi-2' : fa.classList.contains('avi-go') ? '.avi-go:not(.avi-2)' : '.avi-x') : null; var x = tx(opc.idioma ? opc.idioma() : 'es'), w = dlg.querySelector('.avi-w'), app = opc.app || 'AVHUB', ya = enApp(), sin = navigator.onLine === false;
     var st = estado === 'no' ? ['', x.no] : sin ? ['sin', x.sin] : estado === 'ok' ? ['ok', x.ok + (guardados ? ' · ' + guardados + ' ' + x.arch : '')] : ['', x.prep];
     w.innerHTML = '<button type="button" class="avi-x" aria-label="' + x.c + '">✕</button><div class="avi-hd">' + ICO + '<h2></h2></div><p></p>' + (ya ? '' : (aviso ? '<button type="button" class="avi-go"></button>' : '') + '<p class="avi-man"></p>') + (opc.todo && puedeSW && !sin ? '<button type="button" class="avi-go avi-2"></button>' : '') + '<div class="avi-st ' + st[0] + '" role="status"><i></i><span></span></div>';
     w.querySelector('h2').textContent = (ya ? x.ya : x.t).replace('{A}', app); w.querySelector('p').textContent = ya && dlg.dataset.hecho ? x.hecho : x.p; var go = w.querySelector('.avi-go:not(.avi-2)'); if (go) go.textContent = x.b; var g2 = w.querySelector('.avi-2'); if (g2) g2.textContent = x.todo; var man = w.querySelector('.avi-man'); if (man) man.textContent = x.man; w.querySelector('.avi-st span').textContent = st[1];
-    dlg.setAttribute('aria-label', (ya ? x.ya : x.t).replace('{A}', app)); }
+    dlg.setAttribute('aria-label', (ya ? x.ya : x.t).replace('{A}', app)); if (foco) { var f = w.querySelector(foco) || w.querySelector('.avi-x'); try { f && f.focus(); } catch (e) {} } }
   var antes = null;
-  function cierra() { if (!dlg) return; dlg.remove(); dlg = null; try { antes && antes.focus(); } catch (e) {} }
+  /* mientras la ventana está abierta, el teclado y el mando son suyos: Escape o «atrás» la cierran, las flechas pasan de un botón a otro y nada llega a los atajos de la app */
+  function tecla(e) { if (!dlg) return; if (e.key === 'Escape' || e.key === 'GoBack' || e.key === 'BrowserBack' || e.keyCode === 10009 || e.keyCode === 461) { e.preventDefault(); e.stopPropagation(); cierra(); return; }
+    if (/^Arrow/.test(e.key)) { var bs = [].slice.call(dlg.querySelectorAll('button')), i = bs.indexOf(document.activeElement), n = bs.length; if (n) { bs[i < 0 ? 0 : (i + (/Down|Right/.test(e.key) ? 1 : n - 1)) % n].focus(); e.preventDefault(); } }
+    else if (e.key === 'Tab' && !dlg.contains(document.activeElement)) { var p = dlg.querySelector('button'); if (p) { p.focus(); e.preventDefault(); } }
+    if (!/^(Tab|Shift)$/.test(e.key)) e.stopPropagation(); }
+  function cierra() { if (!dlg) return; document.removeEventListener('keydown', tecla, true); dlg.remove(); dlg = null; try { antes && antes.focus(); } catch (e) {} }
   function abre(o) { if (dlg) return; estilos(); opc = o; antes = document.activeElement; dlg = document.createElement('div'); dlg.className = 'avi-ov'; dlg.setAttribute('role', 'dialog'); dlg.setAttribute('aria-modal', 'true'); dlg.innerHTML = '<div class="avi-w"></div>'; pinta();
-    ['keydown', 'keyup', 'wheel', 'touchstart', 'touchmove', 'pointerdown', 'click'].forEach(function (ev) { dlg.addEventListener(ev, function (e) {
-      if (ev === 'keydown' && e.key === 'Escape') cierra();
-      else if (ev === 'click') { if (e.target === dlg || e.target.closest('.avi-x')) cierra(); else if (e.target.closest('.avi-2')) { var o2 = opc; cierra(); try { o2 && o2.todo && o2.todo(); } catch (x) {} } else if (e.target.closest('.avi-go') && aviso) { var a = aviso; aviso = null; try { a.prompt(); a.userChoice.then(function (r) { if (r && r.outcome === 'accepted') { instalada = true; if (dlg) dlg.dataset.hecho = '1'; } refresca(); }, refresca); } catch (x) { refresca(); } } }
+    ['keyup', 'wheel', 'touchstart', 'touchmove', 'pointerdown', 'click'].forEach(function (ev) { dlg.addEventListener(ev, function (e) {
+      if (ev === 'click') { if (e.target === dlg || e.target.closest('.avi-x')) cierra(); else if (e.target.closest('.avi-2')) { var o2 = opc; cierra(); try { o2 && o2.todo && o2.todo(); } catch (x) {} } else if (e.target.closest('.avi-go') && aviso) { var a = aviso; aviso = null; try { a.prompt(); a.userChoice.then(function (r) { if (r && r.outcome === 'accepted') { instalada = true; if (dlg) dlg.dataset.hecho = '1'; } refresca(); }, refresca); } catch (x) { refresca(); } } }
       e.stopPropagation(); }); });
-    document.body.appendChild(dlg); var f = dlg.querySelector('.avi-go') || dlg.querySelector('.avi-x'); f && f.focus(); }
+    document.addEventListener('keydown', tecla, true); document.body.appendChild(dlg); var f = dlg.querySelector('.avi-go') || dlg.querySelector('.avi-x'); f && f.focus(); }
 
   function boton(o) { o = o || {}; estilos(); var x = tx(o.idioma ? o.idioma() : 'es'), b = document.createElement('button'); b.type = 'button'; b.className = 'avi-btn' + (o.clase ? ' ' + o.clase : ''); b.innerHTML = ICO; b._avi = o; b.title = x.tip; b.setAttribute('aria-label', x.nom);
     b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); rotula(b); abre(o); }); ['pointerenter', 'focus'].forEach(function (ev) { b.addEventListener(ev, function () { rotula(b); }); });
