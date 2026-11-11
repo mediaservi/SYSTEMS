@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v0.10 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v0.11 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -44,7 +44,11 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v0.10)
+## Cambios de la versión actual (v0.11)
+
+- **Documentación legal completa:** `LEGAL.md`, `DISCLAIMER.md`, `PRIVACY.md` y `COOKIES.md` en el repositorio, enlazados desde el «Aviso legal» de la app. El aviso de la app añade que no es un proyecto técnico ni asesoramiento profesional, que la limitación de responsabilidad no alcanza a lo que la ley no permite excluir, y un apartado de privacidad y contacto.
+
+Sigue de la v0.10:
 
 - **Aviso legal** enlazado detrás de la línea de crédito: explica, en lenguaje llano y en es/en/ca, que esto es software gratuito hecho por afición, sin garantías, con resultados orientativos y de uso bajo la responsabilidad de cada cual.
 - La descripción ya no habla de «profesionales»: calculadores para la gente del sonido y la iluminación.
@@ -78,8 +82,10 @@ Versiones anteriores: v0.3, SYSTEMS pasa a su repositorio propio como app indepe
 Código abierto bajo la licencia **GNU GPL v3**.
 
 ---
-*SYSTEMS v0.10 es un proyecto hecho con ⚙ by [mediaservi.com](https://mediaservi.com)*
+*SYSTEMS v0.11 es un proyecto hecho con ⚙ by [mediaservi.com](https://mediaservi.com)*
 
 ## Aviso
 
 Software gratuito y de código abierto, hecho con pasión por un aficionado en su tiempo libre. No es un producto profesional. Se ofrece «tal cual», sin garantías de ningún tipo; los resultados son orientativos y hay que comprobarlos siempre; se usa bajo la responsabilidad de cada cual, hasta donde lo permita la ley aplicable. El aviso completo (es/en/ca) está en la propia app, en el enlace «Aviso legal» que acompaña a la línea de crédito. Licencia GPL-3.0.
+
+Documentos legales del repositorio: [`LEGAL.md`](LEGAL.md) (aviso legal), [`DISCLAIMER.md`](DISCLAIMER.md) (garantías y responsabilidad), [`PRIVACY.md`](PRIVACY.md) (privacidad), [`COOKIES.md`](COOKIES.md) (cookies y almacenamiento local) y [`LICENSE`](LICENSE) (GPL-3.0). Sin publicidad, afiliación ni ingresos de ningún tipo.
