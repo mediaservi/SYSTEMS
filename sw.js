@@ -4,7 +4,7 @@
    · Lo que no es de este sitio (avisos, crédito, directo) y los vídeos y audios a trozos van siempre por la red.
    Para forzar una copia nueva en todos los dispositivos, sube el número de CACHE.
    Licencia GPL-3.0 · mediaservi.com */
-const PREFIJO = 'systems-', CACHE = PREFIJO + 'v2';
+const PREFIJO = 'systems-', CACHE = PREFIJO + 'v3';
 const BASICO = ['./', 'index.html', 'app.js', 'calculos.js', 'textos.js', 'base.css', 'estilo.css', 'credito.js', 'fallo.js', 'instalar.js', 'manifest.json', 'catalogo/nureva.json', 'catalogo/rcf.json', 'catalogo/sennheiser.json', 'assets/avhub-logo.svg', 'assets/fam/adposter-logo.svg', 'assets/fam/msgame-logo.svg', 'assets/fam/screens-logo.svg', 'assets/fam/vjshow-logo.svg', 'assets/favicon.svg', 'assets/fonts/inter-latin-400-normal.woff2', 'assets/fonts/inter-latin-700-normal.woff2', 'assets/fonts/inter-latin-800-normal.woff2', 'assets/fonts/share-tech-mono-latin-400-normal.woff2', 'assets/iconos/systems-192.png', 'assets/systems-icono.svg', 'assets/systems-logo.svg'];   // lo mínimo para arrancar sin conexión desde la primera visita
 const FRESCO = /(\/|\.html?|\.json|\.js|\.css|\.webmanifest)$/i, TOPE = 6000;
 const clave = u => { const x = new URL(u, self.registration.scope); x.search = ''; x.hash = ''; return x.href; };
