@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v0.12 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v0.13 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -22,6 +22,8 @@ Primer bloque: **Audio y escenario**, con 26 calculadores en 9 grupos.
 - **Pesos y medidas:** conversor de peso, longitud, superficie, volumen y temperatura.
 - **Referencia:** asignación de pines (XLR, jack, speakON, DB25, DMX y RJ45) y patrones polares de micrófonos.
 
+**Instalable y sin conexión:** con el botón «Instalar» se queda como una app más del dispositivo y funciona sin internet.
+
 La consola tiene tres zonas, como la de SCREENS: los calculadores a la izquierda, los datos en la segunda columna con CALCULAR y RESTABLECER al pie, y el resultado en el centro. En el móvil las zonas se apilan.
 
 ## Marcas y catálogo
@@ -36,7 +38,7 @@ Los cálculos son orientativos: hay que comprobar siempre los datos del fabrican
 
 ## Tecnología
 
-HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (estilos base de AVHUB), `estilo.css`, `calculos.js` (fórmulas), `textos.js` (idiomas) y `app.js` (interfaz). Las fuentes van en `assets/fonts/`.
+HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (estilos base de AVHUB), `estilo.css`, `calculos.js` (fórmulas), `textos.js` (idiomas) y `app.js` (interfaz). Las fuentes van en `assets/fonts/`. Es una app web instalable: `manifest.json`, el service worker `sw.js` (red primero para la app y los datos; copia guardada si no hay conexión) y `instalar.js` (el botón «Instalar», común a las apps de AVHUB). Al añadir archivos nuevos que deban estar disponibles sin conexión desde la primera visita, apúntalos en la lista `BASICO` de `sw.js`.
 
 ## Ramas
 
@@ -44,7 +46,11 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v0.12)
+## Cambios de la versión actual (v0.13)
+
+- **Instalable y sin conexión:** botón «Instalar» en la barra (junto a la seta). SYSTEMS se instala como una app en el móvil, la tableta o el ordenador y funciona sin internet con la última copia descargada; con internet se actualiza sola. Archivos nuevos: `manifest.json`, `sw.js`, `instalar.js` e iconos en `assets/iconos/`.
+
+Sigue de la v0.12:
 
 - **Aviso legal:** se añade que es un proyecto personal del autor, ajeno a su empleador, que no lo encarga, financia ni respalda.
 
@@ -86,7 +92,7 @@ Versiones anteriores: v0.3, SYSTEMS pasa a su repositorio propio como app indepe
 Código abierto bajo la licencia **GNU GPL v3**.
 
 ---
-*SYSTEMS v0.12 es un proyecto hecho con ⚙ by [mediaservi.com](https://mediaservi.com)*
+*SYSTEMS v0.13 es un proyecto hecho con ⚙ by [mediaservi.com](https://mediaservi.com)*
 
 ## Aviso
 

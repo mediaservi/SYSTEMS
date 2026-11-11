@@ -10,6 +10,10 @@
 
 La aplicación guarda en tu navegador (almacenamiento local) lo necesario para funcionar como tú la dejaste: idioma, ajustes, últimas opciones elegidas y, si lo escribiste, tu correo para los avisos de fallo. Esa información **no sale de tu dispositivo** y puedes borrarla cuando quieras desde los ajustes del navegador (borrar los datos del sitio). Al ser estrictamente necesaria para el servicio que tú pides, no requiere un aviso de consentimiento.
 
+## Copia sin conexión
+
+Para que puedas instalarla y usarla sin internet, la aplicación guarda en tu navegador una **copia de sus propios archivos** (páginas, imágenes, tipos de letra, librerías y los catálogos). Son solo archivos de la aplicación, no datos personales, y no se envían a nadie. Se renueva sola cada vez que la abres con conexión y la borras igual que el resto: borrando los datos del sitio en el navegador o desinstalando la app.
+
 ## Cookies de terceros
 
 La aplicación no incrusta contenidos de terceros que instalen cookies. Los proveedores técnicos (alojamiento, tipos de letra, librerías) reciben tu dirección IP al servir sus archivos, como en cualquier web; el detalle está en [`PRIVACY.md`](PRIVACY.md).

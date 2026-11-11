@@ -4,13 +4,16 @@
 import { CALC, GRUPOS } from './calculos.js';
 import { T, IDIOMAS, idioma, fijarIdioma, idiomaInicial } from './textos.js';
 
-const VERSION = 'v0.12';
+const VERSION = 'v0.13';
 // v0.8 · la línea de crédito es la común de AVHUB (credito.js): se edita en AVHUB ADMIN y es la misma en todas las apps
 const pintarPie = () => { const p = document.querySelector('#pie'); if (p) p.innerHTML = window.AVCREDITO ? window.AVCREDITO.html('SYSTEMS', VERSION, idioma()) : `SYSTEMS ${VERSION} ${new Date().getFullYear()} ${T('es un proyecto hecho con')} by <a href="https://mediaservi.com" target="_blank" rel="noopener">mediaservi.com</a>`; };
 if (window.AVCREDITO) window.AVCREDITO.alCambiar(pintarPie);
 // v0.9 · seta de aviso de fallos, común a toda la familia (fallo.js): en la barra de botones, del mismo tamaño que el resto
 if (window.AVFALLO) { const bi = document.querySelector('#btn-inicio'); if (bi) { const bf = window.AVFALLO.boton({ app: 'SYSTEMS', version: VERSION, idioma }); bf.id = 'btn-fallo'; bi.before(bf);
   const talla = () => { const h = bi.offsetHeight; if (h) bf.style.setProperty('--avf', h + 'px'); }; talla(); addEventListener('resize', talla); setTimeout(talla, 800); } }
+// v0.13 · botón «Instalar», común a toda la familia (instalar.js): instala SYSTEMS como una app y la deja lista para usarse sin conexión (sw.js)
+if (window.AVINSTALA) { const bi = document.querySelector('#btn-inicio'); if (bi) { const bn = window.AVINSTALA.boton({ app: 'SYSTEMS', idioma, sw: 'sw.js' }); bn.id = 'btn-instala'; (document.querySelector('#btn-fallo') || bi).before(bn);
+  const talla = () => { const h = bi.offsetHeight; if (h) bn.style.setProperty('--avi', h + 'px'); }; talla(); addEventListener('resize', talla); setTimeout(talla, 800); } }
 const $ = (s, r = document) => r.querySelector(s);
 const COL = ['#b566ff', '#00b4ff', '#e100ff', '#ff4d5e', '#00ff04', '#ffb000'];
 const porId = (id) => CALC.find(c => c.id === id) || CALC[0];

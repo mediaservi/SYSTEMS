@@ -1,0 +1,32 @@
+{
+  "name": "SYSTEMS · Audio y escenario",
+  "short_name": "SYSTEMS",
+  "description": "Calculadores de sonido, iluminación y electricidad para el escenario",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#121213",
+  "theme_color": "#232325",
+  "icons": [
+    {
+      "src": "assets/iconos/systems-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/iconos/systems-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/iconos/systems-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
