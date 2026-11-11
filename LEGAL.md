@@ -10,7 +10,7 @@ SYSTEMS (https://systems.mediaservi.com) forma parte de mediaservi.com, proyecto
 
 ## Naturaleza del proyecto
 
-Es una herramienta personal, gratuita, independiente y de código abierto. No se cobra por usarla y no tiene publicidad, enlaces de afiliación, patrocinios, donaciones, suscripciones ni ningún otro ingreso.
+Es una herramienta personal, gratuita, independiente y de código abierto. Es un proyecto personal del autor, ajeno a su empleador, que no lo encarga, financia ni respalda. No se cobra por usarla y no tiene publicidad, enlaces de afiliación, patrocinios, donaciones, suscripciones ni ningún otro ingreso.
 
 Por ese motivo, y salvo mejor criterio jurídico, el proyecto no constituye una actividad económica y no se publican más datos identificativos que los anteriores. Si esa situación cambiara, este aviso se actualizaría con la información que exija la normativa.
 

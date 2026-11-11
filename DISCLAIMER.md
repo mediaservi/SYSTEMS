@@ -2,7 +2,7 @@
 
 *Última revisión: 11 de noviembre de 2026. Este documento acompaña a la licencia (archivo `LICENSE`, GPL-3.0) y no la modifica.*
 
-SYSTEMS (calculadores de audio, iluminación y escenario) es software gratuito y de código abierto, hecho por una persona en su tiempo libre, sin publicidad, afiliación ni ingresos de ningún tipo. No es un producto profesional ni lo desarrolla una empresa.
+SYSTEMS (calculadores de audio, iluminación y escenario) es software gratuito y de código abierto, hecho por una persona en su tiempo libre, sin publicidad, afiliación ni ingresos de ningún tipo. No es un producto profesional ni lo desarrolla una empresa: es un proyecto personal del autor, ajeno a su empleador, que no lo encarga, financia ni respalda.
 
 ## 1. Se ofrece «tal cual»
 
