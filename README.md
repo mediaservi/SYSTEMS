@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v0.13 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v0.14 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -46,7 +46,11 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v0.13)
+## Cambios de la versión actual (v0.14)
+
+- **Logo de MSGAME**: se sirve con una dirección nueva para que nadie siga viendo el antiguo desde la copia guardada en su dispositivo, y se renueva la caché sin conexión.
+
+### v0.13
 
 - **Instalable y sin conexión:** botón «Instalar» en la barra (junto a la seta). SYSTEMS se instala como una app en el móvil, la tableta o el ordenador y funciona sin internet con la última copia descargada; con internet se actualiza sola. Archivos nuevos: `manifest.json`, `sw.js`, `instalar.js` e iconos en `assets/iconos/`.
 
@@ -92,7 +96,7 @@ Versiones anteriores: v0.3, SYSTEMS pasa a su repositorio propio como app indepe
 Código abierto bajo la licencia **GNU GPL v3**.
 
 ---
-*SYSTEMS v0.13 es un proyecto hecho con ⚙ by [mediaservi.com](https://mediaservi.com)*
+*SYSTEMS v0.14 es un proyecto hecho con ⚙ by [mediaservi.com](https://mediaservi.com)*
 
 ## Aviso
 
