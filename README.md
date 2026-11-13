@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v0.14 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v0.15 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -46,7 +46,13 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v0.14)
+## Cambios de la versión actual (v0.15)
+
+- **SYSTEMS en una pantalla (BLOCKS, beta 1), en `blocks/`:** los mismos 26 calculadores en la interfaz de bloques fijos que ya usa SCREENS, sin desplazamiento en escritorio ni en TV. Arriba, los nueve grupos y CALCULAR; a la izquierda, los calculadores del grupo y sus datos (con botones − y + y RESTABLECER); en los dos bloques grandes, **dos vistas distintas a elegir** en cada uno (cada gráfica, la tabla, las notas o el resumen); abajo, las seis cifras principales, cada una en su bloque. Tema claro y oscuro, español, inglés y catalán, y bloques apilados en el móvil. Comparte los datos guardados con la versión clásica, que sigue siendo la portada y **no cambia**; desde BLOCKS hay un botón para volver a ella.
+- Pie con el texto común nuevo de AVHUB: «SYSTEMS vX.Y AAAA forma parte del proyecto AVHUB ideado por el fundador de mediaservi.com · Aviso legal» (`credito.js`).
+- Enlace de pruebas: `https://raw.githack.com/mediaservi/SYSTEMS/beta/blocks/index.html`.
+
+### v0.14
 
 - **Logo de MSGAME**: se sirve con una dirección nueva para que nadie siga viendo el antiguo desde la copia guardada en su dispositivo, y se renueva la caché sin conexión.
 
