@@ -5,7 +5,7 @@
 import { CALC, GRUPOS } from '../calculos.js';
 import { T as T0, IDIOMAS, idioma, fijarIdioma, idiomaInicial } from '../textos.js';
 
-const VERSION = 'v0.15', BETA = 'BLOCKS · beta 1';
+const VERSION = 'v0.16', BETA = 'BLOCKS · beta 1';
 // textos nuevos de esta vista (el resto sale de textos.js)
 const MIO = { 'Resumen': ['Summary', 'Resum'], 'Tabla': ['Table', 'Taula'], 'Notas': ['Notes', 'Notes'], 'Vista 1': ['View 1', 'Vista 1'], 'Vista 2': ['View 2', 'Vista 2'], 'Resultado': ['Result', 'Resultat'], 'Versión clásica': ['Classic version', 'Versió clàssica'],
   'Tema claro u oscuro': ['Light or dark theme', 'Tema clar o fosc'], 'Nuevo cálculo: lo deja todo como al empezar': ['New calculation: back to the starting values', 'Nou càlcul: ho deixa tot com al començar'], 'Sin más cifras': ['No more figures', 'Sense més xifres'],
@@ -119,7 +119,7 @@ function vistaHTML(x, r) {
   if (!x) return '';
   if (x.k === 'tabla') return `<div class="vis texto"><table class="tabla"><thead><tr>${r.tabla.cab.map(h => `<th>${esc(T(h))}</th>`).join('')}</tr></thead><tbody>${r.tabla.filas.map(f => `<tr>${f.map(c => `<td>${esc(T(String(c)))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   if (x.k === 'resumen') return `<div class="vis texto"><div class="resumen">${(r.res || []).map(q => `<div><div class="t">${esc(T(q[0]))}</div><div class="v">${esc(T(String(q[1])))}<small>${esc(T(q[2] || ''))}</small></div>${q[3] ? `<div class="s">${esc(T(q[3]))}</div>` : ''}</div>`).join('') || `<p class="ayuda">${T('Sin más cifras')}</p>`}</div></div>`;
-  if (x.k === 'notas') return `<div class="vis texto notas">${(r.notas || []).map(n => `<p>${esc(T(n))}</p>`).join('')}<p class="av">${T0('Estos cálculos son orientativos: comprueba siempre los datos del fabricante y la normativa antes de montar.')}</p></div>`;
+  if (x.k === 'notas') return `<div class="vis texto notas">${(r.notas || []).map(n => `<p>${esc(T(n))}</p>`).join('')}<p class="av">${T0('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.')}</p></div>`;
   const g = x.g, cab = `<h3>${esc(T(g.tit))}${g.sub ? `<small>${esc(T(g.sub))}</small>` : ''}</h3>`;
   if (g.tipo === 'linea') return `<div class="vis">${cab}${grafLinea(g)}</div>`;
   if (g.tipo === 'polar') return `<div class="vis">${cab}${grafPolar(g)}</div>`;
@@ -159,7 +159,7 @@ function marco() {
       <div data-blk="H1R" class="h1r"><a class="ic-bt" href="../" title="${T('Versión clásica')}" aria-label="${T('Versión clásica')}">${IC.clasica}</a><button type="button" class="ic-bt" data-accion="inicio" title="${T('Nuevo cálculo: lo deja todo como al empezar')}" aria-label="${T('Inicio')}">${IC.nuevo}</button><button type="button" class="ic-bt" data-accion="tema" title="${T('Tema claro u oscuro')}" aria-label="${T('Tema claro u oscuro')}">${IC.tema}</button><button type="button" class="ic-bt" data-accion="idioma" aria-label="${T('Idioma')}">${idioma().toUpperCase()}</button></div></header>
     <div class="franja f-hm"><div data-blk="HM1" class="grupos" id="grupos" role="group" aria-label="${T('Calculadores')}"></div><div data-blk="HM3"><button type="button" class="pri" data-accion="calc">${T('Calcular')}</button></div></div>
     <main class="rejilla" id="rejilla"></main>
-    <footer class="franja f-f1"><div data-blk="F1L" class="av">${T('Cálculos orientativos: comprueba los datos del fabricante y la normativa.')}</div><div data-blk="F1C" class="cred" id="pie"></div><div data-blk="F1R" class="der" id="f1r"></div></footer></div>`;
+    <footer class="franja f-f1"><div data-blk="F1L" class="av">${T0('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.')}</div><div data-blk="F1C" class="cred" id="pie"></div><div data-blk="F1R" class="der" id="f1r"></div></footer></div>`;
   pintaPie(); const r = $('#f1r');
   if (window.AVINSTALA) { const b = window.AVINSTALA.boton({ app: 'SYSTEMS', idioma, sw: '../sw.js' }); b.style.setProperty('--avi', 'calc(var(--u) * 40)'); r.appendChild(b); }
   if (window.AVFALLO) { const b = window.AVFALLO.boton({ app: 'SYSTEMS', version: VERSION + ' · ' + BETA, idioma }); b.style.setProperty('--avf', 'calc(var(--u) * 40)'); r.appendChild(b); }

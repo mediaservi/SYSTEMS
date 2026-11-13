@@ -4,7 +4,7 @@
 import { CALC, GRUPOS } from './calculos.js';
 import { T, IDIOMAS, idioma, fijarIdioma, idiomaInicial } from './textos.js';
 
-const VERSION = 'v0.15';
+const VERSION = 'v0.16';
 // v0.8 · la línea de crédito es la común de AVHUB (credito.js): se edita en AVHUB ADMIN y es la misma en todas las apps
 const pintarPie = () => { const p = document.querySelector('#pie'); if (p) p.innerHTML = window.AVCREDITO ? window.AVCREDITO.html('SYSTEMS', VERSION, idioma()) : `SYSTEMS ${VERSION} ${new Date().getFullYear()} ${T('es un proyecto hecho con')} by <a href="https://mediaservi.com" target="_blank" rel="noopener">mediaservi.com</a>`; };
 if (window.AVCREDITO) window.AVCREDITO.alCambiar(pintarPie);
@@ -142,7 +142,7 @@ function pintarResultado() {
   if (r.res && r.res.length) h += `<div class="res-tot">${r.res.map(tarjeta).join('')}</div>`;
   const gs = (r.grafs || []).map(grafHTML).join(''); if (gs) h += `<div class="hw-grafs">${gs}</div>`;
   if (r.tabla) h += `<div class="tabla-caja"><table class="tabla"><thead><tr>${r.tabla.cab.map(x => `<th>${esc(T(x))}</th>`).join('')}</tr></thead><tbody>${r.tabla.filas.map(f => `<tr>${f.map(x => `<td>${esc(T(String(x)))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
-  h += `<div class="hw-notas">${(r.notas || []).map(n => `<p>${esc(T(n))}</p>`).join('')}<p class="av">${T('Estos cálculos son orientativos: comprueba siempre los datos del fabricante y la normativa antes de montar.')}</p></div>`;
+  h += `<div class="hw-notas">${(r.notas || []).map(n => `<p>${esc(T(n))}</p>`).join('')}<p class="av">${T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.')}</p></div>`;
   $('#res').innerHTML = h;
   (r.grafs || []).forEach((g, i) => { if (g.tipo === 'mapa') { const cv = $(`#res canvas[data-mapa="${i}"]`); if (cv) pintarMapa(cv, g); } });
   ajustar();

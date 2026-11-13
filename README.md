@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v0.15 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v0.16 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -46,7 +46,11 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v0.15)
+## Cambios de la versión actual (v0.16)
+
+- **Aviso común de las apps de cálculo de AVHUB:** al pie de las notas de cada calculador, «Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.» (antes: «Estos cálculos son orientativos: comprueba siempre los datos del fabricante y la normativa antes de montar.»). En español, inglés y catalán.
+
+## Cambios de la v0.15
 
 - **SYSTEMS en una pantalla (BLOCKS, beta 1), en `blocks/`:** los mismos 26 calculadores en la interfaz de bloques fijos que ya usa SCREENS, sin desplazamiento en escritorio ni en TV. Arriba, los nueve grupos y CALCULAR; a la izquierda, los calculadores del grupo y sus datos (con botones − y + y RESTABLECER); en los dos bloques grandes, **dos vistas distintas a elegir** en cada uno (cada gráfica, la tabla, las notas o el resumen); abajo, las seis cifras principales, cada una en su bloque. Tema claro y oscuro, español, inglés y catalán, y bloques apilados en el móvil. Comparte los datos guardados con la versión clásica, que sigue siendo la portada y **no cambia**; desde BLOCKS hay un botón para volver a ella.
 - Pie con el texto común nuevo de AVHUB: «SYSTEMS vX.Y AAAA forma parte del proyecto AVHUB ideado por el fundador de mediaservi.com · Aviso legal» (`credito.js`).
