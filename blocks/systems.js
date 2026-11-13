@@ -5,7 +5,7 @@
 import { CALC, GRUPOS } from '../calculos.js';
 import { T as T0, IDIOMAS, idioma, fijarIdioma, idiomaInicial } from '../textos.js';
 
-const VERSION = 'v0.16', BETA = 'BLOCKS · beta 1';
+const VERSION = 'v0.17', BETA = 'BLOCKS · beta 1';
 // textos nuevos de esta vista (el resto sale de textos.js)
 const MIO = { 'Resumen': ['Summary', 'Resum'], 'Tabla': ['Table', 'Taula'], 'Notas': ['Notes', 'Notes'], 'Vista 1': ['View 1', 'Vista 1'], 'Vista 2': ['View 2', 'Vista 2'], 'Resultado': ['Result', 'Resultat'], 'Versión clásica': ['Classic version', 'Versió clàssica'],
   'Tema claro u oscuro': ['Light or dark theme', 'Tema clar o fosc'], 'Nuevo cálculo: lo deja todo como al empezar': ['New calculation: back to the starting values', 'Nou càlcul: ho deixa tot com al començar'], 'Sin más cifras': ['No more figures', 'Sense més xifres'],

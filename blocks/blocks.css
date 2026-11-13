@@ -143,3 +143,9 @@ select.sel { min-height: calc(var(--u) * 38); border: 1px solid var(--linea); bo
   :root { --u: calc(100vw / 860); }
   .rejilla { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-areas: "ma ma ma mb mb mb" "m3a m3a m3b m3b m3c m3c" "m3d m3d m3e m3e m3f m3f" "s1a s1a s1a s1b s1b s1b"; }
 }
+
+/* v0.17 · aviso del pie: mismo tamaño que los créditos, con su triangulito, en una columna que se estira lo que haga falta */
+.f-f1 { grid-template-columns: auto minmax(0, 1fr) auto; }
+.f-f1 .av { display: flex; align-items: center; line-height: 1.25; white-space: nowrap; overflow: visible; }
+.notas p.av::before, .f-f1 .av::before { content: ''; display: inline-block; flex: none; width: 1.15em; height: 1.15em; margin-right: .4em; vertical-align: -.22em; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.6 2.4 20.2h19.2z'/%3E%3Cpath d='M12 9.6v5'/%3E%3Cpath d='M12 17.6h.01'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.6 2.4 20.2h19.2z'/%3E%3Cpath d='M12 9.6v5'/%3E%3Cpath d='M12 17.6h.01'/%3E%3C/svg%3E") center / contain no-repeat; }
+@media (max-width: 900px), (max-height: 520px) { .f-f1 .av { white-space: normal; justify-content: center; } }
