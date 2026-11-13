@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v0.16 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v0.17 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -46,7 +46,11 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v0.16)
+## Cambios de la versión actual (v0.17)
+
+- El aviso «Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.» lleva delante un triangulito de aviso discreto (monocromo, filete del color del texto), igual en todas las apps de cálculo de AVHUB. En la vista en una pantalla (beta), el aviso del pie va al mismo tamaño que los créditos, en una columna que se estira lo que haga falta.
+
+## Cambios de la v0.16
 
 - **Aviso común de las apps de cálculo de AVHUB:** al pie de las notas de cada calculador, «Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.» (antes: «Estos cálculos son orientativos: comprueba siempre los datos del fabricante y la normativa antes de montar.»). En español, inglés y catalán.
 - **Pie común nuevo de AVHUB** (`credito.js`): «SYSTEMS vX.Y AAAA forma parte del proyecto AVHUB ideado por el fundador de mediaservi.com · Aviso legal», con el aviso legal en su ventana.
