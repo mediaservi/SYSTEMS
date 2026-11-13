@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v0.14 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v0.16 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -46,7 +46,12 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v0.14)
+## Cambios de la versión actual (v0.16)
+
+- **Aviso común de las apps de cálculo de AVHUB:** al pie de las notas de cada calculador, «Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.» (antes: «Estos cálculos son orientativos: comprueba siempre los datos del fabricante y la normativa antes de montar.»). En español, inglés y catalán.
+- **Pie común nuevo de AVHUB** (`credito.js`): «SYSTEMS vX.Y AAAA forma parte del proyecto AVHUB ideado por el fundador de mediaservi.com · Aviso legal», con el aviso legal en su ventana.
+
+### v0.14
 
 - **Logo de MSGAME**: se sirve con una dirección nueva para que nadie siga viendo el antiguo desde la copia guardada en su dispositivo, y se renueva la caché sin conexión.
 
@@ -96,7 +101,7 @@ Versiones anteriores: v0.3, SYSTEMS pasa a su repositorio propio como app indepe
 Código abierto bajo la licencia **GNU GPL v3**.
 
 ---
-*SYSTEMS v0.14 es un proyecto hecho con ⚙ by [mediaservi.com](https://mediaservi.com)*
+*SYSTEMS v0.16 es un proyecto hecho con ⚙ by [mediaservi.com](https://mediaservi.com)*
 
 ## Aviso
 
