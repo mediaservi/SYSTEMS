@@ -5,7 +5,7 @@
 import { CALC, GRUPOS } from '../calculos.js';
 import { T as T0, IDIOMAS, idioma, fijarIdioma, idiomaInicial } from '../textos.js';
 
-const VERSION = 'v0.17', BETA = 'BLOCKS · beta 1';
+const VERSION = 'v0.18', BETA = 'BLOCKS · beta 1';
 // textos nuevos de esta vista (el resto sale de textos.js)
 const MIO = { 'Resumen': ['Summary', 'Resum'], 'Tabla': ['Table', 'Taula'], 'Notas': ['Notes', 'Notes'], 'Vista 1': ['View 1', 'Vista 1'], 'Vista 2': ['View 2', 'Vista 2'], 'Resultado': ['Result', 'Resultat'], 'Versión clásica': ['Classic version', 'Versió clàssica'],
   'Tema claro u oscuro': ['Light or dark theme', 'Tema clar o fosc'], 'Nuevo cálculo: lo deja todo como al empezar': ['New calculation: back to the starting values', 'Nou càlcul: ho deixa tot com al començar'], 'Sin más cifras': ['No more figures', 'Sense més xifres'],
@@ -152,7 +152,7 @@ function pinta() {
 }
 function marco() {
   document.documentElement.lang = idioma(); document.documentElement.dataset.tema = V.tema === 'claro' ? 'claro' : 'oscuro';
-  const fam = [['SCREENS', 'https://screens.mediaservi.com/', 'fam/screens-logo.svg'], ['ADPOSTER', 'https://adposter.mediaservi.com/', 'fam/adposter-logo.svg'], ['AVHUB', 'https://avhub.mediaservi.com/', 'avhub-logo.svg'], ['VJSHOW', 'https://vjshow.mediaservi.com/', 'fam/vjshow-logo.svg'], ['MSGAME', 'https://msgame.mediaservi.com/', 'fam/msgame-logo.svg?v=3']];
+  const fam = [['SCREENS', 'https://screens.mediaservi.com/', 'fam/screens-logo.svg'], ['ADPOSTER', 'https://adposter.mediaservi.com/', 'fam/adposter-logo.svg'], ['AVHUB', 'https://avhub.mediaservi.com/', 'avhub-logo.svg'], ['VJSHOW', 'https://vjshow.mediaservi.com/', 'fam/vjshow-logo.svg'], ['MSGAME', 'https://msgame.mediaservi.com/', 'fam/msgame-logo.svg?v=4']];
   $('#app').innerHTML = `<div class="blocks">
     <header class="franja f-h1"><div data-blk="H1L"><button type="button" class="marca" data-accion="inicio" title="${T('Nuevo cálculo: lo deja todo como al empezar')}" aria-label="SYSTEMS"><img src="../assets/systems-logo.svg" alt="SYSTEMS"></button><span class="chip">${BETA}</span></div>
       <nav data-blk="H1C" class="fam" aria-label="AVHUB">${fam.map(f => `<a href="${f[1]}" target="_blank" rel="noopener" aria-label="${f[0]}"${f[0] === 'AVHUB' ? ' class="hub"' : ''}><img src="../assets/${f[2]}" alt="${f[0]}"></a>`).join('')}</nav>
