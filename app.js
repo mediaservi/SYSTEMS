@@ -4,7 +4,7 @@
 import { CALC, GRUPOS } from './calculos.js';
 import { T, IDIOMAS, idioma, fijarIdioma, idiomaInicial } from './textos.js';
 
-const VERSION = 'v0.19';
+const VERSION = 'v0.20';
 // v0.8 · la línea de crédito es la común de AVHUB (credito.js): se edita en AVHUB ADMIN y es la misma en todas las apps
 const pintarPie = () => { const p = document.querySelector('#pie'); if (p) p.innerHTML = window.AVCREDITO ? window.AVCREDITO.html('SYSTEMS', VERSION, idioma()) : `SYSTEMS ${VERSION} ${new Date().getFullYear()} ${T('es un proyecto hecho con')} by <a href="https://mediaservi.com" target="_blank" rel="noopener">mediaservi.com</a>`; };
 if (window.AVCREDITO) window.AVCREDITO.alCambiar(pintarPie);
@@ -19,7 +19,7 @@ const COL = ['#b566ff', '#00b4ff', '#e100ff', '#ff4d5e', '#00ff04', '#ffb000'];
 const porId = (id) => CALC.find(c => c.id === id) || CALC[0];
 const esc = (s) => String(s).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[m]);
 // cifras: coma decimal en español y catalán, punto en inglés; el menos, tipográfico
-const F = (x, d = 2) => { if (typeof x !== 'number' || !isFinite(x)) return '—'; const en = idioma() === 'en'; return Number(x).toLocaleString(en ? 'en-GB' : 'es-ES', { maximumFractionDigits: d, useGrouping: !en }).replace('-', '−'); };
+const F = (x, d = 2) => { if (typeof x !== 'number' || !isFinite(x)) return '—'; const en = idioma() === 'en'; return Number(x).toLocaleString(en ? 'en-GB' : 'es-ES', { maximumFractionDigits: d, useGrouping: !en }).replace(/^-(?=0(?:[.,]0+)?$)/, '').replace('-', '−'); };
 
 let E = { sel: 'spl', vals: {} };
 try { const g = JSON.parse(localStorage.getItem('systems_estado') || 'null'); if (g && g.vals && CALC.some(c => c.id === g.sel)) E = g; } catch (e) {}
@@ -45,7 +45,7 @@ const tarjeta = (r, i) => `<div class="tar" style="--ac:${COL[i % COL.length]}">
 
 // ---------- gráficas ----------
 function grafLinea(g) {
-  const W = 600, H = 250, ml = 46, mr = 12, mt = 10, mb = 28, xs = g.xs, x0 = xs[0], x1 = xs[xs.length - 1];
+  const NAR = typeof matchMedia === 'function' && matchMedia('(max-width: 600px)').matches, W = NAR ? 400 : 600, H = 250, ml = 46, mr = 12, mt = 24, mb = 28,   /* v0.20 · en el móvil el dibujo es más estrecho, así la letra no baja de unos 10 px, y el rótulo del eje va encima de la gráfica */ xs = g.xs, x0 = xs[0], x1 = xs[xs.length - 1];
   const todos = g.series.flatMap(s => s.ys).filter(isFinite); let y0 = g.ymin != null ? g.ymin : Math.min(...todos), y1 = g.ymax != null ? g.ymax : Math.max(...todos);
   const paso = [0.5, 1, 2, 3, 5, 6, 10, 12, 20, 50].find(p => (y1 - y0) / p <= 7) || 100; y0 = Math.floor(y0 / paso) * paso; y1 = Math.ceil(y1 / paso) * paso; if (y1 === y0) y1 = y0 + paso;
   const X = (x) => ml + (g.log ? Math.log(x / x0) / Math.log(x1 / x0) : (x - x0) / (x1 - x0)) * (W - ml - mr), Y = (y) => mt + (1 - (Math.min(y1, Math.max(y0, y)) - y0) / (y1 - y0)) * (H - mt - mb);
@@ -55,7 +55,7 @@ function grafLinea(g) {
   marcas.forEach(x => { h += `<line x1="${X(x)}" x2="${X(x)}" y1="${mt}" y2="${H - mb}" stroke="rgba(255,255,255,.08)"/><text x="${X(x)}" y="${H - mb + 15}" font-size="11" text-anchor="middle">${x >= 1000 ? F(x / 1000, 1) + 'k' : F(x, 1)}</text>`; });
   if (g.marca && g.marca >= x0 && g.marca <= x1) h += `<line x1="${X(g.marca)}" x2="${X(g.marca)}" y1="${mt}" y2="${H - mb}" stroke="#9900ff" stroke-width="1.5" stroke-dasharray="4 4"/>`;
   g.series.forEach(s => { h += `<polyline fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" points="${s.ys.map((y, i) => X(xs[i]).toFixed(1) + ',' + Y(y).toFixed(1)).join(' ')}"/>`; });
-  h += `<text x="${W - mr}" y="${H - 4}" font-size="11" text-anchor="end">${esc(g.xlab || '')}</text><text x="6" y="${mt + 9}" font-size="11">${esc(g.ylab || '')}</text></svg>`;
+  h += `<text x="${W - mr}" y="${H - 4}" font-size="11" text-anchor="end">${esc(g.xlab || '')}</text><text x="6" y="${mt - 9}" font-size="11">${esc(g.ylab || '')}</text></svg>`;
   if (g.series.length > 1) h += `<div class="hw-ley">${g.series.map(s => `<span><i style="background:${s.color}"></i>${esc(T(s.nom))}</span>`).join('')}</div>`;
   return h;
 }

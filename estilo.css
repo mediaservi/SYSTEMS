@@ -52,7 +52,7 @@
   .hw-lista { display: none; } .hw-sel { display: block; }   /* en móvil, la lista pasa a ser un desplegable: menos camino hasta los datos */
   .hw .res { padding: 10px; }
 }
-@media (max-width: 600px) { .hw .tabla th, .hw .tabla td { padding: 5px; font-size: 11px; white-space: normal; } .hw .tabla th { font-size: 8.5px; letter-spacing: .05em; }
+@media (max-width: 600px) { .hw .tabla th, .hw .tabla td { padding: 5px; font-size: 11px; white-space: normal; } .hw .tabla th { font-size: 10px; letter-spacing: .03em; }
   .hw-grupos { grid-template-columns: repeat(3, minmax(0, 1fr)); } .hw-marca img { height: 26px; } .hw-marca span { padding-left: 32px; } .hw .cab { grid-template-columns: 1fr auto; } }
 @media (max-height: 500px) and (orientation: landscape) { .hw-grupos { grid-template-columns: repeat(9, minmax(0, 1fr)); } .hw-grupos .tog { min-height: 34px; font-size: 9.5px; } .hw .consola { grid-template-columns: minmax(0, 1fr); } }
 
@@ -65,5 +65,5 @@
 @media (hover: hover) { .fam a:hover img { opacity: 1; filter: none; } }
 .fam a:focus-visible { outline: 1px solid var(--verde); outline-offset: 4px; } .fam a:focus-visible img, .fam a:active img { opacity: 1; filter: none; }
 .fam-pie { display: none; flex: none; justify-content: center; flex-wrap: wrap; gap: 8px 18px; padding: 8px 10px 4px; background: var(--bg); border-top: 1px solid #000; }
-@media (max-width: 1023px) { .cab .fam { display: none; } .fam-pie { display: flex; } .fam-pie + .pie { border-top: 0; padding-top: 2px; } .fam-pie img { height: 16px; } }
+@media (max-width: 1023px) { .cab .fam { display: none; } .fam-pie { display: flex; } .fam-pie + .pie { border-top: 0; padding-top: 2px; } .fam-pie img { height: 16px; } .fam-pie a.hub img { height: 22px; } }   /* v0.20 · AVHUB en el centro de la fila de la familia en el móvil */
 @media print { .fam-pie { display: none !important; } }
