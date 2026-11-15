@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v0.19 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v0.20 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -46,7 +46,18 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v0.19)
+## Cambios de la versión actual (v0.20)
+
+Correcciones de la auditoría en el móvil en vertical:
+
+- **BLOCKS · escribir un número funciona:** al teclear en una casilla ya no se rehace el bloque de datos, así el cursor y lo escrito se mantienen (antes «25» acababa en «500»).
+- **BLOCKS · la fila de vistas salta de línea** si no cabe: RESUMEN, NOTAS y el resto de vistas de End-fire y Broadside se ven y se pueden elegir.
+- **BLOCKS · botones de grupo** en dos líneas en vez de encoger la letra hasta 7 px; las tablas (Tempo, Direcciones DMX) se ajustan al ancho del bloque.
+- **Gráficas:** en el móvil se dibujan más estrechas para que la letra no baje de unos 10 px, y el rótulo del eje («dB SPL»…) va encima de la gráfica en vez de sobre la cifra más alta.
+- **Clásica:** cabeceras de tabla a 10 px; AVHUB en el centro de la fila de apps del pie en el móvil; ya no sale «−0 dB».
+- **Aviso legal:** se abre por el principio (antes aparecía desplazado hasta abajo).
+
+### v0.19
 
 - Logo nuevo de MSGAME en la barra de apps: «MS» en dos fichas moradas con la misma letra que GAME y sombra verde.
 
@@ -118,7 +129,7 @@ Versiones anteriores: v0.3, SYSTEMS pasa a su repositorio propio como app indepe
 Código abierto bajo la licencia **GNU GPL v3**.
 
 ---
-*SYSTEMS v0.19 es un proyecto hecho con ⚙ by [mediaservi.com](https://mediaservi.com)*
+*SYSTEMS v0.20 es un proyecto hecho con ⚙ by [mediaservi.com](https://mediaservi.com)*
 
 ## Aviso
 

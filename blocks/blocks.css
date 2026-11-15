@@ -149,3 +149,11 @@ select.sel { min-height: calc(var(--u) * 38); border: 1px solid var(--linea); bo
 .f-f1 .av { display: flex; align-items: center; line-height: 1.25; white-space: nowrap; overflow: visible; }
 .notas p.av::before, .f-f1 .av::before { content: ''; display: inline-block; flex: none; width: 1.15em; height: 1.15em; margin-right: .4em; vertical-align: -.22em; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.6 2.4 20.2h19.2z'/%3E%3Cpath d='M12 9.6v5'/%3E%3Cpath d='M12 17.6h.01'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.6 2.4 20.2h19.2z'/%3E%3Cpath d='M12 9.6v5'/%3E%3Cpath d='M12 17.6h.01'/%3E%3C/svg%3E") center / contain no-repeat; }
 @media (max-width: 900px), (max-height: 520px) { .f-f1 .av { white-space: normal; justify-content: center; } }
+/* v0.20 · móvil: la cabecera de las vistas salta de línea si no cabe (RESUMEN, NOTAS… siempre a la vista), los grupos parten el texto en dos líneas en vez de encoger la letra y las tablas se ajustan al ancho del bloque */
+.blk.pant .blk-cab { flex-wrap: wrap; row-gap: calc(var(--u) * 5); }
+.vistas { flex-wrap: wrap; }
+@media (max-width: 900px), (max-height: 520px) {
+  .grupos .tog { white-space: normal; line-height: 1.1; text-align: center; padding-block: calc(var(--u) * 4); }
+  .vis.texto table { width: 100%; max-width: 100%; }
+  .vis.texto th, .vis.texto td { white-space: normal; overflow-wrap: anywhere; }
+}
