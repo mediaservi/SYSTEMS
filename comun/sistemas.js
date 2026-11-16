@@ -10,8 +10,10 @@ globalThis.SC_SISTEMAS = {
   "CLEVER": "Consulta del CRM de Charmex (16-11-2026), categoría DISPLAYS",
   "PURELINK": "Listas del CRM (15-11-2026) y reglas de conectividad",
   "AVER": "Listas del CRM (15-11-2026); tamaño de sala y campo de visión de la tabla comparativa de AVer y de su ficha (VB342 Pro: 84° horizontal)",
-  "SENNHEISER": "Listas del CRM (15-11-2026); cobertura de TCC 2 (80 m²) y TCC M (40 m²) de sennheiser.com",
-  "JUST ADD POWER": "Listas del CRM (15-11-2026)"
+  "SENNHEISER": "Consulta del CRM de Charmex (16-11-2026), categoría AUDIO › Sennheiser; cobertura de TeamConnect Ceiling 2 (80 m²) y Medium (40 m²) de sennheiser.com",
+  "JUST ADD POWER": "Listas del CRM (15-11-2026)",
+  "RCF": "Consulta del CRM de Charmex (16-11-2026), categoría AUDIO › Audio RCF",
+  "NUREVA": "Consulta del CRM de Charmex (16-11-2026), categoría AUDIO › Audio Nureva; tamaño de sala de nureva.com (catalogo/nureva.json)"
  },
  "marcas": {
   "SAMSUNG": [
@@ -2519,7 +2521,16 @@ globalThis.SC_SISTEMAS = {
     "tipo": "microfono",
     "marca": "SENNHEISER",
     "modelo": "TeamConnect Ceiling 2",
-    "descripcion": "Array de techo de 28 cápsulas, blanco",
+    "descripcion": "ARRAY SENNHEISER DE 28 CÁPSULAS BLANCO (TEAMCONNECT CEILING 2)",
+    "clase": "techo",
+    "m2": 80
+   },
+   {
+    "id": "TEAM-CEILING-2-BLACK",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "TeamConnect Ceiling 2",
+    "descripcion": "ARRAY SENNHEISER DE 28 CÁPSULAS NEGRO (TEAMCONNECT CEILING 2)",
     "clase": "techo",
     "m2": 80
    },
@@ -2528,57 +2539,231 @@ globalThis.SC_SISTEMAS = {
     "tipo": "microfono",
     "marca": "SENNHEISER",
     "modelo": "TeamConnect Ceiling Medium",
-    "descripcion": "Array de 15 cápsulas para falso techo",
+    "descripcion": "ARRAY SENNHEISER 15 CÁPSULAS FALSO TECHO (TEAMCONNECT CEILING MEDIUM)",
     "clase": "techo",
+    "m2": 40
+   },
+   {
+    "id": "TCC-M-S-W",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "TeamConnect Ceiling Medium",
+    "descripcion": "ARRAY SENNHEISER 15 CÁPSULAS SUPERFICIE O COLGAR (TEAMCONNECT CEILING MEDIUM)",
+    "clase": "mesa",
     "m2": 40
    },
    {
     "id": "TCC",
     "tipo": "kit-audio",
     "marca": "SENNHEISER",
-    "modelo": "TCC M + Xilica",
-    "descripcion": "Kit TeamConnect M con procesador Xilica",
-    "clase": "kit"
+    "modelo": "TCC",
+    "descripcion": "KIT SENNHEISER TCC M + XILICA"
    },
    {
     "id": "TCC-MEDIUM",
     "tipo": "kit-audio",
     "marca": "SENNHEISER",
-    "modelo": "TeamConnect + Xilica (sala mediana)",
-    "descripcion": "Kit TeamConnect con procesador Xilica",
-    "clase": "kit"
+    "modelo": "TCC-MEDIUM",
+    "descripcion": "KIT SENNHEISER TEAMCONNECT + XILICA (SALA MEDIANA)"
    },
    {
     "id": "TCC-LARGE",
     "tipo": "kit-audio",
     "marca": "SENNHEISER",
-    "modelo": "TeamConnect + Xilica (sala grande)",
-    "descripcion": "Kit TeamConnect con procesador Xilica",
-    "clase": "kit"
-   },
-   {
-    "id": "MEB-114-B",
-    "tipo": "microfono",
-    "marca": "SENNHEISER",
-    "modelo": "MEB 114",
-    "descripcion": "Micrófono de superficie XLR3",
-    "clase": "mesa"
-   },
-   {
-    "id": "SL-HANDHELD-SET",
-    "tipo": "microfono",
-    "marca": "SENNHEISER",
-    "modelo": "SpeechLine de mano",
-    "descripcion": "Set inalámbrico de mano",
-    "clase": "inalambrico"
+    "modelo": "TCC-LARGE",
+    "descripcion": "KIT SENNHEISER TEAMCONNECT + XILICA (SALA GRANDE)"
    },
    {
     "id": "EW-D-835-SET-Q1-6",
     "tipo": "microfono",
     "marca": "SENNHEISER",
-    "modelo": "EW-D 835 SET",
-    "descripcion": "Set inalámbrico de mano",
+    "modelo": "EW-D-835-SET-Q1-6",
+    "descripcion": "SET INALÁMBRICO SENNHEISER MANO (EW-D)",
     "clase": "inalambrico"
+   },
+   {
+    "id": "EW-D-ME2-SET-Q1-6",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "EW-D-ME2-SET-Q1-6",
+    "descripcion": "SET INALÁMBRICO SENNHEISER PETACA CON LAVALIER (EW-D)",
+    "clase": "cuerpo"
+   },
+   {
+    "id": "EW-D-ME3-SET-Q1-6",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "EW-D-ME3-SET-Q1-6",
+    "descripcion": "SET INALÁMBRICO SENNHEISER PETACA CON DIADEMA (EW-D)",
+    "clase": "cuerpo"
+   },
+   {
+    "id": "EW-D-CI1-Q1-6",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "EW-D-CI1-Q1-6",
+    "descripcion": "SET INALÁMBRICO SENNHEISER PETACA PARA INSTRUMENTO (EW-D)",
+    "clase": "inalambrico"
+   },
+   {
+    "id": "EW-DX-EM2-Q1-9",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "EW-DX-EM2-Q1-9",
+    "descripcion": "RECEPTOR 2 CANALES SENNHEISER (EW-DX)",
+    "clase": "inalambrico"
+   },
+   {
+    "id": "EW-DX-EM2-D-Q1-9",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "EW-DX-EM2-D-Q1-9",
+    "descripcion": "RECEPTOR 2 CANALES SENNHEISER CON DANTE (EW-DX)",
+    "clase": "inalambrico"
+   },
+   {
+    "id": "EW-DX-EM4-D-Q1-9",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "EW-DX-EM4-D-Q1-9",
+    "descripcion": "RECEPTOR 4 CANALES SENNHEISER DANTE REDUNDANTE (EW-DX)",
+    "clase": "inalambrico"
+   },
+   {
+    "id": "EW-DX-835-Q1-9",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "EW-DX-835-Q1-9",
+    "descripcion": "2 TRANSMISORES DE MANO SENNHEISER (EW-DX)",
+    "clase": "inalambrico"
+   },
+   {
+    "id": "EW-DX-MKE-2-Q1-9",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "EW-DX-MKE-2-Q1-9",
+    "descripcion": "2 TRANSMISORES DE PETACA SENNHEISER (EW-DX)",
+    "clase": "inalambrico"
+   },
+   {
+    "id": "SL-HANDHELD-SET",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "SL-HANDHELD-SET",
+    "descripcion": "SET INALÁMBRICO SENNHEISER MANO (SPEECHLINE)",
+    "clase": "inalambrico"
+   },
+   {
+    "id": "SL-HEADMIC-SET",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "SL-HEADMIC-SET",
+    "descripcion": "SET INALÁMBRICO SENNHEISER DIADEMA (SPEECHLINE)",
+    "clase": "cuerpo"
+   },
+   {
+    "id": "SL-DW-3-LAVALIER-SET",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "SL-DW-3-LAVALIER-SET",
+    "descripcion": "SET INALÁMBRICO SENNHEISER LAVALIER (SPEECHLINE)",
+    "clase": "cuerpo"
+   },
+   {
+    "id": "SL-BOUND-SET-MEB-114",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "SL-BOUND-SET-MEB-114",
+    "descripcion": "SET INALÁMBRICO SENNHEISER CONFERENCIAS (SPEECHLINE)",
+    "clase": "inalambrico"
+   },
+   {
+    "id": "SL-TS-133-GN-SET-DW",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "SL-TS-133-GN-SET-DW",
+    "descripcion": "SET INALÁMBRICO SENNHEISER CONFERENCIAS DE SOBREMESA (SPEECHLINE)",
+    "clase": "inalambrico"
+   },
+   {
+    "id": "SL-MCR-2-DW-3",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "SL-MCR-2-DW-3",
+    "descripcion": "RECEPTOR DIGITAL SENNHEISER 2 CANALES CON DANTE (SPEECHLINE)",
+    "clase": "inalambrico"
+   },
+   {
+    "id": "SL-MCR-4-DW-3",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "SL-MCR-4-DW-3",
+    "descripcion": "RECEPTOR DIGITAL SENNHEISER 4 CANALES CON DANTE (SPEECHLINE)",
+    "clase": "inalambrico"
+   },
+   {
+    "id": "MEB-114-B",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "MEB-114-B",
+    "descripcion": "MICRÓFONO DE SUPERFICIE SENNHEISER XLR3",
+    "clase": "mesa"
+   },
+   {
+    "id": "MEB-102-B",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "MEB-102-B",
+    "descripcion": "MICRÓFONO DE EMPOTRAR SENNHEISER XLR3",
+    "clase": "mesa"
+   },
+   {
+    "id": "MZH-3040",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "MZH-3040",
+    "descripcion": "MICRÓFONO DE FLEXO SENNHEISER DE 400 MM",
+    "clase": "mesa"
+   },
+   {
+    "id": "MEG-14-40-B",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "MEG-14-40-B",
+    "descripcion": "MICRÓFONO DE FLEXO SENNHEISER DE 450 MM",
+    "clase": "mesa"
+   },
+   {
+    "id": "HSP-4-EW-3",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "HSP-4-EW-3",
+    "descripcion": "DIADEMA SENNHEISER CARDIOIDE",
+    "clase": "cuerpo"
+   },
+   {
+    "id": "HSP-ESSENTIAL-OMNI",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "HSP-ESSENTIAL-OMNI",
+    "descripcion": "DIADEMA SENNHEISER SUPERMINIATURA OMNI",
+    "clase": "cuerpo"
+   },
+   {
+    "id": "ME-2-II",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "ME-2-II",
+    "descripcion": "LAVALIER SENNHEISER OMNI",
+    "clase": "cuerpo"
+   },
+   {
+    "id": "MKE-1-EW",
+    "tipo": "microfono",
+    "marca": "SENNHEISER",
+    "modelo": "MKE-1-EW",
+    "descripcion": "LAVALIER SENNHEISER OMNI ALTA GAMA MINIATURA",
+    "clase": "cuerpo"
    }
   ],
   "JUST ADD POWER": [
@@ -2595,6 +2780,861 @@ globalThis.SC_SISTEMAS = {
     "marca": "JUST ADD POWER",
     "modelo": "UL-508POE",
     "descripcion": "Receptor (decoder) HDMI 4K PoE, serie Ultra"
+   }
+  ],
+  "RCF": [
+   {
+    "id": "L-2406T",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "L-2406T",
+    "descripcion": "ALTAVOZ COLUMNA RCF 6 X 5\" + 4 X 1\" 200 W ABEDUL",
+    "w": 200,
+    "montaje": "columna"
+   },
+   {
+    "id": "L-2406T-W",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "L-2406T-W",
+    "descripcion": "ALTAVOZ COLUM RCF 6 X 5\"+4 X 1\" 200W ABEDUL BLANCO",
+    "w": 200,
+    "montaje": "columna"
+   },
+   {
+    "id": "MQ-100L-B",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "MQ-100L-B",
+    "descripcion": "ALTAVOZ RCF COLUMNA MINIARRAY NEGRO SOP INCLUIDO",
+    "montaje": "columna"
+   },
+   {
+    "id": "MQ-100L-W",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "MQ-100L-W",
+    "descripcion": "ALTAVOZ RCF COLUMNA MINIARRAY BLANCO SOP INCLUIDO",
+    "montaje": "columna"
+   },
+   {
+    "id": "COMPACT-M-04",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-M-04",
+    "descripcion": "ALTAVOZ RCF 4\" + 1\" 60 W MADERA INCLUYE SOPORTE",
+    "w": 60
+   },
+   {
+    "id": "COMPACT-M-05",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-M-05",
+    "descripcion": "ALTAVOZ RCF 5\" + 1\" 80 W MADERA NO INCLUYE SOPORTE",
+    "w": 80
+   },
+   {
+    "id": "COMPACT-M-06",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-M-06",
+    "descripcion": "ALTAVOZ RCF 6\" + 1\" 100 W MADERA SIN SOPORTE",
+    "w": 100
+   },
+   {
+    "id": "COMPACT-M-08",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-M-08",
+    "descripcion": "ALTAVOZ RCF 8\" + 1\" 200 W MADERA SIN SOPORTE",
+    "w": 200
+   },
+   {
+    "id": "COMPACT-M-10",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-M-10",
+    "descripcion": "ALTAVOZ RCF 10\" + 1\" 300 W MADERA SIN SOPORTE",
+    "w": 300
+   },
+   {
+    "id": "COMPACT-M-12",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-M-12",
+    "descripcion": "ALTAVOZ RCF 12\" + 1\" 300 W MADERA SIN SOPORTE",
+    "w": 300
+   },
+   {
+    "id": "COMPACT-A-10",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-A-10",
+    "descripcion": "ALTAVOZ RCF 10\" + 1,75\" 350 W MATERIAL COMPUESTO",
+    "w": 350
+   },
+   {
+    "id": "COMPACT-A-12",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-A-12",
+    "descripcion": "ALTAVOZ RCF 12\" + 1,75\" 400 W MATERIAL COMPUESTO",
+    "w": 400
+   },
+   {
+    "id": "COMPACT-A-15",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-A-15",
+    "descripcion": "ALTAVOZ RCF 15\" + 1,75\" 450 W MATERIAL COMPUESTO",
+    "w": 450
+   },
+   {
+    "id": "COMPACT-C-32",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-C-32",
+    "descripcion": "ALTAVOZ RCF 12\" + 3\" 600 W EN 54-24 MADERA",
+    "w": 600,
+    "en54": true
+   },
+   {
+    "id": "COMPACT-C-32-WP",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-C-32-WP",
+    "descripcion": "ALTAVOZ RCF 12\"+3\" 600 W EN 54-24 IP55 MADERA",
+    "w": 600,
+    "en54": true,
+    "ip": "IP55"
+   },
+   {
+    "id": "COMPACT-C-45",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-C-45",
+    "descripcion": "ALTAVOZ RCF 15\" + 4\" 700 W EN 54-24 MADERA",
+    "w": 700,
+    "en54": true
+   },
+   {
+    "id": "COMPACT-C-45-WP",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "COMPACT-C-45-WP",
+    "descripcion": "ALTAVOZ RCF 15\"+4\" 700 W EN 54-24 IP55 MADERA",
+    "w": 700,
+    "en54": true,
+    "ip": "IP55"
+   },
+   {
+    "id": "C-3108-96",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "C-3108-96",
+    "descripcion": "ALTAVOZ RCF 8\" 1\" 90X60° 300 W MADERA",
+    "w": 300
+   },
+   {
+    "id": "C-3108-126",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "C-3108-126",
+    "descripcion": "ALTAVOZ RCF 8\" 1\" 120X60° 300 W MADERA",
+    "w": 300
+   },
+   {
+    "id": "C-3110-96",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "C-3110-96",
+    "descripcion": "ALTAVOZ RCF 10\" 1\" 90X60° 300 W MADERA",
+    "w": 300
+   },
+   {
+    "id": "C-3110-126",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "C-3110-126",
+    "descripcion": "ALTAVOZ RCF 10\" 1\" 120X60° 300 W MADERA",
+    "w": 300
+   },
+   {
+    "id": "VSA-850-II",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "VSA-850-II",
+    "descripcion": "ALTAVOZ RCF COLUMNA DIGITAL 8 x 3,5\" RDNET BLANCO",
+    "montaje": "columna"
+   },
+   {
+    "id": "VSA-1250-II",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "VSA-1250-II",
+    "descripcion": "ALTAVOZ RCF COLUMNA DIGITAL 12 x 3,5\" RDNET BLANCO",
+    "montaje": "columna"
+   },
+   {
+    "id": "VSA-2050-II",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "VSA-2050-II",
+    "descripcion": "ALTAVOZ RCF COLUMNA DIGITAL 20 x 3,5\" RDNET BLANCO",
+    "montaje": "columna"
+   },
+   {
+    "id": "CS-3082",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "CS-3082",
+    "descripcion": "ALTAVOZ RCF COLUMNA 8 WOOFERS 2\"+2 TW 30 W BLANCO",
+    "w": 30,
+    "montaje": "columna"
+   },
+   {
+    "id": "MQ-80P-B",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "MQ-80P-B",
+    "descripcion": "ALTAVOZ RCF CON BOCINA 30 W IP55 NEGRO",
+    "w": 30,
+    "ip": "IP55"
+   },
+   {
+    "id": "WMF-33EN",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "WMF-33EN",
+    "descripcion": "ALTAVOZ RCF DE PARED - EN 54-24",
+    "montaje": "pared",
+    "en54": true
+   },
+   {
+    "id": "MF-33-EN",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "MF-33-EN",
+    "descripcion": "ALTAVOZ RCF DE TECHO - EN 54-24",
+    "montaje": "techo",
+    "en54": true
+   },
+   {
+    "id": "DM-41",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "DM-41",
+    "descripcion": "ALTAVOZ RCF PARED 3,5\" 15 W IP55 BLANCO INCL SOP",
+    "w": 15,
+    "montaje": "pared",
+    "ip": "IP55"
+   },
+   {
+    "id": "DM-61",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "DM-61",
+    "descripcion": "ALTAVOZ RCF PARED 6\" 25 W IP55 BLANCO INC SOPORTE",
+    "w": 25,
+    "montaje": "pared",
+    "ip": "IP55"
+   },
+   {
+    "id": "WMR-50T",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "WMR-50T",
+    "descripcion": "ALTAVOZ RCF PARED IP55 5\" + 1\" 40 W",
+    "w": 40,
+    "montaje": "pared",
+    "ip": "IP55"
+   },
+   {
+    "id": "WMR-60T",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "WMR-60T",
+    "descripcion": "ALTAVOZ RCF PARED IP55 6,5\" + 1\" 80 W",
+    "w": 80,
+    "montaje": "pared",
+    "ip": "IP55"
+   },
+   {
+    "id": "PMR-60T-W",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "PMR-60T-W",
+    "descripcion": "ALTAVOZ RCF SUSPENDIDO 6,5\" + 1\" 80 W BLANCO",
+    "w": 80
+   },
+   {
+    "id": "CMR-50T-W",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "CMR-50T-W",
+    "descripcion": "ALTAVOZ RCF TECHO 5\" + 1\" 40 W BLANCO",
+    "w": 40,
+    "montaje": "techo"
+   },
+   {
+    "id": "CMR-60T-W",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "CMR-60T-W",
+    "descripcion": "ALTAVOZ RCF TECHO 6,5\" + 1\" 80 W BLANCO",
+    "w": 80,
+    "montaje": "techo"
+   },
+   {
+    "id": "PL-6X",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "PL-6X",
+    "descripcion": "ALTAVOZ RCF TECHO COAXIAL EMPOTRABLE 6\" 12 W IP44",
+    "w": 12,
+    "montaje": "techo",
+    "ip": "IP44"
+   },
+   {
+    "id": "PL-8X",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "PL-8X",
+    "descripcion": "ALTAVOZ RCF TECHO COAXIAL EMPOTRABLE 8\" 20 W IP44",
+    "w": 20,
+    "montaje": "techo",
+    "ip": "IP44"
+   },
+   {
+    "id": "PL-40",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "PL-40",
+    "descripcion": "ALTAVOZ RCF TECHO EMPOTRABLE 3,5\" 8 W IP44",
+    "w": 8,
+    "montaje": "techo",
+    "ip": "IP44"
+   },
+   {
+    "id": "PL-50",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "PL-50",
+    "descripcion": "ALTAVOZ RCF TECHO EMPOTRABLE 6\" BLANCO 6 W",
+    "w": 6,
+    "montaje": "techo"
+   },
+   {
+    "id": "PL-60",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "PL-60",
+    "descripcion": "ALTAVOZ RCF TECHO EMPOTRABLE 6\" BLANCO 6 W",
+    "w": 6,
+    "montaje": "techo"
+   },
+   {
+    "id": "CMR-30",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "CMR-30",
+    "descripcion": "PAREJA DE ALTAVOCES TECHO RCF 60 W PICO 16 OHM",
+    "w": 60,
+    "montaje": "techo"
+   },
+   {
+    "id": "MR-40T",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "MR-40T",
+    "descripcion": "PAREJA ALTAVOCES PARED RCF 4\" + 1\" 40 W",
+    "w": 40,
+    "montaje": "pared"
+   },
+   {
+    "id": "MR-50T",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "MR-50T",
+    "descripcion": "PAREJA ALTAVOCES PARED RCF 5\" + 1\" 60 W",
+    "w": 60,
+    "montaje": "pared"
+   },
+   {
+    "id": "MMR-30T-B",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "MMR-30T-B",
+    "descripcion": "PAREJA MICROMONITORES RCF MMR 30T 3\" NEGRO"
+   },
+   {
+    "id": "NX912-A",
+    "tipo": "altavoz",
+    "marca": "RCF",
+    "modelo": "NX912-A",
+    "descripcion": "SISTEMA DE ALTAVOCES ACTIVOS DE DOS VÍAS 12\" + 1,75\""
+   },
+   {
+    "id": "S-08-A",
+    "tipo": "subgrave",
+    "marca": "RCF",
+    "modelo": "S-08-A",
+    "descripcion": "SUBWOOFER ACTIVO RCF S 08-A DE 8\", 4 CANALES"
+   },
+   {
+    "id": "S-08",
+    "tipo": "subgrave",
+    "marca": "RCF",
+    "modelo": "S-08",
+    "descripcion": "SUBWOOFER PASIVO RCF S 08 DE 8\", 120 W, 4 Ω",
+    "w": 120
+   },
+   {
+    "id": "S-10",
+    "tipo": "subgrave",
+    "marca": "RCF",
+    "modelo": "S-10",
+    "descripcion": "SUBWOOFER RCF BASS REFLEX 10\" 400 W",
+    "w": 400
+   },
+   {
+    "id": "S-12",
+    "tipo": "subgrave",
+    "marca": "RCF",
+    "modelo": "S-12",
+    "descripcion": "SUBWOOFER RCF BASS REFLEX 12\" 400 W",
+    "w": 400
+   },
+   {
+    "id": "S-15",
+    "tipo": "subgrave",
+    "marca": "RCF",
+    "modelo": "S-15",
+    "descripcion": "SUBWOOFER RCF BASS REFLEX 15\" 500 W",
+    "w": 500
+   },
+   {
+    "id": "S-8015LP",
+    "tipo": "subgrave",
+    "marca": "RCF",
+    "modelo": "S-8015LP",
+    "descripcion": "SUBWOOFER RCF 15\" 800 W BANDPASS BAJO ASIENTO",
+    "w": 800
+   },
+   {
+    "id": "CMR-S-60T-W",
+    "tipo": "subgrave",
+    "marca": "RCF",
+    "modelo": "CMR-S-60T-W",
+    "descripcion": "SUBWOOFER RCF TECHO 6,5\" 80 W",
+    "w": 80,
+    "montaje": "techo"
+   },
+   {
+    "id": "ZM-2124",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "ZM-2124",
+    "descripcion": "AMPLIFICADOR MAESTRO DE 6 ZONAS RCF 240 W",
+    "w": 240
+   },
+   {
+    "id": "AM-2080",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "AM-2080",
+    "descripcion": "AMPLIFICADOR MEZCLADOR RCF 2+2 80 W PRIORIDAD",
+    "w": 80
+   },
+   {
+    "id": "AM-2160",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "AM-2160",
+    "descripcion": "AMPLIFICADOR MEZCLADOR RCF 4+2 160 W PRIORIDAD",
+    "w": 160
+   },
+   {
+    "id": "AM-2320",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "AM-2320",
+    "descripcion": "AMPLIFICADOR MEZCLADOR RCF 4+2 320 W PRIORIDAD",
+    "w": 320
+   },
+   {
+    "id": "AM-1125",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "AM-1125",
+    "descripcion": "AMPLIFICADOR MEZCLADOR RCF 5 120 W AC/DC PRIORIDAD",
+    "w": 120
+   },
+   {
+    "id": "ES-2160",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "ES-2160",
+    "descripcion": "AMPLIFICADOR MEZCLADOR RCF 160 W USB BLUETOOTH MP3",
+    "w": 160
+   },
+   {
+    "id": "ES-3080",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "ES-3080",
+    "descripcion": "AMPLIFICADOR MEZCLADOR RCF 80 W USB SD BLUETOOTH MP3",
+    "w": 80
+   },
+   {
+    "id": "UP-2321",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "UP-2321",
+    "descripcion": "AMPLIFICADOR POTENCIA RCF 1+1 ENTRADA 320 W",
+    "w": 320
+   },
+   {
+    "id": "UP-8501",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "UP-8501",
+    "descripcion": "AMPLIFICADOR POTENCIA RCF 1+1 ENTRADA 500 W AC/DC",
+    "w": 500
+   },
+   {
+    "id": "UP-2162",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "UP-2162",
+    "descripcion": "AMPLIFICADOR POTENCIA RCF 2 X 160 W",
+    "canales": 2,
+    "w": 160
+   },
+   {
+    "id": "UP-8502",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "UP-8502",
+    "descripcion": "AMPLIFICADOR POTENCIA RCF 2 X 250 W AC/DC",
+    "canales": 2,
+    "w": 250
+   },
+   {
+    "id": "UP-8504",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "UP-8504",
+    "descripcion": "AMPLIFICADOR POTENCIA RCF 4 X 125 W AC/DC",
+    "canales": 4,
+    "w": 125
+   },
+   {
+    "id": "DMA-82",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "DMA-82",
+    "descripcion": "AMPLIFICADOR RCF CLASE D MULTIZONA 2 X 80 W DSP",
+    "canales": 2,
+    "w": 80
+   },
+   {
+    "id": "DMA-162",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "DMA-162",
+    "descripcion": "AMPLIFICADOR RCF CLASE D MULTIZONA 2 X 160 W DSP",
+    "canales": 2,
+    "w": 160
+   },
+   {
+    "id": "DMA-162P",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "DMA-162P",
+    "descripcion": "ETAPA DE POTENCIA RCF CLASE D 320 W RMS",
+    "w": 320
+   },
+   {
+    "id": "KPS-162",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-162",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 2 X 160 W",
+    "canales": 2,
+    "w": 160
+   },
+   {
+    "id": "KPS-162D",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-162D",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 2 X 160 W DANTE",
+    "canales": 2,
+    "w": 160,
+    "dante": true
+   },
+   {
+    "id": "KPS-164",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-164",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 4 X 160 W",
+    "canales": 4,
+    "w": 160
+   },
+   {
+    "id": "KPS-164D",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-164D",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 4 X 160 W DANTE",
+    "canales": 4,
+    "w": 160,
+    "dante": true
+   },
+   {
+    "id": "KPS-168",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-168",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 8 X 160 W",
+    "canales": 8,
+    "w": 160
+   },
+   {
+    "id": "KPS-168D",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-168D",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 8 X 160 W DANTE",
+    "canales": 8,
+    "w": 160,
+    "dante": true
+   },
+   {
+    "id": "KPS-802",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-802",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 2 X 800 W",
+    "canales": 2,
+    "w": 800
+   },
+   {
+    "id": "KPS-802D",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-802D",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 2 X 800 W DANTE",
+    "canales": 2,
+    "w": 800,
+    "dante": true
+   },
+   {
+    "id": "KPS-804",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-804",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 4 X 800 W",
+    "canales": 4,
+    "w": 800
+   },
+   {
+    "id": "KPS-804D",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-804D",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 4 X 800 W DANTE",
+    "canales": 4,
+    "w": 800,
+    "dante": true
+   },
+   {
+    "id": "KPS-808",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-808",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 8 X 800 W",
+    "canales": 8,
+    "w": 800
+   },
+   {
+    "id": "KPS-808D",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "KPS-808D",
+    "descripcion": "ETAPA RCF CLASE D CON DSP 8 X 800 W DANTE",
+    "canales": 8,
+    "w": 800,
+    "dante": true
+   },
+   {
+    "id": "IPS-1.5K",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "IPS-1.5K",
+    "descripcion": "ETAPA RCF CLASE H 2 X 750 W 4 OHM",
+    "canales": 2,
+    "w": 750
+   },
+   {
+    "id": "IPS-2.5K",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "IPS-2.5K",
+    "descripcion": "ETAPA RCF CLASE H 2 X 1.250 W 4 OHM",
+    "canales": 2,
+    "w": 1250
+   },
+   {
+    "id": "IPS-5.0K",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "IPS-5.0K",
+    "descripcion": "ETAPA RCF CLASE H 2 X 2.600 W 4 OHM",
+    "canales": 2,
+    "w": 2600
+   },
+   {
+    "id": "DX-1616",
+    "tipo": "procesador-audio",
+    "marca": "RCF",
+    "modelo": "DX-1616",
+    "descripcion": "PROCESADOR RCF 16X16 AES-EBU ETHERNET DANTE",
+    "dante": true
+   },
+   {
+    "id": "PR-4093",
+    "tipo": "etapa",
+    "marca": "RCF",
+    "modelo": "PR-4093",
+    "descripcion": "PREAMPLIFICADOR MEZCLADOR RCF 9 Y 3 SALIDAS"
+   },
+   {
+    "id": "BM-2006",
+    "tipo": "microfono",
+    "marca": "RCF",
+    "modelo": "BM-2006",
+    "descripcion": "MICRÓFONO DE AVISOS RCF 6 ZONAS"
+   },
+   {
+    "id": "BM-3022",
+    "tipo": "microfono",
+    "marca": "RCF",
+    "modelo": "BM-3022",
+    "descripcion": "CONSOLA MICRÓFONO CISNE RCF SALIDA 0 DB"
+   },
+   {
+    "id": "MC-5054",
+    "tipo": "microfono",
+    "marca": "RCF",
+    "modelo": "MC-5054",
+    "descripcion": "MICRÓFONO CISNE RCF ELECTRET CARDIOIDE"
+   },
+   {
+    "id": "DMU-6100",
+    "tipo": "microfono",
+    "marca": "RCF",
+    "modelo": "DMU-6100",
+    "descripcion": "UNIDAD CENTRAL SISTEMA DEBATE RCF FORUM"
+   },
+   {
+    "id": "MMS-3404D",
+    "tipo": "microfono",
+    "marca": "RCF",
+    "modelo": "MMS-3404D",
+    "descripcion": "UNIDAD DELEGADO MICRO RCF ARO LUMINOSO"
+   },
+   {
+    "id": "MMS-3405P",
+    "tipo": "microfono",
+    "marca": "RCF",
+    "modelo": "MMS-3405P",
+    "descripcion": "UNIDAD PRESIDENTE MICRO RCF ARO LUMINOSO"
+   }
+  ],
+  "NUREVA": [
+   {
+    "id": "HDL200-B",
+    "tipo": "audio-vc",
+    "marca": "NUREVA",
+    "modelo": "HDL200",
+    "descripcion": "BARRA NUREVA SALA MEDIANA NEGRO",
+    "salaAncho": 5.5,
+    "salaFondo": 5.5,
+    "fuente": "https://www.nureva.com/products/hdl-series/hdl200"
+   },
+   {
+    "id": "HDL200-W",
+    "tipo": "audio-vc",
+    "marca": "NUREVA",
+    "modelo": "HDL200",
+    "descripcion": "BARRA NUREVA SALA MEDIANA BLANCO",
+    "salaAncho": 5.5,
+    "salaFondo": 5.5,
+    "fuente": "https://www.nureva.com/products/hdl-series/hdl200"
+   },
+   {
+    "id": "HDL310-B",
+    "tipo": "audio-vc",
+    "marca": "NUREVA",
+    "modelo": "HDL310",
+    "descripcion": "SISTEMA AUDIO NUREVA SALAS GRANDES NEGRO",
+    "salaAncho": 9.1,
+    "salaFondo": 9.1,
+    "fuente": "https://www.nureva.com/products/hdl-series/hdl310"
+   },
+   {
+    "id": "HDL310-W",
+    "tipo": "audio-vc",
+    "marca": "NUREVA",
+    "modelo": "HDL310",
+    "descripcion": "SISTEMA AUDIO NUREVA SALAS GRANDES BLANCO",
+    "salaAncho": 9.1,
+    "salaFondo": 9.1,
+    "fuente": "https://www.nureva.com/products/hdl-series/hdl310"
+   },
+   {
+    "id": "HDL410-B",
+    "tipo": "audio-vc",
+    "marca": "NUREVA",
+    "modelo": "HDL410",
+    "descripcion": "SISTEMA NUREVA SALAS EXTRA GRANDES NEGRO",
+    "salaAncho": 10.7,
+    "salaFondo": 16.8,
+    "fuente": "https://www.nureva.com/products/hdl-series/hdl410"
+   },
+   {
+    "id": "HDL410-W",
+    "tipo": "audio-vc",
+    "marca": "NUREVA",
+    "modelo": "HDL410",
+    "descripcion": "SISTEMA NUREVA SALAS EXTRA GRANDES BLANCO",
+    "salaAncho": 10.7,
+    "salaFondo": 16.8,
+    "fuente": "https://www.nureva.com/products/hdl-series/hdl410"
+   },
+   {
+    "id": "HDX-BAR-B",
+    "tipo": "audio-vc",
+    "marca": "NUREVA",
+    "modelo": "HDX-BAR-B",
+    "descripcion": "BARRA MICRÓFONO Y ALTAVOZ SISTEMA HDX NEGRA"
+   },
+   {
+    "id": "HDX-HUB",
+    "tipo": "audio-vc",
+    "marca": "NUREVA",
+    "modelo": "HDX-HUB",
+    "descripcion": "HUB SISTEMA HDX"
+   },
+   {
+    "id": "HDX-POD",
+    "tipo": "audio-vc",
+    "marca": "NUREVA",
+    "modelo": "HDX-POD",
+    "descripcion": "POD DE MICRÓFONOS SISTEMA HDX"
    }
   ]
  }

@@ -131,4 +131,3 @@ html.ss-apila .ss-cd > span.ss-fit, html.ss-apila .ss-fv.ss-fit { white-space: n
 .blk-cu .num input { font-size: calc(var(--u) * 22) !important; }
 @media (max-width: 900px), (max-height: 520px) { [data-blk="S1A"] .blk-cab { flex-wrap: wrap; row-gap: calc(var(--u) * 4); } [data-blk="S1A"] .blk-cab b { flex: 1 1 auto; } }
 html.ss-apila .ss-linea > .ss-fit { white-space: normal; }
-@media (max-width: 900px) { .blk-cu .fila.uno .tog { flex-basis: calc(33% - var(--u) * 8); } }
