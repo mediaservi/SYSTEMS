@@ -1,41 +1,54 @@
 <!DOCTYPE html>
 <!--
-  SYSTEMS · AUDIO Y ESCENARIO — calculadores de refuerzo sonoro, electrónica de audio, cableado, iluminación, electricidad y música.
-  Apartado SYSTEMS de AVHUB (mediaservi.com; hasta la v0.1 se llamó «Hardware»). Versión v0.20 (beta, en pruebas). Misma consola de 3 zonas que SCREENS:
-  dos columnas fijas («calculadores» y «datos», con CALCULAR al pie) y el centro desplazable con las cifras, las gráficas y las tablas.
-  Módulos: calculos.js (fórmulas), textos.js (es/en/ca) y app.js (interfaz). Estilos base de AVHUB en base.css. Catálogo de marcas en catalogo/ (datos oficiales guardados para funcionar sin conexión).
+  SYSTEMS · consola (v1.0): hermana de la de SCREENS (misma cabecera, SIMPLE / PRO, bloques de datos, esquema y resultado).
+  Módulo ELECTRÓNICA: la electrónica de control para quien ya tiene la pantalla LED y las fuentes de reproducción.
+  Mismo motor y mismas listas de equipos que SCREENS (comun/equipos.js y comun/electronica.js; listas en vivo desde AVHUB ADMIN).
+  Los calculadores de audio y escenario de la v0.20 siguen en audio.html (botón AUDIO).
   Licencia GPL-3.0 · mediaservi.com
 -->
 <html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>SYSTEMS · Audio y escenario</title>
-  <meta name="description" content="SYSTEMS: calculadores para la gente del sonido y la iluminación. SPL, arrays de subgraves, cable de altavoz, limitadores, DMX, electricidad y más.">
-  <meta name="theme-color" content="#232325">
-    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>SYSTEMS · Electrónica, señal y audio</title>
+  <meta name="description" content="SYSTEMS: la electrónica de control para una pantalla LED que ya existe y sus fuentes, con el procesador, las tarjetas, las líneas y el esquema de la señal. Y los calculadores de audio y escenario.">
+  <meta name="theme-color" content="#2b2c31">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/iconos/systems-180.png">
-  <link rel="stylesheet" href="base.css?v=0.20">
-  <link rel="stylesheet" href="estilo.css?v=0.20">
+  <link rel="stylesheet" href="vista/consola.css?v=1.0">
+  <script>(function(){try{var t=localStorage.getItem('systems_tema');if(t==='claro')document.documentElement.classList.add('claro');}catch(e){}})();</script>
 </head>
-<body class="hw">
+<body>
   <header class="cab">
-    <div class="cab-izq"><a class="hw-marca" href="./" data-accion="inicio" aria-label="SYSTEMS"><img src="assets/systems-logo.svg" alt="SYSTEMS" width="440" height="120"><span id="hw-lema">Audio y escenario</span></a><nav class="fam fam-l" aria-label="Apps de AVHUB"><a href="https://screens.mediaservi.com/" target="_blank" rel="noopener" aria-label="SCREENS"><img src="assets/fam/screens-logo.svg" alt="SCREENS"></a><a href="https://adposter.mediaservi.com/" target="_blank" rel="noopener" aria-label="ADPOSTER"><img src="assets/fam/adposter-logo.svg" alt="ADPOSTER"></a></nav></div>
-    <div class="cab-centro"><a href="https://avhub.mediaservi.com/" target="_blank" rel="noopener" aria-label="AVHUB"><img src="assets/avhub-logo.svg" alt="AVHUB"></a></div>
-    <div class="cab-der"><nav class="fam fam-r" aria-label="Apps de AVHUB"><a href="https://vjshow.mediaservi.com/" target="_blank" rel="noopener" aria-label="VJSHOW"><img src="assets/fam/vjshow-logo.svg" alt="VJSHOW"></a><a href="https://msgame.mediaservi.com/" target="_blank" rel="noopener" aria-label="MSGAME"><img src="assets/fam/msgame-logo.svg?v=5" alt="MSGAME"></a></nav>
-      <button type="button" class="hdr-btn" data-accion="inicio" id="btn-inicio" aria-label="Inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></button>
-      <button type="button" class="hdr-btn" data-accion="idioma" id="btn-idioma">ES</button>
+    <div class="cab-izq">
+      <a class="marca" href="./" aria-label="SYSTEMS"><img src="assets/systems-logo.svg" alt="SYSTEMS" width="440" height="120"></a>
+      <div class="modo" role="group" aria-label="SIMPLE / PRO"><button type="button" data-accion="modo" data-v="simple">SIMPLE</button><button type="button" class="sw" data-accion="modo-sw" aria-label="SIMPLE / PRO"><i></i></button><button type="button" data-accion="modo" data-v="pro">PRO</button></div>
+    </div>
+    <nav class="fam" aria-label="Apps de AVHUB"><a href="https://screens.mediaservi.com/" target="_blank" rel="noopener" aria-label="SCREENS"><img src="assets/fam/screens-logo.svg" alt="SCREENS"></a><a href="https://adposter.mediaservi.com/" target="_blank" rel="noopener" aria-label="ADPOSTER"><img src="assets/fam/adposter-logo.svg" alt="ADPOSTER"></a><a class="av" href="https://avhub.mediaservi.com/" target="_blank" rel="noopener" aria-label="AVHUB"><img src="assets/avhub-logo.svg" alt="AVHUB"></a><a href="https://vjshow.mediaservi.com/" target="_blank" rel="noopener" aria-label="VJSHOW"><img src="assets/fam/vjshow-logo.svg" alt="VJSHOW"></a><a href="https://msgame.mediaservi.com/" target="_blank" rel="noopener" aria-label="MSGAME"><img src="assets/fam/msgame-logo.svg?v=5" alt="MSGAME"></a></nav>
+    <div class="cab-der">
+      <button type="button" class="hdr-btn" id="btn-pdf" data-accion="pdf" aria-label="PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4"/><path d="M12 11v6M9 14.5l3 3 3-3"/></svg></button>
+      <button type="button" class="hdr-btn" id="btn-tema" data-accion="tema" aria-label="Claro / oscuro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+      <button type="button" class="hdr-btn" id="btn-inicio" data-accion="reset" aria-label="Restablecer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,14q-0.82,0-1.41-0.59T10,12t0.59-1.41T12,10t1.41,0.59Q14,11.18 14,12t-0.59,1.41T12,14Zm0,7q-3.47,0-6.03-2.29Q3.43,16.43 3.05,13H5.1q0.35,2.6 2.31,4.3T12,19q2.93,0 4.96-2.04Q19,14.93 19,12q0-2.93-2.04-4.96T12,5Q10.28,5 8.78,5.8T6.25,8H9v2H3V4H5V6.35q1.28-1.6 3.11-2.47T12,3q1.88,0 3.51,0.71t2.85,1.93t1.93,2.85T21,12t-0.71,3.51t-1.93,2.85t-2.85,1.93T12,21Z"/></svg></button>
+      <button type="button" class="hdr-btn" id="btn-idioma" data-accion="idioma">ES</button>
     </div>
   </header>
-  <div class="consola hw-consola" id="consola"></div>
-  <div id="app" style="flex:1; display:flex; flex-direction:column; min-height:0"></div>
-  <nav class="fam fam-pie" aria-label="Apps de AVHUB"><a href="https://screens.mediaservi.com/" target="_blank" rel="noopener" aria-label="SCREENS"><img src="assets/fam/screens-logo.svg" alt="SCREENS"></a><a href="https://adposter.mediaservi.com/" target="_blank" rel="noopener" aria-label="ADPOSTER"><img src="assets/fam/adposter-logo.svg" alt="ADPOSTER"></a><a class="hub" href="https://avhub.mediaservi.com/" target="_blank" rel="noopener" aria-label="AVHUB"><img src="assets/avhub-logo.svg" alt="AVHUB"></a><a href="https://vjshow.mediaservi.com/" target="_blank" rel="noopener" aria-label="VJSHOW"><img src="assets/fam/vjshow-logo.svg" alt="VJSHOW"></a><a href="https://msgame.mediaservi.com/" target="_blank" rel="noopener" aria-label="MSGAME"><img src="assets/fam/msgame-logo.svg?v=5" alt="MSGAME"></a></nav>
-  <footer class="pie" id="pie"></footer>
+  <nav class="barra" aria-label="Módulos">
+    <button type="button" class="mod on" data-accion="mod" data-v="elec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h2M7 14h2M12 10h5M12 14h5"/></svg><span id="t-mod-elec">ELECTRÓNICA LED</span></button>
+    <a class="mod" href="audio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg><span id="t-mod-audio">AUDIO</span></a>
+    <span class="barra-sp"></span>
+    <button type="button" class="pri" data-accion="calc" id="btn-calc">CALCULAR</button>
+  </nav>
+  <main class="consola" id="consola"></main>
+  <nav class="fam fam-pie" aria-label="Apps de AVHUB"><a href="https://screens.mediaservi.com/" target="_blank" rel="noopener" aria-label="SCREENS"><img src="assets/fam/screens-logo.svg" alt="SCREENS"></a><a href="https://adposter.mediaservi.com/" target="_blank" rel="noopener" aria-label="ADPOSTER"><img src="assets/fam/adposter-logo.svg" alt="ADPOSTER"></a><a class="av" href="https://avhub.mediaservi.com/" target="_blank" rel="noopener" aria-label="AVHUB"><img src="assets/avhub-logo.svg" alt="AVHUB"></a><a href="https://vjshow.mediaservi.com/" target="_blank" rel="noopener" aria-label="VJSHOW"><img src="assets/fam/vjshow-logo.svg" alt="VJSHOW"></a><a href="https://msgame.mediaservi.com/" target="_blank" rel="noopener" aria-label="MSGAME"><img src="assets/fam/msgame-logo.svg?v=5" alt="MSGAME"></a></nav>
+  <footer class="pie-f"><div class="pie-aviso" id="pie-aviso"></div><div class="pie" id="pie"></div></footer>
   <noscript><p style="padding:2rem;color:#fff">SYSTEMS necesita JavaScript activado.</p></noscript>
-  <script src="credito.js?v=0.20"></script>
-  <script src="fallo.js?v=0.20"></script>
-  <script src="instalar.js?v=0.20"></script>
-  <script type="module" src="app.js?v=0.20"></script>
+  <script src="credito.js?v=1.0"></script>
+  <script src="fallo.js?v=1.0"></script>
+  <script src="instalar.js?v=1.0"></script>
+  <script src="comun/equipos.js?v=1.0"></script>
+  <script src="comun/electronica.js?v=1.0"></script>
+  <script src="comun/motor-i18n.js?v=1.0"></script>
+  <script type="module" src="vista/electronica.js?v=1.0"></script>
 </body>
 </html>
