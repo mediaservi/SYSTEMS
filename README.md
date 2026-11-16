@@ -2,13 +2,19 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v0.20 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v1.0 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
 Reúne en una sola consola los cálculos que se hacen al diseñar y montar un sistema audiovisual. Se elige un calculador, se escriben los datos (o se cambian con las flechas) y el resultado sale al momento con sus cifras, gráficas, tablas y notas. Funciona en el navegador, sin conexión a ningún servidor, en español, inglés y catalán, y en TV, ordenador, tablet y móvil.
 
 ## Funciones
+
+**Desde la v1.0, SYSTEMS es hermano de SCREENS:** la misma consola (cabecera, SIMPLE con asistente y PRO con todos los datos, bloques de datos, esquema, resultado con despiece, avisos y cifras grandes), con el mismo motor y las mismas listas de equipos (`comun/equipos.js` y `comun/electronica.js`, en vivo desde AVHUB ADMIN). No calcula pantallas: calcula todo lo demás.
+
+- **ELECTRÓNICA LED** (portada): para quien ya tiene la pantalla y las fuentes. Con la resolución (o el cabinet y cuántos hay), las salidas de la fuente (DisplayPort, HDMI o SDI), la distancia (cable de red o fibra) y el backup, calcula las líneas de datos, cómo se reparte la señal entre las salidas (con el corte por columnas de cabinet), el procesador recomendado con su despiece de tarjetas y conversores, las alternativas (PRO) y los avisos (Mosaic o Surround, entradas a medida, distancias). Dibuja el esquema de la señal: fuente → procesador → pantalla. PDF desde la cabecera.
+- **AUDIO** (`audio.html`): los calculadores de audio y escenario de siempre, que se irán pasando a la consola.
+
 
 Primer bloque: **Audio y escenario**, con 26 calculadores en 9 grupos.
 
@@ -46,7 +52,16 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v0.20)
+## Cambios de la versión actual (v1.0)
+
+**SYSTEMS pasa a ser hermano de SCREENS y estrena ELECTRÓNICA LED.**
+
+- Portada nueva con la consola de SCREENS: SIMPLE (asistente de seis preguntas la primera vez y botón PREGÚNTAME) y PRO (refresco, máximo por salida, marca y alternativas), claro y oscuro, es/en/ca, sin desplazarse en ordenador y TV.
+- Módulo ELECTRÓNICA LED con el motor de electrónica de SCREENS: caso de prueba 8960 × 1536 con 3 salidas DisplayPort → H Series H2 con cable de red, COEX MX2000 Pro con fibra y H5 con backup 1:1.
+- Esquema de la señal en horizontal en ordenador y TV, y de arriba abajo en el móvil.
+- Los calculadores de audio siguen en `audio.html` (botón AUDIO); el logo de esa página vuelve a la portada.
+
+### v0.20
 
 Correcciones de la auditoría en el móvil en vertical:
 

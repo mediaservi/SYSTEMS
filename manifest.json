@@ -1,7 +1,7 @@
 {
-  "name": "SYSTEMS · Audio y escenario",
+  "name": "SYSTEMS · Electrónica, señal y audio",
   "short_name": "SYSTEMS",
-  "description": "Calculadores de sonido, iluminación y electricidad para el escenario",
+  "description": "Electrónica de control para pantallas LED, señal y calculadores de sonido, iluminación y electricidad",
   "lang": "es",
   "start_url": "./",
   "scope": "./",
