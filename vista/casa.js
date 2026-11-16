@@ -10,7 +10,7 @@ import AUDIO from './mod-audio.js';
 import VIDEO from './mod-video.js';
 import { cargar } from './listas.js';
 
-export const VERSION = 'v1.1';
+export const VERSION = 'v1.2';
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
 const MODS = [ELEC, SENAL, AUDIO, VIDEO];
 fijarIdioma(idiomaInicial());

@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v1.1 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v1.2 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -28,7 +28,7 @@ En SIMPLE, un asistente pregunta lo justo la primera vez y cada línea de «Lo q
 
 ## Listas de equipos
 
-`comun/equipos.js` (procesadores LED: NOVASTAR, COEX y PIXELHUE, la misma de SCREENS) y `comun/sistemas.js` (displays SAMSUNG, LG y CLEVER; PURELINK; AVER; SENNHEISER; JUST ADD POWER) son las listas de fábrica, sin precios. El panel AVHUB ADMIN las carga y, una vez guardadas allí, la app usa las del panel (`?accion=equipos`).
+`comun/equipos.js` (procesadores LED: NOVASTAR, COEX y PIXELHUE, la misma de SCREENS) y `comun/sistemas.js` (displays SAMSUNG, LG y CLEVER; PURELINK; AVER; NUREVA; RCF; SENNHEISER; JUST ADD POWER) son las listas de fábrica, sin precios. El panel AVHUB ADMIN las carga y, una vez guardadas allí, la app usa las del panel (`?accion=equipos`).
 
 ## Avisos
 
@@ -44,7 +44,13 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v1.1)
+## Cambios de la versión actual (v1.2)
+
+- Listas de fábrica de audio sacadas del CRM de Charmex: RCF (altavoces, subgraves, etapas, procesadores y micrófonos), SENNHEISER (TeamConnect, inalámbricos, mesa y cuerpo) y NUREVA (HDL200, HDL310, HDL410 y HDX).
+- VIDEOCONFERENCIA propone como alternativa de audio el sistema NUREVA que cubre la sala.
+- Para el panel AVHUB ADMIN v12.10: los tipos nuevos (display, conmutador, extensor, cable, AV sobre IP, videoconferencia, micrófono, altavoz, etapa…) y el botón AÑADIR LAS MARCAS NUEVAS DE FÁBRICA.
+
+## Cambios de la v1.1
 
 **Una sola casa, calcada de SCREENS, para todos los módulos.**
 

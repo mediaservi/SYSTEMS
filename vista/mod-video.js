@@ -50,9 +50,11 @@ function calcula() {
   r.area = S.ancho * S.fondo;
   if (r.ptz || (r.cam && r.cam.fondoMax && r.cam.fondoMax < S.fondo)) {
     const M = equipos('microfono').filter((x) => x.m2).sort((a, b) => a.m2 - b.m2), m = M.find((x) => x.m2 >= r.area) || M[M.length - 1];
-    if (m) { r.mic = m; r.nmic = Math.ceil(r.area / m.m2); r.kit = equipos('kit-audio').find((x) => (r.area > 40 ? /LARGE|TCC$/ : /MEDIUM/).test(x.id)) || null;
+    if (m) { r.mic = m; r.nmic = Math.ceil(r.area / m.m2); r.kit = equipos('kit-audio', 'SENNHEISER').find((x) => (m.m2 >= 80 ? /^TCC-LARGE$/ : /^TCC$/).test(x.id)) || null;
       av.push(['info', T('Con más fondo del que cubre la barra, los micrófonos van en el techo: {n} × {m} (hasta {a} m² cada uno).', { n: r.nmic, m: m.modelo, a: m.m2 })]); }
   }
+  /* alternativa de audio: el sistema NUREVA que cubre la sala (ancho y fondo del fabricante) */
+  if (r.mic) r.nureva = equipos('audio-vc', 'NUREVA').filter((x) => x.salaAncho && Math.min(x.salaAncho, x.salaFondo) >= Math.min(S.ancho, S.fondo) && Math.max(x.salaAncho, x.salaFondo) >= Math.max(S.ancho, S.fondo)).sort((a, b) => a.salaAncho * a.salaFondo - b.salaAncho * b.salaFondo)[0] || null;
   r.sem = av.some((a) => !a[0]) ? 'A' : 'V';
   r.semTxt = r.sem === 'A' ? T('Hay solución, con avisos') : T('Hay solución');
   r.lineaTxt = [r.disp ? r.disp.marca + ' ' + r.disp.modelo + ' ' + r.disp.pulgadas + '″' : r.pulg + '″', r.cam ? r.cam.modelo : '', r.mic ? r.nmic + ' × ' + r.mic.modelo : T('Los de la barra')].filter(Boolean).join(' · ');
@@ -83,7 +85,7 @@ function resultado(r) {
   let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
   h += eq(r.disp, S.np, 'Pantalla', true) + eq(r.cam, 1, r.ptz ? 'Cámara' : 'Barra de vídeo', true, r.cam && r.cam.fondoMax ? ' · ' + T('hasta {f} m de fondo', { f: r.cam.fondoMax }) : '') + eq(r.mic, r.nmic, 'Micrófonos', true) + eq(r.kit, 1, '', false);
   if (r.av.length) h += `<ul class="avisos">${r.av.map((a) => `<li class="${a[0]}">${esc(a[1])}</li>`).join('')}</ul>`;
-  if (r.altsD.length) h += `<p class="alt-t">${T('Alternativas')}</p>` + r.altsD.map((x) => eq(x, S.np, '', false)).join('');
+  if (r.altsD.length || r.nureva) h += `<p class="alt-t">${T('Alternativas')}</p>` + r.altsD.map((x) => eq(x, S.np, '', false)).join('') + eq(r.nureva, 1, 'Micrófonos', false, r.nureva ? ' · ' + r.nureva.salaAncho + ' × ' + r.nureva.salaFondo + ' m' : '');
   return h;
 }
 const cifras = (r) => [
