@@ -1,7 +1,7 @@
 {
-  "name": "SYSTEMS · Electrónica, señal y audio",
+  "name": "SYSTEMS · Electrónica, señal, audio y videoconferencia",
   "short_name": "SYSTEMS",
-  "description": "Electrónica de control para pantallas LED, señal y calculadores de sonido, iluminación y electricidad",
+  "description": "Electrónica de pantallas LED, proyección y displays, señal y conectividad, audio y videoconferencia",
   "lang": "es",
   "start_url": "./",
   "scope": "./",

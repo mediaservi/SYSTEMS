@@ -1,0 +1,127 @@
+// SYSTEMS · módulo VIDEOCONFERENCIA: por el tamaño de la sala y la gente, el tamaño de pantalla (regla del espectador más lejano),
+// la cámara o barra (campo de visión y fondo de sala del fabricante) y la microfonía (cobertura del fabricante).
+// Solo con equipos de las listas del panel (AVER, SENNHEISER, displays SAMSUNG, LG y CLEVER). GPL-3.0 · mediaservi.com
+import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
+import { equipos } from './listas.js';
+textos({
+  'VIDEOCONF.': ['VIDEO CONF.', 'VIDEOCONF.'], 'Videoconferencia': ['Video conferencing', 'Videoconferència'],
+  'Sala de reuniones: tamaño de pantalla, cámara o barra con su campo de visión y micrófonos por cobertura.': ['Meeting room: screen size, camera or video bar with its field of view, and microphones by coverage.', 'Sala de reunions: mida de pantalla, càmera o barra amb el seu camp de visió i micròfons per cobertura.'],
+  'Escríbela: «sala de 6 x 4 m para 10 personas»': ['Type it: “6 x 4 m room for 10 people”', 'Escriu-la: «sala de 6 x 4 m per a 10 persones»'],
+  'Sala': ['Room', 'Sala'], 'Ancho (m)': ['Width (m)', 'Amplada (m)'], 'Fondo (m)': ['Depth (m)', 'Fons (m)'], 'Personas': ['People', 'Persones'], 'Primera fila a (m)': ['First row at (m)', 'Primera fila a (m)'],
+  'Pantalla': ['Screen', 'Pantalla'], 'Contenido': ['Content', 'Contingut'], 'Vídeo y presentaciones': ['Video and slides', 'Vídeo i presentacions'], 'Documentos y hojas de cálculo': ['Documents and spreadsheets', 'Documents i fulls de càlcul'],
+  'Monitor': ['Monitor', 'Monitor'], 'Interactivo': ['Interactive', 'Interactiu'], 'Cuántas pantallas': ['How many screens', 'Quantes pantalles'],
+  'Cámara y micrófonos': ['Camera and microphones', 'Càmera i micròfons'], 'Plano de la sala': ['Room plan', 'Planta de la sala'], 'Diagonal mínima': ['Minimum diagonal', 'Diagonal mínima'],
+  'Cámara': ['Camera', 'Càmera'], 'Campo de visión necesario': ['Field of view needed', 'Camp de visió necessari'], 'Campo de visión': ['Field of view', 'Camp de visió'], 'Micrófonos': ['Microphones', 'Micròfons'], 'Superficie': ['Area', 'Superfície'],
+  'Los de la barra': ['The bar’s own', 'Els de la barra'], 'de techo': ['ceiling', 'de sostre'],
+  'Pantalla: el espectador más lejano a {d} m necesita una imagen de al menos {h} m de alto ({k} veces su altura): {p}″ o más.': ['Screen: the farthest viewer at {d} m needs an image at least {h} m high ({k} times its height): {p}″ or more.', 'Pantalla: l\'espectador més llunyà a {d} m necessita una imatge d\'almenys {h} m d\'alt ({k} vegades la seva alçada): {p}″ o més.'],
+  'Más grande que cualquier monitor de las listas: mejor una pantalla LED (calcúlala en SCREENS).': ['Larger than any monitor in the lists: better an LED screen (work it out in SCREENS).', 'Més gran que qualsevol monitor de les llistes: millor una pantalla LED (calcula-la a SCREENS).'],
+  'Para encuadrar a todos desde la primera fila hacen falta {a}° horizontales; la {m} da {b}°.': ['To frame everyone from the first row you need {a}° horizontally; the {m} gives {b}°.', 'Per enquadrar tothom des de la primera fila calen {a}° horitzontals; la {m} en dona {b}°.'],
+  'Comprueba en la ficha de {m} el campo de visión: hacen falta {a}° horizontales.': ['Check the field of view in the {m} datasheet: {a}° horizontal are needed.', 'Comprova a la fitxa de {m} el camp de visió: calen {a}° horitzontals.'],
+  'Con más fondo del que cubre la barra, los micrófonos van en el techo: {n} × {m} (hasta {a} m² cada uno).': ['With more depth than the bar covers, the microphones go on the ceiling: {n} × {m} (up to {a} m² each).', 'Amb més fons del que cobreix la barra, els micròfons van al sostre: {n} × {m} (fins a {a} m² cadascun).'],
+  'Sala más grande que la que cubren las barras de la lista: cámara PTZ con micrófonos de techo y procesador.': ['Room larger than the bars in the list cover: PTZ camera with ceiling microphones and a processor.', 'Sala més gran que la que cobreixen les barres de la llista: càmera PTZ amb micròfons de sostre i processador.'],
+  'Barra de vídeo': ['Video bar', 'Barra de vídeo'], 'hasta {f} m de fondo': ['up to {f} m deep', 'fins a {f} m de fons'],
+  '¿Cuánto mide la sala?': ['How big is the room?', 'Quant fa la sala?'], '¿Cuántas personas?': ['How many people?', 'Quantes persones?'], '¿Qué se ve en la pantalla?': ['What is shown on screen?', 'Què es veu a la pantalla?'], '¿Qué pantalla?': ['Which screen?', 'Quina pantalla?'],
+  'Solo se ve': ['Display only', 'Només es veu'], 'Táctil, se escribe encima': ['Touch, you can write on it', 'Tàctil, s\'hi escriu a sobre'], 'personas': ['people', 'persones'],
+});
+const DEF = { ancho: 4, fondo: 6, pers: 8, fila: 1.5, cont: 'video', tipo: 'monitor', np: 1 };
+let S = Object.assign({}, DEF, lee('systems_video') || {});
+const NUMS = { ancho: [1.5, 30, 1], fondo: [1.5, 40, 1], pers: [1, 200, 0], fila: [0.5, 6, 1], np: [1, 2, 0] };
+const MED = [32, 43, 50, 55, 65, 75, 86, 98, 105, 110, 115];
+
+function calcula() {
+  const av = [], r = { av };
+  const dLej = Math.max(1, S.fondo - 0.3), k = S.cont === 'detalle' ? 4 : 6, h = dLej / k, diag = h / 0.4903 / 0.0254;
+  r.dLej = dLej; r.h = h; r.diag = diag;
+  let D = equipos('display').filter((x) => (S.tipo === 'interactivo' ? x.uso === 'interactivo' : x.uso === 'pared') && x.pulgadas);
+  const ok = D.filter((x) => x.pulgadas >= diag - 1).sort((a, b) => a.pulgadas - b.pulgadas || (b.stock ? 1 : 0) - (a.stock ? 1 : 0) || (b.horas === '16/7' ? 0 : 1) - (a.horas === '16/7' ? 0 : 1));
+  r.disp = ok[0] || null; r.altsD = ok.filter((x) => r.disp && x.pulgadas === r.disp.pulgadas && x !== r.disp).slice(0, 3);
+  r.pulg = Math.ceil(diag);
+  av.push(['info', T('Pantalla: el espectador más lejano a {d} m necesita una imagen de al menos {h} m de alto ({k} veces su altura): {p}″ o más.', { d: N(dLej, 1), h: N(h, 2), k, p: r.pulg })]);
+  if (!r.disp) av.push(['', T('Más grande que cualquier monitor de las listas: mejor una pantalla LED (calcúlala en SCREENS).')]);
+  /* cámara: la barra más pequeña cuyo fondo de sala llega; si ninguna, PTZ */
+  r.fov = 2 * Math.atan((S.ancho / 2) / Math.max(0.5, S.fila)) * 180 / Math.PI;
+  const B = equipos('barra-vc').filter((x) => x.fondoMax).sort((a, b) => a.fondoMax - b.fondoMax);
+  r.cam = B.find((x) => x.fondoMax >= S.fondo) || null;
+  if (!r.cam) { r.cam = equipos('camara').find((x) => /CAM570/.test(x.id)) || equipos('camara')[0] || null; r.ptz = true; av.push(['', T('Sala más grande que la que cubren las barras de la lista: cámara PTZ con micrófonos de techo y procesador.')]); }
+  if (r.cam) { const fh = r.cam.fovH || (r.cam.fovD ? Math.round(r.cam.fovD * 0.87) : 0);
+    if (fh && fh < r.fov) av.push(['', T('Para encuadrar a todos desde la primera fila hacen falta {a}° horizontales; la {m} da {b}°.', { a: Math.round(r.fov), m: r.cam.modelo, b: fh })]);
+    else if (!fh) av.push(['info', T('Comprueba en la ficha de {m} el campo de visión: hacen falta {a}° horizontales.', { m: r.cam.modelo, a: Math.round(r.fov) })]); }
+  /* micrófonos: los de la barra mientras su fondo llega; si no, de techo por superficie */
+  r.area = S.ancho * S.fondo;
+  if (r.ptz || (r.cam && r.cam.fondoMax && r.cam.fondoMax < S.fondo)) {
+    const M = equipos('microfono').filter((x) => x.m2).sort((a, b) => a.m2 - b.m2), m = M.find((x) => x.m2 >= r.area) || M[M.length - 1];
+    if (m) { r.mic = m; r.nmic = Math.ceil(r.area / m.m2); r.kit = equipos('kit-audio').find((x) => (r.area > 40 ? /LARGE|TCC$/ : /MEDIUM/).test(x.id)) || null;
+      av.push(['info', T('Con más fondo del que cubre la barra, los micrófonos van en el techo: {n} × {m} (hasta {a} m² cada uno).', { n: r.nmic, m: m.modelo, a: m.m2 })]); }
+  }
+  r.sem = av.some((a) => !a[0]) ? 'A' : 'V';
+  r.semTxt = r.sem === 'A' ? T('Hay solución, con avisos') : T('Hay solución');
+  r.lineaTxt = [r.disp ? r.disp.marca + ' ' + r.disp.modelo + ' ' + r.disp.pulgadas + '″' : r.pulg + '″', r.cam ? r.cam.modelo : '', r.mic ? r.nmic + ' × ' + r.mic.modelo : T('Los de la barra')].filter(Boolean).join(' · ');
+  r.linea = `<b>${esc(r.disp ? r.disp.modelo + ' ' + r.disp.pulgadas + '″' : r.pulg + '″')}</b> · ${esc(r.cam ? r.cam.modelo : '—')} · ${esc(r.mic ? r.nmic + ' × ' + r.mic.modelo : T('Los de la barra'))}`;
+  guarda('systems_video', S); return r;
+}
+function esquema(r, o = {}) {
+  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = mov ? 520 : 520, pad = 40;
+  const k = Math.min((VW - 2 * pad) / S.ancho, (VH - 2 * pad - 20) / S.fondo), w = S.ancho * k, h = S.fondo * k, x0 = (VW - w) / 2, y0 = pad;
+  let s = `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="none" stroke="var(--linea)" stroke-width="3"/>`;
+  const pw = Math.min(w * .8, (r.disp ? r.disp.pulgadas : r.pulg) * 0.0254 * 0.8716 * k * S.np + (S.np - 1) * 10);
+  s += `<rect x="${x0 + (w - pw) / 2}" y="${y0 - 8}" width="${pw}" height="10" rx="2" fill="var(--verde-txt)"/><text x="${x0 + w / 2}" y="${y0 - 14}" text-anchor="middle" font-size="14" class="t-mono">${esc((r.disp ? r.disp.modelo + ' · ' : '') + (r.disp ? r.disp.pulgadas : r.pulg) + '″')}</text>`;
+  const cx = x0 + w / 2, cy = y0 + 8, a = r.fov / 2 * Math.PI / 180, L = Math.min(h - 10, S.fondo * k);
+  const fh = r.cam ? (r.cam.fovH || (r.cam.fovD ? r.cam.fovD * .87 : 0)) : 0;
+  if (fh) { const b = fh / 2 * Math.PI / 180; s += `<path d="M${cx} ${cy} L ${cx - Math.tan(b) * L} ${cy + L} L ${cx + Math.tan(b) * L} ${cy + L} Z" fill="var(--azul)" fill-opacity=".12" stroke="var(--azul)" stroke-dasharray="6 5"/>`; }
+  s += `<path d="M${cx} ${cy} L ${x0 + 4} ${y0 + S.fila * k} M${cx} ${cy} L ${x0 + w - 4} ${y0 + S.fila * k}" stroke="var(--ambar)" stroke-width="2"/>`;
+  s += `<circle cx="${cx}" cy="${cy}" r="7" fill="var(--azul)"/><text x="${cx + 12}" y="${cy + 22}" font-size="13" class="t-mono">${esc((r.cam ? r.cam.modelo : '') + ' · ' + Math.round(r.fov) + '°')}</text>`;
+  /* mesa y personas */
+  const tx = x0 + w * .3, tw = w * .4, ty = y0 + S.fila * k, th = Math.max(20, h - S.fila * k - 0.8 * k);
+  s += `<rect x="${tx}" y="${ty}" width="${tw}" height="${th}" rx="10" fill="var(--blk2)" stroke="var(--linea)"/>`;
+  const lado = Math.max(1, Math.ceil(S.pers / 2)); for (let i = 0; i < Math.min(S.pers, 40); i++) { const izq = i % 2 === 0, j = Math.floor(i / 2), py = ty + (j + .5) * th / lado; s += `<circle cx="${izq ? tx - 12 : tx + tw + 12}" cy="${py}" r="7" fill="var(--violeta)"/>`; }
+  if (r.mic) { const rr = Math.sqrt(r.mic.m2 / Math.PI) * k; for (let i = 0; i < r.nmic; i++) { const my = y0 + h * (i + .5) / r.nmic; s += `<circle cx="${cx}" cy="${my}" r="${rr}" fill="var(--verde)" fill-opacity=".08" stroke="var(--verde)" stroke-dasharray="4 4"/><rect x="${cx - 9}" y="${my - 9}" width="18" height="18" fill="var(--verde)"/>`; } }
+  s += `<text x="${x0 + w / 2}" y="${y0 + h + 22}" text-anchor="middle" font-size="14" class="t-mono t-ten">${esc(N(S.ancho, 1) + ' × ' + N(S.fondo, 1) + ' m · ' + S.pers + ' ' + T('personas'))}</text>`;
+  return `<svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="${esc(T('Plano de la sala'))}" preserveAspectRatio="xMidYMid meet">${s}</svg>`;
+}
+const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}${x.stock ? ' · ' + esc(T('En stock')) : ''}</td></tr></table></div>` : '';
+function resultado(r) {
+  let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
+  h += eq(r.disp, S.np, 'Pantalla', true) + eq(r.cam, 1, r.ptz ? 'Cámara' : 'Barra de vídeo', true, r.cam && r.cam.fondoMax ? ' · ' + T('hasta {f} m de fondo', { f: r.cam.fondoMax }) : '') + eq(r.mic, r.nmic, 'Micrófonos', true) + eq(r.kit, 1, '', false);
+  if (r.av.length) h += `<ul class="avisos">${r.av.map((a) => `<li class="${a[0]}">${esc(a[1])}</li>`).join('')}</ul>`;
+  if (r.altsD.length) h += `<p class="alt-t">${T('Alternativas')}</p>` + r.altsD.map((x) => eq(x, S.np, '', false)).join('');
+  return h;
+}
+const cifras = (r) => [
+  { t: 'Diagonal mínima', v: String(r.pulg), u: '″', s: N(r.h, 2) + ' m · ' + N(r.dLej, 1) + ' m', ic: 'tele', c: 'var(--verde-txt)' },
+  { t: 'Pantalla', v: r.disp ? r.disp.modelo : '—', s: r.disp ? r.disp.marca + ' · ' + r.disp.pulgadas + '″' : '', ic: 'tele', c: 'var(--azul)' },
+  { t: 'Cámara', v: r.cam ? r.cam.modelo : '—', s: r.cam ? r.cam.marca : '', ic: 'sim', c: 'var(--violeta)' },
+  { t: 'Campo de visión', v: String(Math.round(r.fov)), u: '°', s: T('Primera fila a (m)') + ' ' + N(S.fila, 1), ic: 'ojo', c: 'var(--ambar)' },
+  { t: 'Micrófonos', v: r.mic ? String(r.nmic) : '—', u: r.mic ? '× ' + T('de techo') : '', s: r.mic ? r.mic.modelo : T('Los de la barra'), ic: 'chispa', c: 'var(--verde)' },
+  { t: 'Superficie', v: N(r.area, 1), u: 'm²', s: S.pers + ' ' + T('personas'), ic: 'regla', c: 'var(--magenta, #e24bf0)' }];
+function datos() {
+  return [{ tit: 'Sala', ic: 'regla', ac: 'var(--azul)', html: `<div class="nums">${num('ancho', 'Ancho (m)', S.ancho, 'm', 0.5, 1.5, 30)}${num('fondo', 'Fondo (m)', S.fondo, 'm', 0.5, 1.5, 40)}</div>` + num('pers', 'Personas', S.pers, '', 1, 1, 200) + num('fila', 'Primera fila a (m)', S.fila, 'm', 0.1, 0.5, 6) },
+    { tit: 'Pantalla', ic: 'tele', ac: 'var(--verde-txt)', html: etq('Contenido') + togs('cont', [['video', 'Vídeo y presentaciones'], ['detalle', 'Documentos y hojas de cálculo']], S.cont, 'uno') + etq('Pantalla') + togs('tipo', [['monitor', 'Monitor'], ['interactivo', 'Interactivo']], S.tipo, 'dos') + etq('Cuántas pantallas') + togs('np', [[1, '1'], [2, '2']], S.np, 'dos') + `<div class="pie-b"><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>` }];
+}
+const filas = () => [['sala', 'regla', 'Sala', N(S.ancho, 1) + ' × ' + N(S.fondo, 1) + ' m'], ['pers', 'persona', 'Personas', String(S.pers)], ['cont', 'tele', 'Contenido', T(S.cont === 'detalle' ? 'Documentos y hojas de cálculo' : 'Vídeo y presentaciones')], ['tipo', 'mano', 'Pantalla', T(S.tipo === 'interactivo' ? 'Interactivo' : 'Monitor')]];
+const pasos = () => ['sala', 'pers', 'cont', 'tipo'];
+function pregunta(k) {
+  switch (k) {
+    case 'sala': return { q: '¿Cuánto mide la sala?', nums: [['ancho', 'Ancho (m)', S.ancho, 1.5, 30, 'm'], ['fondo', 'Fondo (m)', S.fondo, 1.5, 40, 'm']], aplica: (o) => { S.ancho = o.ancho; S.fondo = o.fondo; } };
+    case 'pers': return { q: '¿Cuántas personas?', val: S.pers, ops: [4, 6, 8, 10, 12, 16, 20, 30].map((n) => [n, String(n), '', 'persona']), aplica: (v) => { S.pers = v; } };
+    case 'cont': return { q: '¿Qué se ve en la pantalla?', val: S.cont, ops: [['video', 'Vídeo y presentaciones', '', 'tele'], ['detalle', 'Documentos y hojas de cálculo', '', 'lista']], aplica: (v) => { S.cont = v; } };
+    case 'tipo': return { q: '¿Qué pantalla?', val: S.tipo, ops: [['monitor', 'Monitor', 'Solo se ve', 'tele'], ['interactivo', 'Interactivo', 'Táctil, se escribe encima', 'mano']], aplica: (v) => { S.tipo = v; } };
+  }
+  return null;
+}
+function pon(k, v) { if (NUMS[k]) { const [a, b, d] = NUMS[k], n = +v; S[k] = Math.max(a, Math.min(b, isFinite(n) ? +n.toFixed(d) : a)); } else S[k] = v; }
+function pide(t) {
+  const s = t.toLowerCase().replace(/,/g, '.'); let ok = false, m;
+  if ((m = s.match(/(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*m?/))) { const a = +m[1], b = +m[2]; S.ancho = Math.min(a, b); S.fondo = Math.max(a, b); ok = true; }
+  if ((m = s.match(/(\d+)\s*(personas|people|persones|pax|plazas)/))) { S.pers = +m[1]; ok = true; }
+  if (/interactiv|táctil|tactil|touch/.test(s)) S.tipo = 'interactivo'; if (/excel|hoja|document|detalle/.test(s)) S.cont = 'detalle';
+  return ok || /videoconf|reuni|teams|zoom|meeting/.test(s);
+}
+export default {
+  id: 'video', nom: 'Videoconferencia', corto: 'VIDEOCONF.', ic: 'videoconf', ejemplo: 'Escríbela: «sala de 6 x 4 m para 10 personas»',
+  info: 'Sala de reuniones: tamaño de pantalla, cámara o barra con su campo de visión y micrófonos por cobertura.',
+  calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
+  reconoce: (t) => /videoconf|sala de reuni|teams|zoom|meeting room|personas/i.test(t),
+  esquema: (r, o) => ({ tit: 'Plano de la sala', ic: 'cubo', html: esquema(r, o) }),
+  set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * (k === 'pers' || k === 'np' ? 1 : k === 'fila' ? 0.1 : 0.5)),
+  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); }, reset: () => { S = Object.assign({}, DEF); },
+};

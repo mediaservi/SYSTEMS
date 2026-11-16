@@ -2,41 +2,33 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v1.0 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v1.1 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
-Reúne en una sola consola los cálculos que se hacen al diseñar y montar un sistema audiovisual. Se elige un calculador, se escriben los datos (o se cambian con las flechas) y el resultado sale al momento con sus cifras, gráficas, tablas y notas. Funciona en el navegador, sin conexión a ningún servidor, en español, inglés y catalán, y en TV, ordenador, tablet y móvil.
+Reúne en una sola consola los cálculos que se hacen al diseñar y montar un sistema audiovisual, con los equipos de las marcas del catálogo. Funciona en el navegador, en español, inglés y catalán, y en TV, ordenador, tablet y móvil.
+
+**Norma:** solo se calcula y se propone con las marcas y los fabricantes que están en las listas del panel AVHUB ADMIN. Si ninguna resuelve, el resultado lo dice.
 
 ## Funciones
 
-**Desde la v1.0, SYSTEMS es hermano de SCREENS:** la misma consola (cabecera, SIMPLE con asistente y PRO con todos los datos, bloques de datos, esquema, resultado con despiece, avisos y cifras grandes), con el mismo motor y las mismas listas de equipos (`comun/equipos.js` y `comun/electronica.js`, en vivo desde AVHUB ADMIN). No calcula pantallas: calcula todo lo demás.
+**SYSTEMS vive en la misma casa que SCREENS:** la cabecera (logo, SIMPLE / PRO, familia AVHUB, información, PDF, nuevo cálculo, idioma y tema), la barra de módulos con la petición escrita y CALCULAR, la rejilla de bloques de PRO, los tres bloques de SIMPLE (lo que pides, esquema y resultado) y el pie (aviso, crédito, instalar y reporte de fallos) son los de SCREENS (`vista/blocks.css`, `vista/simple.css` y `vista/iconos.css`). Todos los módulos se abren en la misma consola:
 
-- **ELECTRÓNICA LED** (portada): para quien ya tiene la pantalla y las fuentes. Con la resolución (o el cabinet y cuántos hay), las salidas de la fuente (DisplayPort, HDMI o SDI), la distancia (cable de red o fibra) y el backup, calcula las líneas de datos, cómo se reparte la señal entre las salidas (con el corte por columnas de cabinet), el procesador recomendado con su despiece de tarjetas y conversores, las alternativas (PRO) y los avisos (Mosaic o Surround, entradas a medida, distancias). Dibuja el esquema de la señal: fuente → procesador → pantalla. PDF desde la cabecera.
-- **AUDIO** (`audio.html`): los calculadores de audio y escenario de siempre, que se irán pasando a la consola.
+- **ELECTRÓNICA** (como en SCREENS: UNA o VARIAS pantallas y LED, PROYECCIÓN o DISPLAYS)
+  - *LED:* con la resolución (o el cabinet), las salidas de la fuente, cable de red o fibra y backup: líneas, reparto de la señal, procesador con su despiece, alternativas, conversores de fibra CVT10 junto a la pantalla (dibujados en el esquema) y avisos. Hasta 4 pantallas a la vez.
+  - *PROYECCIÓN:* la misma imagen, distintas o fundida (blending): distribuidor, matriz o equipo de blending de las listas, y el cable o extensor de cada tramo.
+  - *DISPLAYS:* monitores SAMSUNG, LG y CLEVER (lista del CRM de Charmex) por tamaño, uso (interior, escaparate, exterior, interactivo, tótem) y horas al día; espejo, distintas o videowall.
+- **SEÑAL Y CONECTIVIDAD:** fuentes → selector, distribuidor o matriz (PURELINK) → destinos, con el cable o extensor de cada tramo según la distancia y la resolución (1080p, 4K60 a 18 Gbps u 8K a 48 Gbps), USB/KVM y AV sobre IP a partir de 8 fuentes o destinos.
+- **AUDIO:** los 26 calculadores de audio y escenario (acústica, arrays, electrónica de audio, cableado, iluminación y vídeo, electricidad, música y grabación, medidas y referencia), con sus gráficas, tablas, resumen y notas.
+- **VIDEOCONFERENCIA:** con las medidas de la sala y la gente, el tamaño de pantalla (espectador más lejano a 6 veces la altura de imagen, o 4 para documentos), la barra o cámara AVER por fondo de sala y campo de visión, y los micrófonos de techo SENNHEISER por cobertura.
 
-
-Primer bloque: **Audio y escenario**, con 26 calculadores en 9 grupos.
-
-- **Acústica:** nivel SPL a distancia (con gráfica), suma de dos niveles por fase, tiempo o distancia (con el filtro de peine dibujado), cobertura de altavoces de techo (con la planta de la sala), absorción del aire según la norma ISO 9613-1, tiempo ↔ distancia y frecuencia ↔ longitud de onda.
-- **Arrays:** distancia de transición de un line array, array de subgraves end-fire y línea de subgraves (broadside) con arco electrónico y orientación por retardo. Los dos de subgraves dibujan el diagrama polar, el mapa de cobertura de 50 × 50 m y la respuesta en frecuencia delante, al lado y detrás, y dan la tabla de retardos de cada caja.
-- **Electrónica de audio:** dBu ↔ dBV ↔ voltios, factor Q ↔ ancho de banda, umbral y tiempos del limitador y ganancia del amplificador.
-- **Cableado:** cable de altavoz en baja impedancia (pérdida, factor de amortiguamiento y comparación de secciones) y en línea de 70 / 100 V.
-- **Iluminación y vídeo:** direcciones DMX con sus microinterruptores, color (RGB, RGBW, RGBA, CMY y hexadecimal) y proyector (distancia, brillo y contraste).
-- **Electricidad:** ley de Ohm y de Joule, y potencia en kVA, kW y amperios en monofásico y trifásico.
-- **Música y grabación:** tempo (BPM ↔ tiempo, con botón TAP), tamaño y tiempo de grabación y nota ↔ frecuencia.
-- **Pesos y medidas:** conversor de peso, longitud, superficie, volumen y temperatura.
-- **Referencia:** asignación de pines (XLR, jack, speakON, DB25, DMX y RJ45) y patrones polares de micrófonos.
+En SIMPLE, un asistente pregunta lo justo la primera vez y cada línea de «Lo que pides» se cambia tocándola. En PRO se ven y cambian todos los datos, el esquema y el despiece. También se puede escribir la petición («pantalla LED de 8960 x 1536 con 3 salidas DP por fibra», «4 portátiles a 2 pantallas, distintas, 4K, a 30 m», «sala de 6 x 4 m para 10 personas») y pulsar CALCULAR.
 
 **Instalable y sin conexión:** con el botón «Instalar» se queda como una app más del dispositivo y funciona sin internet.
 
-La consola tiene tres zonas, como la de SCREENS: los calculadores a la izquierda, los datos en la segunda columna con CALCULAR y RESTABLECER al pie, y el resultado en el centro. En el móvil las zonas se apilan.
+## Listas de equipos
 
-## Marcas y catálogo
-
-En audio, SYSTEMS recomienda y calcula solo con tres marcas: **RCF** (altavoces), **Sennheiser** (micrófonos) y **Nureva** (audio para salas de reunión). La carpeta `catalogo/` guarda los productos de cada marca con sus características, tomadas de la web oficial de cada fabricante, para que todo funcione sin conexión.
-
-Estado del catálogo en la v0.7: es una primera tanda (13 productos de RCF, 15 micrófonos de Sennheiser y 3 sistemas de Nureva) y **todavía no está conectado a los calculadores**. Falta completar las gamas y enlazarlo.
+`comun/equipos.js` (procesadores LED: NOVASTAR, COEX y PIXELHUE, la misma de SCREENS) y `comun/sistemas.js` (displays SAMSUNG, LG y CLEVER; PURELINK; AVER; SENNHEISER; JUST ADD POWER) son las listas de fábrica, sin precios. El panel AVHUB ADMIN las carga y, una vez guardadas allí, la app usa las del panel (`?accion=equipos`).
 
 ## Avisos
 
@@ -44,7 +36,7 @@ Los cálculos son orientativos: hay que comprobar siempre los datos del fabrican
 
 ## Tecnología
 
-HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (estilos base de AVHUB), `estilo.css`, `calculos.js` (fórmulas), `textos.js` (idiomas) y `app.js` (interfaz). Las fuentes van en `assets/fonts/`. Es una app web instalable: `manifest.json`, el service worker `sw.js` (red primero para la app y los datos; copia guardada si no hay conexión) y `instalar.js` (el botón «Instalar», común a las apps de AVHUB). Al añadir archivos nuevos que deban estar disponibles sin conexión desde la primera visita, apúntalos en la lista `BASICO` de `sw.js`.
+HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`vista/casa.js`) y sus módulos (`vista/mod-electronica.js`, `mod-senal.js`, `mod-audio.js`, `mod-video.js`), con las reglas de conectividad en `vista/conectividad.js`, las listas en `vista/listas.js`, los calculadores en `calculos.js` y los textos en `textos.js` y en cada módulo. `audio.html` y `blocks/` llevan a la consola. Es una app web instalable: `manifest.json`, el service worker `sw.js` e `instalar.js`. Al añadir archivos que deban estar disponibles sin conexión desde la primera visita, apúntalos en la lista `BASICO` de `sw.js`.
 
 ## Ramas
 
@@ -52,7 +44,17 @@ HTML, CSS y JavaScript sin dependencias externas: `index.html`, `base.css` (esti
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v1.0)
+## Cambios de la versión actual (v1.1)
+
+**Una sola casa, calcada de SCREENS, para todos los módulos.**
+
+- Cabecera, barra y pie idénticos a SCREENS (mismas hojas de estilo, mismos iconos y mismo orden), con la petición escrita, PEGAR, COPIAR y CALCULAR.
+- Módulos ELECTRÓNICA, SEÑAL Y CONECTIVIDAD, AUDIO y VIDEOCONFERENCIA en la misma consola; AUDIO ya no abre otra página.
+- ELECTRÓNICA como SCREENS: UNA o VARIAS y LED, PROYECCIÓN o DISPLAYS. Con fibra, el esquema dibuja los conversores CVT10 junto a la pantalla.
+- Listas nuevas de fábrica para el panel: displays SAMSUNG, LG y CLEVER, PURELINK, AVER, SENNHEISER y JUST ADD POWER.
+- Norma: solo marcas de las listas del panel.
+
+## Cambios de la v1.0
 
 **SYSTEMS pasa a ser hermano de SCREENS y estrena ELECTRÓNICA LED.**
 
