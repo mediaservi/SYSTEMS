@@ -10,7 +10,7 @@ import AUDIO from './mod-audio.js';
 import VIDEO from './mod-video.js';
 import { cargar } from './listas.js';
 
-export const VERSION = 'v1.2';
+export const VERSION = 'v1.3';
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
 const MODS = [ELEC, SENAL, AUDIO, VIDEO];
 fijarIdioma(idiomaInicial());
@@ -70,7 +70,7 @@ function marco() {
   document.documentElement.lang = l; document.documentElement.dataset.tema = G.tema === 'claro' ? 'claro' : 'oscuro';
   const fam = `<a href="https://screens.mediaservi.com/"><img class="t-osc" src="assets/fam/screens-logo.svg" alt="SCREENS"><img class="t-cla" src="assets/fam/screens-logo-claro.svg" alt="SCREENS"></a><a href="https://adposter.mediaservi.com/"><img class="t-osc" src="assets/fam/adposter-logo.svg" alt="ADPOSTER"><img class="t-cla" src="assets/fam/adposter-logo-claro.svg" alt="ADPOSTER"></a><a class="av" href="https://avhub.mediaservi.com/"><img class="t-osc" src="assets/avhub-logo.svg" alt="AVHUB"><img class="t-cla" src="assets/avhub-logo-claro.svg" alt="AVHUB"></a><a href="https://vjshow.mediaservi.com/"><img class="t-osc" src="assets/fam/vjshow-logo.svg" alt="VJSHOW"><img class="t-cla" src="assets/fam/vjshow-logo-claro.svg" alt="VJSHOW"></a><a href="https://msgame.mediaservi.com/"><img src="assets/fam/msgame-logo.svg?v=5" alt="MSGAME"></a>`;
   const modTog = (m) => `<button type="button" class="tog" aria-pressed="${m.id === G.mod}" data-mod="${m.id}" title="${esc(T(m.nom))}">${icb(m.ic)}<span>${esc(T(m.corto))}</span></button>`;
-  $('#app').innerHTML = `<div class="blocks">
+  $('#app').innerHTML = `<header class="im-cab" aria-hidden="true"><img class="im-logo" src="assets/systems-logo-claro.svg" alt="SYSTEMS"><div class="im-url"><span id="im-fecha">systems.mediaservi.com</span></div><img class="im-avhub" src="assets/avhub-logo-claro.svg" alt="AVHUB"></header><div class="blocks">
     <header class="franja f-h1"><div data-blk="H1L"><button type="button" data-nuevo title="${esc(T('Nuevo cálculo: lo deja todo como al empezar'))}" aria-label="SYSTEMS" style="display:flex;border:0;background:none;padding:0"><img class="logo t-osc" src="assets/systems-logo.svg" alt="SYSTEMS"><img class="logo t-cla" src="assets/systems-logo-claro.svg" alt="SYSTEMS"></button>${sw()}</div>
       <nav data-blk="H1C" class="fam" aria-label="AVHUB">${fam}</nav>
       <div data-blk="H1R" class="h1r">${bt('info', 'Qué es esto y cómo se usa', 'data-info')}${bt('pdf', 'Ver o imprimir el PDF del proyecto', 'data-pdf')}${bt('nuevo', 'Nuevo cálculo: lo deja todo como al empezar', 'data-nuevo')}<button type="button" class="ic-bt g" data-idioma data-crudo title="${esc(tIdi)}" aria-label="${esc(tIdi)}" style="position:relative"><span class="ic ic-lang"></span><small class="cod">${l.toUpperCase()}</small></button>${bt('tema', 'Cambiar entre gris oscuro y gris claro', 'data-tema')}</div></header>
@@ -85,6 +85,14 @@ function marco() {
   if (window.AVINSTALA) r.appendChild(window.AVINSTALA.boton({ app: 'SYSTEMS', idioma, sw: 'sw.js' }));
   if (window.AVFALLO) r.appendChild(window.AVFALLO.boton({ app: 'SYSTEMS', version: VERSION, idioma }));
   pinta();
+}
+/* v1.3 · PDF: hoja en claro con la cabecera de SCREENS (logo de SYSTEMS · web y fecha · logo de AVHUB) y el pie de la app */
+function imprimir() {
+  const hoy = new Date(), l = idioma(), fecha = hoy.toLocaleDateString(l === 'en' ? 'en-GB' : 'es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' · ' + hoy.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  const txt = 'systems.mediaservi.com · ' + fecha, f = $('#im-fecha'); if (f) { f.textContent = txt; f.parentElement.style.setProperty('--n', txt.length); }
+  const tema = document.documentElement.dataset.tema; document.documentElement.dataset.tema = 'claro';
+  const vuelve = () => { document.documentElement.dataset.tema = tema; removeEventListener('afterprint', vuelve); };
+  addEventListener('afterprint', vuelve); window.print(); setTimeout(() => { if (!matchMedia('print').matches) vuelve(); }, 1500);
 }
 function pintaPie() { const p = $('#pie-c'); if (p) p.innerHTML = window.AVCREDITO ? window.AVCREDITO.html('SYSTEMS', VERSION, idioma()) : `SYSTEMS ${VERSION} ${new Date().getFullYear()} · <a href="https://mediaservi.com/" target="_blank" rel="noopener">mediaservi.com</a>`; }
 if (window.AVCREDITO && window.AVCREDITO.alCambiar) window.AVCREDITO.alCambiar(() => { pintaPie(); ajusta(); });
@@ -203,8 +211,8 @@ document.addEventListener('click', (e) => {
   if ((b = q('[data-mod]'))) { cambiaModulo(b.dataset.mod); return; }
   if (q('[data-nuevo]')) { M().reset(); G.texto = ''; const i = $('#pide'); if (i) i.value = ''; EDITA = true; pinta(); return; }
   if (q('[data-idioma]')) { fijarIdioma(IDIOMAS[(IDIOMAS.indexOf(idioma()) + 1) % IDIOMAS.length]); marco(); return; }
-  if (q('[data-tema]')) { G.tema = G.tema === 'claro' ? 'oscuro' : 'claro'; document.documentElement.dataset.tema = G.tema; guardaCasa(); return; }
-  if (q('[data-pdf]')) { window.print(); return; }
+  if (q('button[data-tema]')) { G.tema = G.tema === 'claro' ? 'oscuro' : 'claro'; document.documentElement.dataset.tema = G.tema; guardaCasa(); return; }
+  if (q('[data-pdf]')) { imprimir(); return; }
   if (q('[data-info]')) { info(); return; }
   if (q('[data-cierra]') || e.target.id === 'velo') { cierra(); return; }
   if (q('#calcular')) { calcular(); return; }

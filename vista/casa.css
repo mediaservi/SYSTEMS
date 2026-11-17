@@ -71,10 +71,20 @@ svg .t-mar { fill: var(--verde-txt); }
   .blk.res .blk-cu { min-height: calc(var(--u) * 90); }
   .cif-v { font-size: calc(var(--u) * 40); }
 }
+.im-cab { display: none; }
 @media print {
-  .f-h1, .f-hm, .f-f1, .velo, #ss-asis { display: none !important; }
-  html, body { overflow: visible !important; height: auto !important; }
+  @page { size: A4; margin: 12mm 11mm; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .f-h1, .f-hm, .velo, #ss-asis, .ss-acc, [data-asis], .admin-esq, #hueco-comun, .tostada { display: none !important; }
+  html, body { overflow: visible !important; height: auto !important; background: #fff !important; }
   .blocks { position: static !important; display: block !important; }
+  /* v1.3 · cabecera igual que la del PDF de SCREENS: tres piezas del mismo alto visible, alineadas a izquierda, centro y derecha */
+  .im-cab { display: grid; grid-template-columns: 106.5pt minmax(0, 1fr) 106.5pt; align-items: center; column-gap: 14pt; margin: 0 0 9pt; }
+  .im-logo { justify-self: start; height: 30.4pt; margin-left: -1.4pt; }
+  .im-avhub { justify-self: end; height: 29.2pt; margin-right: -0.7pt; }
+  .im-url { min-width: 0; overflow: hidden; text-align: center; white-space: nowrap; container-type: inline-size; }
+  .im-url span { display: inline-block; font: 400 8pt/1.3 'Share Tech Mono', ui-monospace, monospace; color: #555; letter-spacing: .32em; margin-right: -.32em; font-size: min(8pt, calc(100cqw / var(--n, 41) / .9)); }
+  .f-f1 { margin-top: 10pt; break-inside: avoid; }
 }
 @media (max-width: 900px), (max-height: 520px) {
   .rejilla > [data-blk="M1A"] { order: 1; } .rejilla > [data-blk="M1B"] { order: 2; } .rejilla > [data-blk="M2A"] { order: 3; } .rejilla > [data-blk="M2B"] { order: 4; }
