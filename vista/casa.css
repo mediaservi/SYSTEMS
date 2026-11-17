@@ -141,3 +141,6 @@ html.ss-apila .ss-cd > span.ss-fit, html.ss-apila .ss-fv.ss-fit { white-space: n
 .blk-cu .num input { font-size: calc(var(--u) * 22) !important; }
 @media (max-width: 900px), (max-height: 520px) { [data-blk="S1A"] .blk-cab { flex-wrap: wrap; row-gap: calc(var(--u) * 4); } [data-blk="S1A"] .blk-cab b { flex: 1 1 auto; } }
 html.ss-apila .ss-linea > .ss-fit { white-space: normal; }
+/* v1.4 · cinco módulos en la barra (DISPLAYS nuevo): los botones reparten el sitio y, si no caben con su icono, van sin él */
+[data-blk="HM1"] .grupo .tog[data-mod] { min-width: 0; flex: 1 1 0; }
+@media (max-width: 1600px) { [data-blk="HM1"] .tog[data-mod] svg { display: none; } }

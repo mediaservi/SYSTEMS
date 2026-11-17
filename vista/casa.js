@@ -8,11 +8,12 @@ import ELEC from './mod-electronica.js';
 import SENAL from './mod-senal.js';
 import AUDIO from './mod-audio.js';
 import VIDEO from './mod-video.js';
+import DISP from './mod-display.js';
 import { cargar } from './listas.js';
 
-export const VERSION = 'v1.3';
+export const VERSION = 'v1.4';
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
-const MODS = [ELEC, SENAL, AUDIO, VIDEO];
+const MODS = [ELEC, DISP, SENAL, AUDIO, VIDEO];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage
 fijarIdioma(idiomaInicial());
 
 textos({
@@ -52,7 +53,7 @@ textos({
 
 /* ---------- estado de la casa ---------- */
 const G = Object.assign({ mod: 'elec', vista: 'simple', tema: 'oscuro', texto: '' }, lee('systems_casa') || {});
-try { const q = new URLSearchParams(location.search).get('mod'); if (q && ['elec', 'senal', 'audio', 'video'].includes(q)) G.mod = q; } catch (e) {}
+try { const q = new URLSearchParams(location.search).get('mod'); if (q && ['elec', 'disp', 'senal', 'audio', 'video'].includes(q)) G.mod = q; } catch (e) {}
 const M = () => MODS.find((m) => m.id === G.mod) || MODS[0];
 const guardaCasa = () => guarda('systems_casa', G);
 let R = null, EDITA = true, ASIS = null;
@@ -74,7 +75,7 @@ function marco() {
     <header class="franja f-h1"><div data-blk="H1L"><button type="button" data-nuevo title="${esc(T('Nuevo cálculo: lo deja todo como al empezar'))}" aria-label="SYSTEMS" style="display:flex;border:0;background:none;padding:0"><img class="logo t-osc" src="assets/systems-logo.svg" alt="SYSTEMS"><img class="logo t-cla" src="assets/systems-logo-claro.svg" alt="SYSTEMS"></button>${sw()}</div>
       <nav data-blk="H1C" class="fam" aria-label="AVHUB">${fam}</nav>
       <div data-blk="H1R" class="h1r">${bt('info', 'Qué es esto y cómo se usa', 'data-info')}${bt('pdf', 'Ver o imprimir el PDF del proyecto', 'data-pdf')}${bt('nuevo', 'Nuevo cálculo: lo deja todo como al empezar', 'data-nuevo')}<button type="button" class="ic-bt g" data-idioma data-crudo title="${esc(tIdi)}" aria-label="${esc(tIdi)}" style="position:relative"><span class="ic ic-lang"></span><small class="cod">${l.toUpperCase()}</small></button>${bt('tema', 'Cambiar entre gris oscuro y gris claro', 'data-tema')}</div></header>
-    <div class="franja f-hm"><div data-blk="HM1"><div class="fila grupo" style="flex:1">${modTog(MODS[0])}${modTog(MODS[1])}</div><div class="fila grupo" style="flex:1">${modTog(MODS[2])}${modTog(MODS[3])}</div></div>
+    <div class="franja f-hm"><div data-blk="HM1"><div class="fila grupo" style="flex:2">${modTog(MODS[0])}${modTog(MODS[1])}</div><div class="fila grupo" style="flex:3">${MODS.slice(2).map(modTog).join('')}</div></div>
       <div data-blk="HM2">${bt('pega', 'Pegar una petición copiada', 'data-pega')}<div class="pide-caja"><input class="pide" id="pide" type="text" autocomplete="off" spellcheck="false" placeholder="" aria-label="" value="${esc(G.texto)}"><button type="button" class="pide-res" id="pide-res" hidden title="${esc(T('Resultado del cálculo. Toca para escribir otra petición'))}"></button></div>${bt('copia', 'Copiar el texto de la casilla (la petición o el resultado)', 'data-copiatxt')}</div>
       <div data-blk="HM3"><button type="button" class="calcular" id="calcular">${esc(T('CALCULAR'))} →</button></div></div>
     <main id="cuerpo"></main>
