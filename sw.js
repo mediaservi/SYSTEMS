@@ -4,7 +4,7 @@
    · Lo que no es de este sitio (avisos, crédito, directo) y los vídeos y audios a trozos van siempre por la red.
    Para forzar una copia nueva en todos los dispositivos, sube el número de CACHE.
    Licencia GPL-3.0 · mediaservi.com */
-const PREFIJO = 'systems-', CACHE = PREFIJO + 'v12';
+const PREFIJO = 'systems-', CACHE = PREFIJO + 'v13';
 const BASICO = ['./', 'index.html', 'vista/blocks.css', 'vista/simple.css', 'vista/iconos.css', 'vista/casa.css', 'vista/casa.js', 'vista/util.js', 'vista/iconos.js', 'vista/listas.js', 'vista/conectividad.js', 'vista/tr-electronica.js', 'vista/mod-electronica.js', 'vista/mod-senal.js', 'vista/mod-audio.js', 'vista/mod-video.js', 'vista/mod-display.js', 'comun/equipos.js', 'comun/sistemas.js', 'comun/electronica.js', 'comun/motor-i18n.js', 'calculos.js', 'textos.js', 'credito.js', 'fallo.js', 'instalar.js', 'manifest.json', 'assets/avhub-logo.svg', 'assets/avhub-logo-claro.svg', 'assets/fam/adposter-logo.svg', 'assets/fam/msgame-logo.svg?v=5', 'assets/fam/screens-logo.svg', 'assets/fam/vjshow-logo.svg', 'assets/favicon.svg', 'assets/fonts/inter-latin-400-normal.woff2', 'assets/fonts/inter-latin-500-normal.woff2', 'assets/fonts/inter-latin-700-normal.woff2', 'assets/fonts/inter-latin-800-normal.woff2', 'assets/fonts/share-tech-mono-latin-400-normal.woff2', 'assets/iconos/systems-192.png', 'assets/systems-icono.svg', 'assets/systems-logo.svg'];   // lo mínimo para arrancar sin conexión desde la primera visita
 const FRESCO = /(\/|\.html?|\.json|\.js|\.css|\.webmanifest)$/i, TOPE = 6000;
 const clave = u => { const x = new URL(u, self.registration.scope); x.search = ''; x.hash = ''; return x.href; };
