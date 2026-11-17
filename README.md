@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v1.2 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v1.3 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -44,7 +44,13 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v1.2)
+## Cambios de la versión actual (v1.3)
+
+- PDF con la cabecera de SCREENS: logo de SYSTEMS a la izquierda, la web con la fecha y la hora en el centro y el logo de AVHUB a la derecha.
+- Arreglado: los botones de información, PDF y CALCULAR cambiaban de tema (gris oscuro o claro) en vez de hacer lo suyo.
+- La hoja sale siempre en claro, aunque la app esté en oscuro, con el aviso y la línea de crédito al pie. Ya no salen los botones de la pantalla (PDF, Ver en PRO, Pregúntame otra vez, instalar y reporte de fallos).
+
+## Cambios de la v1.2
 
 - Listas de fábrica de audio sacadas del CRM de Charmex: RCF (altavoces, subgraves, etapas, procesadores y micrófonos), SENNHEISER (TeamConnect, inalámbricos, mesa y cuerpo) y NUREVA (HDL200, HDL310, HDL410 y HDX).
 - VIDEOCONFERENCIA propone como alternativa de audio el sistema NUREVA que cubre la sala.
