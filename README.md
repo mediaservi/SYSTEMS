@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v1.3 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v1.4 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -44,7 +44,11 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v1.3)
+## Cambios de la versión actual (v1.4)
+- **DISPLAYS, pestaña propia para señalética y digital signage** (pedido por Josep): dónde va (interior, escaparate, exterior, tótem, videowall, táctil, alargado o transparente), pulgadas, cuántas (o columnas × filas en videowall), orientación, horas al día (16 h o 24 h), reproductor integrado o externo y marca. Propone el display de las listas del panel (SAMSUNG, LG y CLEVER) del tamaño más cercano, en stock antes que bajo pedido y, a igualdad, por el orden SAMSUNG > LG > CLEVER, con alternativas de las otras marcas. Avisa del brillo en escaparate (2.500 nits o más), del reproductor externo, del montaje en vertical, de las medidas del videowall y de cuándo conviene una pantalla LED. Vista frontal a escala con una persona de 1,75 m.
+- La barra de módulos lleva los cinco (ELECTRÓNICA y DISPLAYS · SEÑAL, AUDIO y VIDEOCONF.) y cabe en todos los formatos: si no hay sitio, los botones van sin icono.
+
+## Cambios de la v1.3
 
 - PDF con la cabecera de SCREENS: logo de SYSTEMS a la izquierda, la web con la fecha y la hora en el centro y el logo de AVHUB a la derecha.
 - Arreglado: los botones de información, PDF y CALCULAR cambiaban de tema (gris oscuro o claro) en vez de hacer lo suyo.

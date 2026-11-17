@@ -1,0 +1,165 @@
+// SYSTEMS · módulo DISPLAYS: señalética y digital signage. Por el sitio (interior, escaparate, exterior, tótem, videowall, táctil…),
+// el tamaño, las horas al día, la orientación y el reproductor, el display de las listas del panel (SAMSUNG, LG y CLEVER) que lo cumple.
+// Elección: el que cumple y está en stock; a igualdad, el orden de marcas SAMSUNG > LG > CLEVER (o la marca que se elija).
+// Solo con equipos de las listas del panel. GPL-3.0 · mediaservi.com
+import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
+import { equipos } from './listas.js';
+textos({
+  'DISPLAYS': ['DISPLAYS', 'DISPLAYS'], 'Displays y señalética': ['Displays and signage', 'Displays i senyalització'],
+  'Señalética y digital signage: el display que cumple con el sitio, el tamaño, las horas al día y el reproductor, de las marcas del catálogo.': ['Signage and digital signage: the display that meets the place, size, hours a day and player, from the catalogue brands.', 'Senyalització i digital signage: el display que compleix amb el lloc, la mida, les hores al dia i el reproductor, de les marques del catàleg.'],
+  'Escríbela: «4 pantallas de 55″ en vertical para escaparate»': ['Type it: “4 portrait 55″ screens for a shop window”', 'Escriu-la: «4 pantalles de 55″ en vertical per a aparador»'],
+  'Dónde va': ['Where it goes', 'On va'], 'Interior': ['Indoor', 'Interior'], 'En una pared o un mostrador': ['On a wall or a counter', 'En una paret o un taulell'],
+  'Escaparate': ['Shop window', 'Aparador'], 'Detrás del cristal, mirando a la calle': ['Behind the glass, facing the street', 'Darrere del vidre, mirant al carrer'],
+  'Exterior': ['Outdoor', 'Exterior'], 'A la intemperie': ['Out in the open', 'A la intempèrie'],
+  'Tótem': ['Totem', 'Tòtem'], 'De pie, en el suelo': ['Free-standing, on the floor', 'Dempeus, a terra'],
+  'Videowall': ['Video wall', 'Videowall'], 'Varias pantallas sin marco que forman una': ['Several bezel-less screens that form one', 'Diverses pantalles sense marc que en formen una'],
+  'Táctil': ['Touch', 'Tàctil'], 'Quiosco o punto de información': ['Kiosk or information point', 'Quiosc o punt d\'informació'],
+  'Alargado': ['Stretched', 'Allargat'], 'Formato estirado (estanterías, barras)': ['Stretched format (shelves, bars)', 'Format estirat (prestatgeries, barres)'],
+  'Transparente': ['Transparent', 'Transparent'], 'Se ve a través': ['You can see through it', 'S\'hi veu a través'],
+  'Tamaño': ['Size', 'Mida'], 'Pulgadas': ['Inches', 'Polzades'], 'Cuántas': ['How many', 'Quantes'], 'Columnas': ['Columns', 'Columnes'], 'Filas': ['Rows', 'Files'],
+  'Uso': ['Use', 'Ús'], 'Horas al día': ['Hours a day', 'Hores al dia'], 'Hasta 16 h': ['Up to 16 h', 'Fins a 16 h'], '24 h, sin apagar': ['24 h, never off', '24 h, sense apagar'],
+  'Orientación': ['Orientation', 'Orientació'], 'Horizontal': ['Landscape', 'Horitzontal'], 'Vertical': ['Portrait', 'Vertical'],
+  'Reproductor': ['Player', 'Reproductor'], 'Integrado en la pantalla': ['Built into the screen', 'Integrat a la pantalla'], 'Externo': ['External', 'Extern'],
+  'Marca': ['Brand', 'Marca'], 'La que esté en stock': ['Whichever is in stock', 'La que estigui en estoc'],
+  'Pantallas': ['Screens', 'Pantalles'], 'Brillo': ['Brightness', 'Brillantor'], 'Resolución': ['Resolution', 'Resolució'], 'Display': ['Display', 'Display'],
+  'En stock': ['In stock', 'En estoc'], 'Bajo pedido': ['To order', 'Sota comanda'], 'Integrado': ['Built in', 'Integrat'],
+  'La instalación vista de frente': ['The installation seen from the front', 'La instal·lació vista de front'], 'Vista frontal': ['Front view', 'Vista frontal'],
+  '¿Dónde va la pantalla?': ['Where does the screen go?', 'On va la pantalla?'], '¿De qué tamaño?': ['What size?', 'De quina mida?'], '¿Cuántas pantallas?': ['How many screens?', 'Quantes pantalles?'],
+  '¿Cuántas horas al día está encendida?': ['How many hours a day is it on?', 'Quantes hores al dia està encesa?'], '¿En horizontal o en vertical?': ['Landscape or portrait?', 'En horitzontal o en vertical?'],
+  'Tiendas y oficinas': ['Shops and offices', 'Botigues i oficines'], 'Comercios abiertos día y noche, transporte': ['Shops open day and night, transport', 'Comerços oberts dia i nit, transport'],
+  'Como una tele': ['Like a TV', 'Com una tele'], 'Cartelería de pie, menús': ['Standing signage, menus', 'Cartelleria dempeus, menús'],
+  'No hay ningún display de las listas para este sitio con estas condiciones.': ['There is no display in the lists for this place with these conditions.', 'No hi ha cap display de les llistes per a aquest lloc amb aquestes condicions.'],
+  'No hay ninguno de {p}″: el más cercano es de {q}″.': ['There is none at {p}″: the closest is {q}″.', 'No n\'hi ha cap de {p}″: el més proper és de {q}″.'],
+  'Para 24 h al día no hay ninguno en las listas: se propone uno de 16 h, que no está pensado para no apagarse nunca.': ['For 24 h a day there is none in the lists: a 16 h one is proposed, which is not meant to stay on all the time.', 'Per a 24 h al dia no n\'hi ha cap a les llistes: se\'n proposa un de 16 h, que no està pensat per no apagar-se mai.'],
+  'Detrás de un cristal a la calle hace falta brillo alto (2.500 nits o más) para verse de día: este da {n} nits.': ['Behind street-facing glass high brightness is needed (2,500 nits or more) to be seen in daylight: this one gives {n} nits.', 'Darrere d\'un vidre al carrer cal brillantor alta (2.500 nits o més) per veure\'s de dia: aquest en dona {n}.'],
+  'Sin reproductor integrado: lleva uno externo por pantalla ({m}).': ['No built-in player: it needs an external one per screen ({m}).', 'Sense reproductor integrat: en porta un d\'extern per pantalla ({m}).'],
+  'Sin reproductor integrado: lleva un reproductor externo por pantalla (no hay ninguno en las listas).': ['No built-in player: it needs an external player per screen (none in the lists).', 'Sense reproductor integrat: porta un reproductor extern per pantalla (no n\'hi ha cap a les llistes).'],
+  'En vertical: comprueba en la ficha que el modelo admite el montaje en vertical.': ['In portrait: check on the datasheet that the model allows portrait mounting.', 'En vertical: comprova a la fitxa que el model admet el muntatge en vertical.'],
+  'Videowall de {c} × {f}: mide {a} × {h} m ({p}″ de diagonal); la señal se reparte con el procesador de videowall o con la entrada y salida en cadena de los displays.': ['{c} × {f} video wall: {a} × {h} m ({p}″ diagonal); the signal is split with a video wall processor or by daisy-chaining the displays.', 'Videowall de {c} × {f}: fa {a} × {h} m ({p}″ de diagonal); el senyal es reparteix amb el processador de videowall o amb l\'entrada i sortida en cadena dels displays.'],
+  'Más grande de lo que llega un videowall razonable o un monitor: mejor una pantalla LED (calcúlala en SCREENS).': ['Larger than a reasonable video wall or monitor reaches: an LED screen is better (work it out in SCREENS).', 'Més gran del que arriba un videowall raonable o un monitor: millor una pantalla LED (calcula-la a SCREENS).'],
+  'Pulgadas pedidas': ['Inches asked for', 'Polzades demanades'], 'Recomendado': ['Recommended', 'Recomanat'], 'Alternativas': ['Alternatives', 'Alternatives'], 'personas': ['people', 'persones'],
+});
+const SITIOS = [['interior', 'Interior', 'En una pared o un mostrador', 'pared'], ['escaparate', 'Escaparate', 'Detrás del cristal, mirando a la calle', 'escaparate'], ['exterior', 'Exterior', 'A la intemperie', 'calle'],
+  ['totem', 'Tótem', 'De pie, en el suelo', 'persona'], ['videowall', 'Videowall', 'Varias pantallas sin marco que forman una', 'led'], ['tactil', 'Táctil', 'Quiosco o punto de información', 'mano'],
+  ['alargado', 'Alargado', 'Formato estirado (estanterías, barras)', 'regla'], ['transparente', 'Transparente', 'Se ve a través', 'ojo']];
+/* qué usos de las listas valen para cada sitio */
+const USOS = { interior: ['pared', 'tv'], escaparate: ['escaparate'], exterior: ['exterior'], totem: ['totem', 'escaparate'], videowall: ['videowall'], tactil: ['tactil', 'interactivo'], alargado: ['alargado'], transparente: ['transparente'] };
+const ORDEN = ['SAMSUNG', 'LG', 'CLEVER'];
+const MED = [24, 32, 43, 49, 50, 55, 65, 75, 86, 98, 105, 110, 115];
+const DEF = { sitio: 'interior', pulg: 55, np: 1, cols: 2, filas: 2, horas: '16/7', orient: 'h', player: 'soc', marca: 'auto' };
+let S = Object.assign({}, DEF, lee('systems_display') || {});
+const NUMS = { pulg: [10, 120, 0], np: [1, 50, 0], cols: [1, 10, 0], filas: [1, 10, 0] };
+const nPant = () => (S.sitio === 'videowall' ? S.cols * S.filas : S.np);
+const ancho16 = (p) => p * 0.0254 * 0.8716, alto16 = (p) => p * 0.0254 * 0.4903;
+
+function calcula() {
+  const av = [], r = { av };
+  const marca = S.marca === 'auto' ? null : S.marca;
+  let L = equipos('display', marca || 'todas').filter((x) => USOS[S.sitio].includes(x.uso) && x.pulgadas);
+  if (!L.length) { r.error = T('No hay ningún display de las listas para este sitio con estas condiciones.'); av.push(['', r.error]); }
+  /* 24 h: solo los de 24/7; si no hay ninguno, se avisa y se sigue con los de 16 h */
+  if (S.horas === '24/7' && L.length) { const l24 = L.filter((x) => x.horas === '24/7'); if (l24.length) L = l24; else av.push(['', T('Para 24 h al día no hay ninguno en las listas: se propone uno de 16 h, que no está pensado para no apagarse nunca.')]); }
+  /* reproductor integrado: se prefieren los que lo llevan (SoC) */
+  const conSoc = L.filter((x) => x.soc); if (S.player === 'soc' && conSoc.length) L = conSoc;
+  /* el tamaño más cercano (a igualdad, el de arriba); luego stock y orden de marcas */
+  const dif = (x) => Math.abs(x.pulgadas - S.pulg) + (x.pulgadas < S.pulg ? 0.5 : 0);
+  const ord = L.slice().sort((a, b) => dif(a) - dif(b) || (b.stock ? 1 : 0) - (a.stock ? 1 : 0) || ORDEN.indexOf(a.marca) - ORDEN.indexOf(b.marca) || (b.nits || 0) - (a.nits || 0));
+  r.disp = ord[0] || null;
+  r.alts = r.disp ? ord.filter((x) => x !== r.disp && x.pulgadas === r.disp.pulgadas && x.marca !== r.disp.marca).filter((x, i, a) => a.findIndex((y) => y.marca === x.marca) === i).slice(0, 3) : [];
+  r.n = nPant();
+  if (r.disp) {
+    if (r.disp.pulgadas !== S.pulg) av.push(['info', T('No hay ninguno de {p}″: el más cercano es de {q}″.', { p: S.pulg, q: r.disp.pulgadas })]);
+    if ((S.sitio === 'escaparate') && (r.disp.nits || 0) < 2500) av.push(['', T('Detrás de un cristal a la calle hace falta brillo alto (2.500 nits o más) para verse de día: este da {n} nits.', { n: N(r.disp.nits || 0) })]);
+    if (!r.disp.soc) { const P = equipos('display').filter((x) => x.uso === 'player'); r.player = P[0] || null;
+      av.push(['info', r.player ? T('Sin reproductor integrado: lleva uno externo por pantalla ({m}).', { m: r.player.marca + ' ' + r.player.modelo }) : T('Sin reproductor integrado: lleva un reproductor externo por pantalla (no hay ninguno en las listas).')]); }
+    if (S.orient === 'v') av.push(['info', T('En vertical: comprueba en la ficha que el modelo admite el montaje en vertical.')]);
+    if (S.sitio === 'videowall') { const a = ancho16(r.disp.pulgadas) * S.cols, h = alto16(r.disp.pulgadas) * S.filas; r.vw = { a, h, p: Math.round(Math.hypot(a, h) / 0.0254) };
+      av.push(['info', T('Videowall de {c} × {f}: mide {a} × {h} m ({p}″ de diagonal); la señal se reparte con el procesador de videowall o con la entrada y salida en cadena de los displays.', { c: S.cols, f: S.filas, a: N(a, 2), h: N(h, 2), p: r.vw.p })]); }
+  }
+  if (S.pulg > 120 || (r.vw && r.vw.p > 300)) av.push(['', T('Más grande de lo que llega un videowall razonable o un monitor: mejor una pantalla LED (calcúlala en SCREENS).')]);
+  r.sem = !r.disp ? 'R' : av.some((a) => !a[0]) ? 'A' : 'V';
+  r.semTxt = r.sem === 'R' ? T('No hay solución') : r.sem === 'A' ? T('Hay solución, con avisos') : T('Hay solución');
+  r.lineaTxt = r.disp ? [r.n + ' × ' + r.disp.marca + ' ' + r.disp.modelo, r.disp.pulgadas + '″', r.disp.horas, r.disp.nits ? r.disp.nits + ' nits' : ''].filter(Boolean).join(' · ') : (r.error || '—');
+  r.linea = r.disp ? `<b>${esc(r.n + ' × ' + r.disp.modelo)}</b> · ${esc(r.disp.pulgadas + '″ · ' + r.disp.horas + (r.disp.nits ? ' · ' + r.disp.nits + ' nits' : ''))}` : esc(r.error || '—');
+  guarda('systems_display', S); return r;
+}
+/* vista frontal a escala, con una persona de 1,75 m al lado */
+function esquema(r, o = {}) {
+  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, pad = 40;
+  const p = r.disp ? r.disp.pulgadas : S.pulg, vert = S.orient === 'v', w1 = vert ? alto16(p) : ancho16(p), h1 = vert ? ancho16(p) : alto16(p);
+  const vw = S.sitio === 'videowall', cols = vw ? S.cols : Math.min(r.n, mov ? 3 : 6), fil = vw ? S.filas : Math.ceil(Math.min(r.n, 12) / cols), gap = vw ? 0.006 : 0.25;
+  const totW = cols * w1 + (cols - 1) * gap + 1.2, base = S.sitio === 'totem' ? 0.3 : vw ? 0.8 : 1.2, totH = Math.max(2, base + fil * h1 + (fil - 1) * gap + 0.3);
+  const k = Math.min((VW - 2 * pad) / totW, (VH - 2 * pad - 30) / totH), suelo = VH - pad - 20, x0 = pad + 1.0 * k;
+  let s = `<line x1="0" y1="${suelo}" x2="${VW}" y2="${suelo}" stroke="var(--linea)" stroke-width="3"/>`;
+  /* persona */
+  const ph = 1.75 * k, px = pad + 0.35 * k;
+  s += `<circle cx="${px}" cy="${suelo - ph + 0.11 * k}" r="${0.11 * k}" fill="var(--tenue)"/><rect x="${px - 0.2 * k}" y="${suelo - ph + 0.24 * k}" width="${0.4 * k}" height="${ph - 0.24 * k}" rx="${0.08 * k}" fill="var(--tenue)" fill-opacity=".8"/>`;
+  let n = 0;
+  for (let f = 0; f < fil; f++) for (let c = 0; c < cols; c++) { if (!vw && n >= Math.min(r.n, 12)) break; n++;
+    const x = x0 + c * (w1 + gap) * k, y = suelo - (base + (fil - f) * h1 + (fil - 1 - f) * gap) * k;
+    if (S.sitio === 'totem') s += `<rect x="${x + w1 * k * .35}" y="${y + h1 * k}" width="${w1 * k * .3}" height="${suelo - y - h1 * k}" fill="var(--linea)"/>`;
+    s += `<rect x="${x}" y="${y}" width="${w1 * k}" height="${h1 * k}" rx="${vw ? 1 : 4}" fill="var(--blk2)" stroke="var(--verde-txt)" stroke-width="${vw ? 1.5 : 3}"/>`;
+    if (S.sitio === 'transparente') s += `<rect x="${x + 4}" y="${y + 4}" width="${w1 * k - 8}" height="${h1 * k - 8}" fill="var(--azul)" fill-opacity=".12"/>`; }
+  const tw = vw ? cols * w1 : w1, cx = x0 + (vw ? tw * k / 2 : w1 * k / 2), ty = suelo - (base + fil * h1 + (fil - 1) * gap) * k - 10;
+  s += `<text x="${cx}" y="${Math.max(18, ty)}" text-anchor="middle" font-size="14" class="t-mono">${esc((r.disp ? r.disp.modelo + ' · ' : '') + p + '″' + (vw ? ' · ' + S.cols + ' × ' + S.filas : r.n > 1 ? ' · ' + r.n + ' ×' : ''))}</text>`;
+  if (!vw && r.n > 12) s += `<text x="${VW - pad}" y="${suelo - 8}" text-anchor="end" font-size="13" class="t-mono t-ten">+${r.n - 12}</text>`;
+  s += `<text x="${px}" y="${suelo + 18}" text-anchor="middle" font-size="12" class="t-mono t-ten">1,75 m</text>`;
+  return `<svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="${esc(T('La instalación vista de frente'))}" preserveAspectRatio="xMidYMid meet">${s}</svg>`;
+}
+const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}</td></tr></table></div>` : '';
+function resultado(r) {
+  let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : r.sem === 'R' ? 'mal' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
+  h += eq(r.disp, r.n, 'Display', true, r.disp ? ' · ' + T(r.disp.stock ? 'En stock' : 'Bajo pedido') : '') + eq(r.player, r.n, 'Reproductor', true);
+  if (r.av.length) h += `<ul class="avisos">${r.av.map((a) => `<li class="${a[0]}">${esc(a[1])}</li>`).join('')}</ul>`;
+  if (r.alts.length) h += `<p class="alt-t">${T('Alternativas')}</p>` + r.alts.map((x) => eq(x, r.n, '', false, ' · ' + T(x.stock ? 'En stock' : 'Bajo pedido'))).join('');
+  return h;
+}
+const cifras = (r) => [
+  { t: 'Display', v: r.disp ? r.disp.modelo : '—', s: r.disp ? r.disp.marca + (r.disp.stock ? ' · ' + T('En stock') : '') : '', ic: 'display', c: 'var(--verde-txt)' },
+  { t: 'Pantallas', v: String(r.n), u: '×', s: S.sitio === 'videowall' ? S.cols + ' × ' + S.filas : T(S.orient === 'v' ? 'Vertical' : 'Horizontal'), ic: 'tele', c: 'var(--azul)' },
+  { t: 'Pulgadas', v: r.disp ? String(r.disp.pulgadas) : String(S.pulg), u: '″', s: r.vw ? N(r.vw.a, 2) + ' × ' + N(r.vw.h, 2) + ' m' : T('Pulgadas pedidas') + ' ' + S.pulg + '″', ic: 'regla', c: 'var(--violeta)' },
+  { t: 'Brillo', v: r.disp && r.disp.nits ? N(r.disp.nits) : '—', u: 'nits', s: T((SITIOS.find((x) => x[0] === S.sitio) || SITIOS[0])[1]), ic: 'sol', c: 'var(--ambar)' },
+  { t: 'Horas al día', v: r.disp ? r.disp.horas : S.horas, s: r.disp && r.disp.res ? r.disp.res : '', ic: 'calidad', c: 'var(--verde)' },
+  { t: 'Reproductor', v: r.disp ? T(r.disp.soc ? 'Integrado' : 'Externo') : '—', s: r.player ? r.player.modelo : '', ic: 'chip', c: 'var(--magenta, #e24bf0)' }];
+function datos() {
+  const marcas = [['auto', 'La que esté en stock'], ...ORDEN.filter((m) => equipos('display', m).length).map((m) => [m, m])];
+  return [{ tit: 'Dónde va', ic: 'display', ac: 'var(--verde-txt)', html: togs('sitio', SITIOS.map((x) => [x[0], x[1]]), S.sitio, 'dos') + etq('Marca') + togs('marca', marcas, S.marca, 'dos') },
+    { tit: 'Tamaño', ic: 'regla', ac: 'var(--azul)', html: num('pulg', 'Pulgadas', S.pulg, '″', 1, 10, 120) + (S.sitio === 'videowall' ? `<div class="nums">${num('cols', 'Columnas', S.cols, '', 1, 1, 10)}${num('filas', 'Filas', S.filas, '', 1, 1, 10)}</div>` : num('np', 'Cuántas', S.np, '', 1, 1, 50)) + etq('Orientación') + togs('orient', [['h', 'Horizontal'], ['v', 'Vertical']], S.orient, 'dos') },
+    { tit: 'Uso', ic: 'calidad', ac: 'var(--ambar)', html: etq('Horas al día') + togs('horas', [['16/7', 'Hasta 16 h'], ['24/7', '24 h, sin apagar']], S.horas, 'dos') + etq('Reproductor') + togs('player', [['soc', 'Integrado en la pantalla'], ['ext', 'Externo']], S.player, 'dos') + `<div class="pie-b"><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>` }];
+}
+const filas = () => [['sitio', 'display', 'Dónde va', T((SITIOS.find((x) => x[0] === S.sitio) || SITIOS[0])[1])], ['pulg', 'regla', 'Tamaño', S.pulg + '″'],
+  ['np', 'tele', 'Pantallas', S.sitio === 'videowall' ? S.cols + ' × ' + S.filas : String(S.np)], ['horas', 'calidad', 'Horas al día', T(S.horas === '24/7' ? '24 h, sin apagar' : 'Hasta 16 h')], ['orient', 'altura', 'Orientación', T(S.orient === 'v' ? 'Vertical' : 'Horizontal')]];
+const pasos = () => ['sitio', 'pulg', 'np', 'horas', 'orient'];
+function pregunta(k) {
+  switch (k) {
+    case 'sitio': return { q: '¿Dónde va la pantalla?', val: S.sitio, ops: SITIOS.map((x) => [x[0], x[1], x[2], x[3]]), aplica: (v) => { S.sitio = v; } };
+    case 'pulg': return { q: '¿De qué tamaño?', val: S.pulg, ops: [32, 43, 50, 55, 65, 75, 86, 98].map((n) => [n, n + '″', '', 'regla']), aplica: (v) => { S.pulg = +v; } };
+    case 'np': return S.sitio === 'videowall' ? { q: '¿Cuántas pantallas?', nums: [['cols', 'Columnas', S.cols, 1, 10, ''], ['filas', 'Filas', S.filas, 1, 10, '']], aplica: (o) => { S.cols = o.cols; S.filas = o.filas; } }
+      : { q: '¿Cuántas pantallas?', val: S.np, ops: [1, 2, 3, 4, 6, 8, 10, 12].map((n) => [n, String(n), '', 'tele']), aplica: (v) => { S.np = +v; } };
+    case 'horas': return { q: '¿Cuántas horas al día está encendida?', val: S.horas, ops: [['16/7', 'Hasta 16 h', 'Tiendas y oficinas', 'luna'], ['24/7', '24 h, sin apagar', 'Comercios abiertos día y noche, transporte', 'sol']], aplica: (v) => { S.horas = v; } };
+    case 'orient': return { q: '¿En horizontal o en vertical?', val: S.orient, ops: [['h', 'Horizontal', 'Como una tele', 'tele'], ['v', 'Vertical', 'Cartelería de pie, menús', 'altura']], aplica: (v) => { S.orient = v; } };
+  }
+  return null;
+}
+function pon(k, v) { if (NUMS[k]) { const [a, b, d] = NUMS[k], n = +v; S[k] = Math.max(a, Math.min(b, isFinite(n) ? +n.toFixed(d) : a)); } else S[k] = v; }
+function pide(t) {
+  const s = t.toLowerCase().replace(/,/g, '.'); let ok = false, m;
+  if ((m = s.match(/(\d{2,3})\s*(?:″|"|''|pulgadas|pulg|inch|inches|polzades)/))) { S.pulg = Math.min(120, +m[1]); ok = true; }
+  if ((m = s.match(/(\d+)\s*[x×]\s*(\d+)\s*(?:videowall|video wall)/)) || (/videowall|video wall/.test(s) && (m = s.match(/(\d+)\s*[x×]\s*(\d+)/)))) { S.sitio = 'videowall'; S.cols = Math.min(10, +m[1]); S.filas = Math.min(10, +m[2]); ok = true; }
+  else if ((m = s.match(/(\d+)\s*(pantallas|displays|monitores|screens|pantalles|monitors)/))) { S.np = Math.min(50, +m[1]); ok = true; }
+  const sit = [[/escaparate|shop window|aparador/, 'escaparate'], [/exterior|outdoor|intemperie|calle/, 'exterior'], [/t[oó]tem/, 'totem'], [/videowall|video wall/, 'videowall'], [/t[aá]ctil|touch|quiosco|kiosk/, 'tactil'], [/alargad|stretch|estirad/, 'alargado'], [/transparent/, 'transparente']];
+  const f = sit.find((x) => x[0].test(s)); if (f) { S.sitio = f[1]; ok = true; }
+  if (/vertical|portrait/.test(s)) S.orient = 'v'; else if (/horizontal|landscape/.test(s)) S.orient = 'h';
+  if (/24\s*\/\s*7|24\s*h/.test(s)) S.horas = '24/7'; else if (/16\s*\/\s*7|16\s*h/.test(s)) S.horas = '16/7';
+  ORDEN.forEach((mm) => { if (s.includes(mm.toLowerCase())) S.marca = mm; });
+  return ok || /se[ñn]al[eé]tica|signage|cartel|digital/.test(s);
+}
+export default {
+  id: 'disp', nom: 'Displays y señalética', corto: 'DISPLAYS', ic: 'display', ejemplo: 'Escríbela: «4 pantallas de 55″ en vertical para escaparate»',
+  info: 'Señalética y digital signage: el display que cumple con el sitio, el tamaño, las horas al día y el reproductor, de las marcas del catálogo.',
+  calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
+  reconoce: (t) => /se[ñn]al[eé]tica|signage|cartel|escaparate|t[oó]tem|videowall|video wall/i.test(t),
+  esquema: (r, o) => ({ tit: 'Vista frontal', ic: 'display', html: esquema(r, o) }),
+  set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d),
+  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); }, reset: () => { S = Object.assign({}, DEF); },
+};
