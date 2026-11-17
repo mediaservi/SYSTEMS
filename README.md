@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v1.4 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v1.5 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -44,7 +44,10 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v1.4)
+## Cambios de la versión actual (v1.5)
+- **Tableta en horizontal con letra legible** (aprobado por Josep, 16-11-2026): en pantallas táctiles de 901 a 1280 px de ancho en horizontal, la página se maqueta a 900 px como la tableta en vertical (bloques uno debajo de otro, con desplazamiento). Antes, en 1024 × 768 los bloques de PRO salían con letra de 3 a 7 px. En ordenador y TV no cambia nada.
+
+## Cambios de la v1.4
 - **DISPLAYS, pestaña propia para señalética y digital signage** (pedido por Josep): dónde va (interior, escaparate, exterior, tótem, videowall, táctil, alargado o transparente), pulgadas, cuántas (o columnas × filas en videowall), orientación, horas al día (16 h o 24 h), reproductor integrado o externo y marca. Propone el display de las listas del panel (SAMSUNG, LG y CLEVER) del tamaño más cercano, en stock antes que bajo pedido y, a igualdad, por el orden SAMSUNG > LG > CLEVER, con alternativas de las otras marcas. Avisa del brillo en escaparate (2.500 nits o más), del reproductor externo, del montaje en vertical, de las medidas del videowall y de cuándo conviene una pantalla LED. Vista frontal a escala con una persona de 1,75 m.
 - La barra de módulos lleva los cinco (ELECTRÓNICA y DISPLAYS · SEÑAL, AUDIO y VIDEOCONF.) y cabe en todos los formatos: si no hay sitio, los botones van sin icono.
 
