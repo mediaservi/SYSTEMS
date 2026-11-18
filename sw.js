@@ -4,22 +4,24 @@
    · Lo que no es de este sitio (avisos, crédito, directo) y los vídeos y audios a trozos van siempre por la red.
    Para forzar una copia nueva en todos los dispositivos, sube el número de CACHE.
    Licencia GPL-3.0 · mediaservi.com */
-const PREFIJO = 'systems-', CACHE = PREFIJO + 'v13';
+const PREFIJO = 'systems-', CACHE = PREFIJO + 'v14';
 const BASICO = ['./', 'index.html', 'vista/blocks.css', 'vista/simple.css', 'vista/iconos.css', 'vista/casa.css', 'vista/casa.js', 'vista/util.js', 'vista/iconos.js', 'vista/listas.js', 'vista/conectividad.js', 'vista/tr-electronica.js', 'vista/mod-electronica.js', 'vista/mod-senal.js', 'vista/mod-audio.js', 'vista/mod-video.js', 'vista/mod-display.js', 'comun/equipos.js', 'comun/sistemas.js', 'comun/electronica.js', 'comun/motor-i18n.js', 'calculos.js', 'textos.js', 'credito.js', 'fallo.js', 'instalar.js', 'manifest.json', 'assets/avhub-logo.svg', 'assets/avhub-logo-claro.svg', 'assets/fam/adposter-logo.svg', 'assets/fam/msgame-logo.svg?v=5', 'assets/fam/screens-logo.svg', 'assets/fam/vjshow-logo.svg', 'assets/favicon.svg', 'assets/fonts/inter-latin-400-normal.woff2', 'assets/fonts/inter-latin-500-normal.woff2', 'assets/fonts/inter-latin-700-normal.woff2', 'assets/fonts/inter-latin-800-normal.woff2', 'assets/fonts/share-tech-mono-latin-400-normal.woff2', 'assets/iconos/systems-192.png', 'assets/systems-icono.svg', 'assets/systems-logo.svg'];   // lo mínimo para arrancar sin conexión desde la primera visita
 const FRESCO = /(\/|\.html?|\.json|\.js|\.css|\.webmanifest)$/i, TOPE = 6000;
 const clave = u => { const x = new URL(u, self.registration.scope); x.search = ''; x.hash = ''; return x.href; };
 const vale = r => r && r.status === 200 && r.type !== 'opaque';
+/* v1.6 · sin caché: todo se pide al servidor revalidando, sin pasar por la copia del navegador (GitHub Pages sirve con 10 minutos de caducidad y no admite cabeceras propias) */
+const SIN = { cache: 'no-cache', credentials: 'same-origin' };
 
 self.addEventListener('install', e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => Promise.all(BASICO.map(u => fetch(new Request(u, { cache: 'reload' })).then(r => vale(r) ? c.put(clave(u), r) : 0).catch(() => 0))))); });
 self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.indexOf(PREFIJO) === 0 && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
 
 async function fresco(req) { const c = await caches.open(CACHE), k = clave(req.url), ya = await c.match(k);
-  const red = fetch(req).then(r => { if (vale(r)) c.put(k, r.clone()).catch(() => {}); return r; });
+  const red = fetch(req.url, SIN).then(r => { if (vale(r)) c.put(k, r.clone()).catch(() => {}); return r; });   // v1.6 · sin caché del navegador
   if (!ya) return red;                                                    // nunca se ha guardado: no queda otra que esperar a la red
   red.catch(() => {});
   return Promise.race([red, new Promise((_, no) => setTimeout(no, TOPE))]).catch(() => ya); }   // sin red o red lenta: la copia guardada
 async function guardado(req) { const c = await caches.open(CACHE), ya = await c.match(req.url);
-  const red = fetch(req).then(async r => { if (vale(r)) { const viejas = await c.keys(clave(req.url), { ignoreSearch: true }); await Promise.all(viejas.filter(q => q.url !== req.url && clave(q.url) === clave(req.url)).map(q => c.delete(q))); await c.put(req.url, r.clone()); } return r; });
+  const red = fetch(req.url, SIN).then(async r => { if (vale(r)) { const viejas = await c.keys(clave(req.url), { ignoreSearch: true }); await Promise.all(viejas.filter(q => q.url !== req.url && clave(q.url) === clave(req.url)).map(q => c.delete(q))); await c.put(req.url, r.clone()); } return r; });
   if (ya) { red.catch(() => {}); return ya; }
   return red.catch(async () => (await c.match(clave(req.url), { ignoreSearch: true })) || Response.error()); }
 

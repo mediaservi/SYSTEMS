@@ -11,7 +11,7 @@ import VIDEO from './mod-video.js';
 import DISP from './mod-display.js';
 import { cargar } from './listas.js';
 
-export const VERSION = 'v1.5';
+export const VERSION = 'v1.6';
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
 const MODS = [ELEC, DISP, SENAL, AUDIO, VIDEO];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage
 fijarIdioma(idiomaInicial());

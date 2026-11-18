@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v1.5 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v1.6 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -44,7 +44,10 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v1.5)
+## Cambios de la versión actual (v1.6)
+- **Sin caché** (pedido por Josep, 18-11-2026): las páginas llevan las etiquetas equivalentes a `Cache-Control: no-cache, no-store, must-revalidate` y el service worker pide siempre al servidor, revalidando, sin pasar por la copia del navegador. Sin conexión sigue funcionando con la copia guardada.
+
+### v1.5
 - **Tableta en horizontal con letra legible** (aprobado por Josep, 16-11-2026): en pantallas táctiles de 901 a 1280 px de ancho en horizontal, la página se maqueta a 900 px como la tableta en vertical (bloques uno debajo de otro, con desplazamiento). Antes, en 1024 × 768 los bloques de PRO salían con letra de 3 a 7 px. En ordenador y TV no cambia nada.
 
 ## Cambios de la v1.4
