@@ -258,7 +258,7 @@ function equipoHTML(x, rec) {
 const eqSimple = (x, cant, tit, rec) => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${cant}×</td><td class="ref">${esc(x.id || x.modelo)}</td><td class="des">${esc(x.descripcion || x.resumen || '')}${x.stock ? ' · ' + esc(T('En stock')) : ''}</td></tr></table></div>` : '';
 function tablaTramos(r) {
   const g = {}; r.tramos.forEach((t) => { const k = t.txt + '|' + ((t.eq || {}).id || ''); g[k] = g[k] || { t, n: 0 }; g[k].n++; });
-  return `<p class="alt-t">${esc(T('Tramos'))}</p><table class="tabla-v"><tr><th>${esc(T('Tramo'))}</th><th>${esc(T('Cable o extensor'))}</th><th></th></tr>${Object.values(g).map((x) => `<tr><td class="m">${x.n} × ${S.dist} m</td><td>${esc(T(x.t.txt))}</td><td class="m">${esc([x.t.eq && x.t.eq.id, x.t.eq2 && x.t.eq2.id, x.t.cat ? 'MC1000' : ''].filter(Boolean).join(' + '))}</td></tr>`).join('')}</table>`;
+  return `<p class="alt-t">${esc(T('Tramos'))}</p><table class="tabla-v"><tr><th>${esc(T('Tramo'))}</th><th>${esc(T('Cable o extensor'))}</th><th></th></tr>${Object.values(g).map((x) => `<tr><td class="m">${x.n} × ${S.dist} m</td><td>${esc(T(x.t.txt))}</td><td class="m">${x.t.eq && x.t.eq.prioritario ? '⭐ ' : ''}${esc([x.t.eq && x.t.eq.id, x.t.eq2 && x.t.eq2.id, x.t.cat ? 'MC1000' : ''].filter(Boolean).join(' + '))}</td></tr>`).join('')}</table>`;
 }
 function resultado(r) {
   const tipo = r.error ? 'mal' : r.sem === 'A' ? 'aviso' : '';

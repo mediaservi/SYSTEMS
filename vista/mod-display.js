@@ -70,7 +70,8 @@ function calcula() {
   if (r.disp) {
     if (r.disp.pulgadas !== S.pulg) av.push(['info', T('No hay ninguno de {p}″: el más cercano es de {q}″.', { p: S.pulg, q: r.disp.pulgadas })]);
     if ((S.sitio === 'escaparate') && (r.disp.nits || 0) < 2500) av.push(['', T('Detrás de un cristal a la calle hace falta brillo alto (2.500 nits o más) para verse de día: este da {n} nits.', { n: N(r.disp.nits || 0) })]);
-    if (!r.disp.soc) { const P = equipos('display').filter((x) => x.uso === 'player'); r.player = P[0] || null;
+    if (!r.disp.soc) { const P = equipos(['display', 'signage']).filter((x) => x.tipo === 'signage' || x.uso === 'player');   /* v1.7 · reproductores de signage (MagicInfo, VXT, webOS): de la misma marca y prioritario si lo hay */
+      r.player = P.find((x) => x.marca === r.disp.marca && x.prioritario) || P.find((x) => x.marca === r.disp.marca) || P.find((x) => x.prioritario) || P[0] || null;
       av.push(['info', r.player ? T('Sin reproductor integrado: lleva uno externo por pantalla ({m}).', { m: r.player.marca + ' ' + r.player.modelo }) : T('Sin reproductor integrado: lleva un reproductor externo por pantalla (no hay ninguno en las listas).')]); }
     if (S.orient === 'v') av.push(['info', T('En vertical: comprueba en la ficha que el modelo admite el montaje en vertical.')]);
     if (S.sitio === 'videowall') { const a = ancho16(r.disp.pulgadas) * S.cols, h = alto16(r.disp.pulgadas) * S.filas; r.vw = { a, h, p: Math.round(Math.hypot(a, h) / 0.0254) };
@@ -106,7 +107,7 @@ function esquema(r, o = {}) {
   s += `<text x="${px}" y="${suelo + 18}" text-anchor="middle" font-size="12" class="t-mono t-ten">1,75 m</text>`;
   return `<svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="${esc(T('La instalación vista de frente'))}" preserveAspectRatio="xMidYMid meet">${s}</svg>`;
 }
-const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}</td></tr></table></div>` : '';
+const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${x.prioritario ? '⭐ ' : ''}${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}</td></tr></table></div>` : '';
 function resultado(r) {
   let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : r.sem === 'R' ? 'mal' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
   h += eq(r.disp, r.n, 'Display', true, r.disp ? ' · ' + T(r.disp.stock ? 'En stock' : 'Bajo pedido') : '') + eq(r.player, r.n, 'Reproductor', true);
