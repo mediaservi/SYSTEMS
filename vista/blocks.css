@@ -568,3 +568,50 @@ table.mat a { color: inherit; text-decoration: underline; text-underline-offset:
   .pide-res { display: flex; flex-direction: column; justify-content: center; white-space: nowrap; font-size: calc(var(--u) * 12) !important; line-height: 1.15; }
   .pide-res span { display: block; white-space: nowrap; overflow: hidden; width: 100%; }
 }
+
+
+/* v1.8 · MÓVIL VERTICAL, igual que SCREENS v10.76 (pedido por Josep, 23-11-2026): cabecera y pie en una sola fila
+   cabecera: isotipo + versión · burbuja SIMPLE/PRO · iconos · logo AVHUB (lleva a todas las apps); fuera los títulos de las otras apps y el texto «screens»
+   pie: triángulo de aviso (al tocarlo, el texto) · Aviso legal · candado; instalar y avisar de un fallo pasan a la ventana de información */
+.logo-iso, .h-ver, .ss-bur, .cred-ver { display: none; }
+.info-comun { display: contents; }
+.info-comun > * { flex: none; }
+@media (max-width: 559px) and (orientation: portrait) {
+  .f-h1 { display: flex !important; flex-wrap: nowrap !important; align-items: center; gap: 6px; padding: 6px 8px !important; row-gap: 0 !important; }
+  .f-h1 > [data-blk="H1L"] { flex: 0 0 auto !important; display: flex; align-items: center; gap: 6px !important; padding: 0 !important; min-width: 0; }
+  :root .f-h1 > [data-blk="H1L"] .logo, :root[data-tema] .f-h1 > [data-blk="H1L"] .logo { display: none !important; }   /* gana al tema claro (.t-osc) */
+  .f-h1 .logo-iso { display: block; width: 30px; height: 30px; }
+  .f-h1 .h-ver { display: none !important; }
+  .f-h1 .ss-sw { display: none !important; }
+  .f-h1 .ss-bur { display: inline-flex; align-items: center; gap: 5px; flex: none; height: 26px; padding: 0 9px; border-radius: 13px; border: 1px solid var(--linea, #3a3d44); background: #07090a; color: var(--txt, #eeeef1); font: 800 10.5px/1 Inter, system-ui, sans-serif; letter-spacing: .1em; cursor: pointer; box-shadow: inset 0 1px 4px #000; }
+  .f-h1 .ss-bur i { width: 7px; height: 7px; border-radius: 50%; background: var(--verde-txt, #d4ff00); box-shadow: 0 0 6px var(--verde-txt, #d4ff00); }
+  .f-h1 .ss-bur.pro i { background: #b566ff; box-shadow: 0 0 6px #b566ff; }
+  .f-h1 > [data-blk="H1C"] { order: 3 !important; flex: 0 0 auto !important; display: flex; justify-content: flex-end; }
+  .f-h1 > [data-blk="H1C"] a:not(.av) { display: none !important; }
+  .f-h1 > [data-blk="H1C"] .av img { height: 26px !important; }
+  .f-h1 > [data-blk="H1R"] { order: 2 !important; flex: 1 1 auto !important; min-width: 0; justify-content: flex-end; gap: 3px !important; padding: 0 !important; }
+  .f-h1 .h1r .ic-bt.g { width: 30px !important; height: 30px !important; }
+  .f-h1 .h1r .ic-bt.g .cod { font-size: 8px; }
+  .f-f1 { display: flex !important; flex-wrap: nowrap !important; align-items: center; gap: 10px; padding: 4px 10px !important; row-gap: 0 !important; min-height: 0; }
+  .f-f1 > [data-blk="F1L"] { order: 1 !important; flex: 0 0 auto !important; }
+  #pie-l .nota { display: flex !important; cursor: pointer; }
+  #pie-l .nota > span { display: none !important; }
+  #pie-l .nota .av-ic { width: 20px; height: 20px; }
+  .f-f1 > .f-cred { order: 2 !important; flex: 1 1 auto !important; display: flex !important; justify-content: center; font-size: 12px !important; white-space: nowrap !important; }
+  .f-f1 .cred-txt { display: none; }
+  .f-f1 > .f-cred { justify-content: space-evenly !important; }
+  .f-f1 .cred-ver { display: inline; font: 600 11px/1 Inter, system-ui, sans-serif; color: var(--tenue); letter-spacing: .04em; }   /* la versión pasa al pie y deja sitio en la cabecera */
+  .f-f1 > [data-blk="F1R"] { order: 3 !important; flex: 0 0 auto !important; }
+  .f-f1 > [data-blk="F1R"] > :not(.admin-esq) { display: none !important; }
+  .f-f1 .admin-esq { width: 18px !important; height: 18px !important; margin: 0 !important; position: static !important; order: 4; flex: none; }
+  .info-comun { display: inline-flex; gap: 8px; align-items: center; --avf: 40px; --avi: 38px; }
+}
+@media (max-width: 389px) and (orientation: portrait) {
+  .f-h1 { gap: 4px !important; padding: 6px !important; }
+  .f-h1 .logo-iso { width: 27px; height: 27px; }
+  .f-h1 .ss-bur { height: 24px; padding: 0 7px; font-size: 9.5px; gap: 4px; }
+  .f-h1 > [data-blk="H1R"] { gap: 2px !important; }
+  .f-h1 .h1r .ic-bt.g { width: 27px !important; height: 27px !important; }
+  .f-h1 > [data-blk="H1C"] .av img { height: 22px !important; }
+}
+@media (max-width: 359px) and (orientation: portrait) { .f-h1 .h1r [data-nuevo] { display: none !important; } }   /* el isotipo ya empieza un cálculo nuevo */
