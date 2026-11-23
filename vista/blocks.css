@@ -605,6 +605,12 @@ table.mat a { color: inherit; text-decoration: underline; text-underline-offset:
   .f-f1 > [data-blk="F1R"] > :not(.admin-esq) { display: none !important; }
   .f-f1 .admin-esq { width: 18px !important; height: 18px !important; margin: 0 !important; position: static !important; order: 4; flex: none; }
   .info-comun { display: inline-flex; gap: 8px; align-items: center; --avf: 40px; --avi: 38px; }
+  /* v1.9 · pestañas de módulo en una fila sin cortarse, y opciones cortas en fila (no una por línea) */
+  .f-hm > [data-blk="HM1"] { gap: 4px !important; }
+  .f-hm > [data-blk="HM1"] .fila.grupo { gap: 4px !important; min-width: 0; }
+  .f-hm > [data-blk="HM1"] .tog { flex: 1 1 auto !important; min-width: 0; padding: 0 3px !important; font-size: 10px !important; letter-spacing: 0 !important; }
+  .f-hm > [data-blk="HM1"] .tog svg { display: none; }
+  .blk-cu .fila.uno .tog { flex-basis: calc(33% - 8px) !important; }
 }
 @media (max-width: 389px) and (orientation: portrait) {
   .f-h1 { gap: 4px !important; padding: 6px !important; }
@@ -614,4 +620,5 @@ table.mat a { color: inherit; text-decoration: underline; text-underline-offset:
   .f-h1 .h1r .ic-bt.g { width: 27px !important; height: 27px !important; }
   .f-h1 > [data-blk="H1C"] .av img { height: 22px !important; }
 }
-@media (max-width: 359px) and (orientation: portrait) { .f-h1 .h1r [data-nuevo] { display: none !important; } }   /* el isotipo ya empieza un cálculo nuevo */
+@media (max-width: 359px) and (orientation: portrait) { .f-h1 .h1r [data-nuevo] { display: none !important; } }
+@media (max-width: 359px) and (orientation: portrait) { .f-hm > [data-blk="HM1"] .tog { font-size: 9px !important; padding: 0 2px !important; } .f-hm > [data-blk="HM1"], .f-hm > [data-blk="HM1"] .fila.grupo { gap: 3px !important; } }   /* el isotipo ya empieza un cálculo nuevo */
