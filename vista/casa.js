@@ -11,7 +11,7 @@ import VIDEO from './mod-video.js';
 import DISP from './mod-display.js';
 import { cargar } from './listas.js';
 
-export const VERSION = 'v1.7';
+export const VERSION = 'v1.8';
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
 const MODS = [ELEC, DISP, SENAL, AUDIO, VIDEO];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage
 fijarIdioma(idiomaInicial());
@@ -62,7 +62,7 @@ const NOMBRE = { es: 'Español', en: 'Inglés', ca: 'Catalán' };
 /* ---------- piezas ---------- */
 const bt = (k, tit, attrs = '', cls = 'g') => `<button type="button" class="ic-bt ${cls}" title="${esc(T(tit))}" aria-label="${esc(T(tit))}" ${attrs}>${k === 'info' ? '<span class="ic ic-info"></span>' : IC[k] || icb(k)}</button>`;
 const blk = (area, id, tit, ac, cuerpo, extra = '', cls = '', icK = '') => `<section class="blk ${cls}" style="grid-area:${area};--ac:${ac}" data-blk="${id}"><header class="blk-cab">${icK ? `<i class="blk-ic" aria-hidden="true">${icb(icK)}</i>` : ''}<b>${tit}</b><span class="sep"></span>${extra}<span class="id">${id}</span></header><div class="blk-cu">${cuerpo}</div></section>`;
-const sw = () => { const pro = G.vista === 'pro'; return `<div class="ss-sw" role="group" aria-label="${esc(T('Modo SIMPLE o PRO'))}" title="${esc(T('Modo SIMPLE o PRO'))}" data-crudo><button type="button" class="ss-sw-e${pro ? '' : ' on'}" data-ss-sw="simple" aria-pressed="${!pro}">SIMPLE</button><label class="ss-sw-t"><input type="checkbox" data-ss-swc aria-label="PRO"${pro ? ' checked' : ''}><span class="ss-sw-p"><span class="ss-sw-b"></span></span></label><button type="button" class="ss-sw-e${pro ? ' on' : ''}" data-ss-sw="pro" aria-pressed="${pro}">PRO</button></div>`; };
+const sw = () => { const pro = G.vista === 'pro'; return `<button type="button" class="ss-bur${pro ? ' pro' : ''}" data-ss-sw="${pro ? 'simple' : 'pro'}" aria-label="${esc(T('Modo SIMPLE o PRO'))}" title="${esc(T('Modo SIMPLE o PRO'))}"><i></i>${pro ? 'PRO' : 'SIMPLE'}</button><div class="ss-sw" role="group" aria-label="${esc(T('Modo SIMPLE o PRO'))}" title="${esc(T('Modo SIMPLE o PRO'))}" data-crudo><button type="button" class="ss-sw-e${pro ? '' : ' on'}" data-ss-sw="simple" aria-pressed="${!pro}">SIMPLE</button><label class="ss-sw-t"><input type="checkbox" data-ss-swc aria-label="PRO"${pro ? ' checked' : ''}><span class="ss-sw-p"><span class="ss-sw-b"></span></span></label><button type="button" class="ss-sw-e${pro ? ' on' : ''}" data-ss-sw="pro" aria-pressed="${pro}">PRO</button></div>`; };
 const COL = ['var(--azul)', 'var(--violeta)', 'var(--magenta, #e24bf0)', 'var(--ambar)', 'var(--verde)', 'var(--rojo)'];
 
 /* ---------- la plantilla (calcada de SCREENS) ---------- */
@@ -72,14 +72,14 @@ function marco() {
   const fam = `<a href="https://screens.mediaservi.com/"><img class="t-osc" src="assets/fam/screens-logo.svg" alt="SCREENS"><img class="t-cla" src="assets/fam/screens-logo-claro.svg" alt="SCREENS"></a><a href="https://adposter.mediaservi.com/"><img class="t-osc" src="assets/fam/adposter-logo.svg" alt="ADPOSTER"><img class="t-cla" src="assets/fam/adposter-logo-claro.svg" alt="ADPOSTER"></a><a class="av" href="https://avhub.mediaservi.com/"><img class="t-osc" src="assets/avhub-logo.svg" alt="AVHUB"><img class="t-cla" src="assets/avhub-logo-claro.svg" alt="AVHUB"></a><a href="https://vjshow.mediaservi.com/"><img class="t-osc" src="assets/fam/vjshow-logo.svg" alt="VJSHOW"><img class="t-cla" src="assets/fam/vjshow-logo-claro.svg" alt="VJSHOW"></a><a href="https://msgame.mediaservi.com/"><img src="assets/fam/msgame-logo.svg?v=5" alt="MSGAME"></a>`;
   const modTog = (m) => `<button type="button" class="tog" aria-pressed="${m.id === G.mod}" data-mod="${m.id}" title="${esc(T(m.nom))}">${icb(m.ic)}<span>${esc(T(m.corto))}</span></button>`;
   $('#app').innerHTML = `<header class="im-cab" aria-hidden="true"><img class="im-logo" src="assets/systems-logo-claro.svg" alt="SYSTEMS"><div class="im-url"><span id="im-fecha">systems.mediaservi.com</span></div><img class="im-avhub" src="assets/avhub-logo-claro.svg" alt="AVHUB"></header><div class="blocks">
-    <header class="franja f-h1"><div data-blk="H1L"><button type="button" data-nuevo title="${esc(T('Nuevo cálculo: lo deja todo como al empezar'))}" aria-label="SYSTEMS" style="display:flex;border:0;background:none;padding:0"><img class="logo t-osc" src="assets/systems-logo.svg" alt="SYSTEMS"><img class="logo t-cla" src="assets/systems-logo-claro.svg" alt="SYSTEMS"></button>${sw()}</div>
+    <header class="franja f-h1"><div data-blk="H1L"><button type="button" data-nuevo title="${esc(T('Nuevo cálculo: lo deja todo como al empezar'))}" aria-label="SYSTEMS" style="display:flex;border:0;background:none;padding:0"><img class="logo t-osc" src="assets/systems-logo.svg" alt="SYSTEMS"><img class="logo t-cla" src="assets/systems-logo-claro.svg" alt="SYSTEMS"><img class="logo-iso" src="assets/systems-icono.svg" alt="SYSTEMS"></button><small class="h-ver">${VERSION}</small>${sw()}</div>
       <nav data-blk="H1C" class="fam" aria-label="AVHUB">${fam}</nav>
       <div data-blk="H1R" class="h1r">${bt('info', 'Qué es esto y cómo se usa', 'data-info')}${bt('pdf', 'Ver o imprimir el PDF del proyecto', 'data-pdf')}${bt('nuevo', 'Nuevo cálculo: lo deja todo como al empezar', 'data-nuevo')}<button type="button" class="ic-bt g" data-idioma data-crudo title="${esc(tIdi)}" aria-label="${esc(tIdi)}" style="position:relative"><span class="ic ic-lang"></span><small class="cod">${l.toUpperCase()}</small></button>${bt('tema', 'Cambiar entre gris oscuro y gris claro', 'data-tema')}</div></header>
     <div class="franja f-hm"><div data-blk="HM1"><div class="fila grupo" style="flex:2">${modTog(MODS[0])}${modTog(MODS[1])}</div><div class="fila grupo" style="flex:3">${MODS.slice(2).map(modTog).join('')}</div></div>
       <div data-blk="HM2">${bt('pega', 'Pegar una petición copiada', 'data-pega')}<div class="pide-caja"><input class="pide" id="pide" type="text" autocomplete="off" spellcheck="false" placeholder="" aria-label="" value="${esc(G.texto)}"><button type="button" class="pide-res" id="pide-res" hidden title="${esc(T('Resultado del cálculo. Toca para escribir otra petición'))}"></button></div>${bt('copia', 'Copiar el texto de la casilla (la petición o el resultado)', 'data-copiatxt')}</div>
       <div data-blk="HM3"><button type="button" class="calcular" id="calcular">${esc(T('CALCULAR'))} →</button></div></div>
     <main id="cuerpo"></main>
-    <footer class="franja f-f1"><div data-blk="F1L" id="pie-l"><span class="nota"><svg class="av-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6 2.4 20.2h19.2z"/><path d="M12 9.6v5"/><path d="M12 17.6h.01"/></svg><span>${esc(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'))}</span></span></div><div data-blk="F1C" id="pie-c" class="f-cred" data-crudo></div><div data-blk="F1R" class="f1r" id="hueco-comun"></div><a class="admin-esq" href="${ADMIN_URL}" target="_blank" rel="noopener" title="${esc(T('Panel de administración'))}" aria-label="${esc(T('Panel de administración'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a></footer>
+    <footer class="franja f-f1"><div data-blk="F1L" id="pie-l"><span class="nota" data-aviso-calc><svg class="av-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6 2.4 20.2h19.2z"/><path d="M12 9.6v5"/><path d="M12 17.6h.01"/></svg><span>${esc(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'))}</span></span></div><div data-blk="F1C" id="pie-c" class="f-cred" data-crudo></div><div data-blk="F1R" class="f1r" id="hueco-comun"></div><a class="admin-esq" href="${ADMIN_URL}" target="_blank" rel="noopener" title="${esc(T('Panel de administración'))}" aria-label="${esc(T('Panel de administración'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a></footer>
   </div><div class="velo" id="velo"></div><div class="tostada" id="tostada" role="status" aria-live="polite"></div>`;
   pintaPie();
   const r = $('#hueco-comun');
@@ -95,7 +95,7 @@ function imprimir() {
   const vuelve = () => { document.documentElement.dataset.tema = tema; removeEventListener('afterprint', vuelve); };
   addEventListener('afterprint', vuelve); window.print(); setTimeout(() => { if (!matchMedia('print').matches) vuelve(); }, 1500);
 }
-function pintaPie() { const p = $('#pie-c'); if (p) p.innerHTML = window.AVCREDITO ? window.AVCREDITO.html('SYSTEMS', VERSION, idioma()) : `SYSTEMS ${VERSION} ${new Date().getFullYear()} · <a href="https://mediaservi.com/" target="_blank" rel="noopener">mediaservi.com</a>`; }
+function pintaPie() { const p = $('#pie-c'); if (p) p.innerHTML = window.AVCREDITO ? (() => { const h = window.AVCREDITO.html('SYSTEMS', VERSION, idioma()), k = h.indexOf(' · <a href="#aviso"'); return '<span class="cred-ver">SYSTEMS ' + VERSION + '</span>' + (k > 0 ? '<span class="cred-txt">' + h.slice(0, k) + ' · </span>' + h.slice(k + 3) : h); })() : `SYSTEMS ${VERSION} ${new Date().getFullYear()} · <a href="https://mediaservi.com/" target="_blank" rel="noopener">mediaservi.com</a>`; }
 if (window.AVCREDITO && window.AVCREDITO.alCambiar) window.AVCREDITO.alCambiar(() => { pintaPie(); ajusta(); });
 
 /* ---------- el cuerpo: SIMPLE (tres bloques) o PRO (rejilla de 6 × 3) ---------- */
@@ -156,7 +156,8 @@ function tostada(t, ms = 3200) { const e = $('#tostada'); if (!e) return; e.text
 function ventana(tit, html) {
   const v = $('#velo'); v.innerHTML = `<div class="vent" role="dialog" aria-modal="true"><div class="vent-cab"><b>${esc(tit)}</b><span class="sep"></span><button type="button" class="ic-bt" data-cierra aria-label="${esc(T('Cerrar'))}">${IC.x}</button></div><div class="vent-cu">${html}</div></div>`; v.classList.add('on');
 }
-const cierra = () => { const v = $('#velo'); v.classList.remove('on'); v.innerHTML = ''; };
+const movilV = () => matchMedia('(max-width: 559px) and (orientation: portrait)').matches;   /* v1.8 · móvil vertical */
+const cierra = () => { const ic = $('#info-comun'), hc = $('#hueco-comun'); if (ic && hc) [...ic.children].forEach((x) => hc.insertBefore(x, hc.querySelector('.admin-esq'))); const v = $('#velo'); v.classList.remove('on'); v.innerHTML = ''; };
 function info() {
   ventana('SYSTEMS', `<p>${esc(T('Calcula la electrónica, la señal, el audio y la videoconferencia de un proyecto con los equipos de las marcas del catálogo.'))}</p><p>${esc(T('Elige arriba el módulo. En SIMPLE te pregunto lo justo y te doy la solución; en PRO ves y cambias todos los datos, el esquema y el despiece.'))}</p><p>${esc(T('También puedes escribir lo que necesitas en la casilla y pulsar CALCULAR.'))}</p><p class="nota">${esc(T('Solo se calcula y se propone con las marcas y los fabricantes de las listas del panel.'))}</p>` +
     MODS.map((m) => `<p><b>${esc(T(m.nom))}</b> · ${esc(T(m.info))}</p>`).join(''));
@@ -193,7 +194,7 @@ function calcular() {
   EDITA = false; pinta();
   const b = $('#calcular'); b.classList.remove('pulso'); void b.offsetWidth; b.classList.add('pulso');
 }
-function ponVista(v) { G.vista = v === 'pro' ? 'pro' : 'simple'; document.querySelectorAll('[data-ss-swc]').forEach((c) => { c.checked = G.vista === 'pro'; }); document.querySelectorAll('[data-ss-sw]').forEach((b) => { if (b.closest('.ss-sw')) { const on = b.dataset.ssSw === G.vista; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); } }); pinta(); }
+function ponVista(v) { G.vista = v === 'pro' ? 'pro' : 'simple'; document.querySelectorAll('[data-ss-swc]').forEach((c) => { c.checked = G.vista === 'pro'; }); document.querySelectorAll('.ss-bur').forEach((b) => { const pro = G.vista === 'pro'; b.dataset.ssSw = pro ? 'simple' : 'pro'; b.classList.toggle('pro', pro); b.innerHTML = '<i></i>' + (pro ? 'PRO' : 'SIMPLE'); }); document.querySelectorAll('[data-ss-sw]').forEach((b) => { if (b.closest('.ss-sw')) { const on = b.dataset.ssSw === G.vista; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); } }); pinta(); }
 document.addEventListener('change', (e) => {
   const t = e.target;
   if (t.matches('[data-ss-swc]')) { ponVista(t.checked ? 'pro' : 'simple'); return; }
@@ -214,7 +215,8 @@ document.addEventListener('click', (e) => {
   if (q('[data-idioma]')) { fijarIdioma(IDIOMAS[(IDIOMAS.indexOf(idioma()) + 1) % IDIOMAS.length]); marco(); return; }
   if (q('button[data-tema]')) { G.tema = G.tema === 'claro' ? 'oscuro' : 'claro'; document.documentElement.dataset.tema = G.tema; guardaCasa(); return; }
   if (q('[data-pdf]')) { imprimir(); return; }
-  if (q('[data-info]')) { info(); return; }
+  if (q('[data-info]')) { info(); if (movilV()) { const cu = document.querySelector('#velo .vent-cu'), hc = $('#hueco-comun'); if (cu && hc) { cu.insertAdjacentHTML('afterbegin', '<div class="fila info-comun" id="info-comun"></div>'); [...hc.children].filter((x) => !x.classList.contains('admin-esq')).forEach((x) => $('#info-comun').appendChild(x)); } } return; }
+  if (q('[data-aviso-calc]') && movilV()) { tostada(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'), 6000); return; }
   if (q('[data-cierra]') || e.target.id === 'velo') { cierra(); return; }
   if (q('#calcular')) { calcular(); return; }
   if (q('#pide-res')) { EDITA = true; pintaRes(); const i = $('#pide'); i.focus(); i.select(); return; }

@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v1.7 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v1.8 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 ## Para qué sirve
 
@@ -44,7 +44,10 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v1.7)
+## Cambios de la versión actual (v1.8)
+- **Móvil vertical más limpio**, igual que SCREENS (pedido por Josep, 23-11-2026): cabecera en una sola fila (isotipo, burbuja SIMPLE / PRO que cambia de modo al tocarla, iconos y el logo de AVHUB, que lleva a todas las apps; fuera los logos de las otras apps) y pie en una sola fila (triángulo de aviso que al tocarlo enseña el texto, «SYSTEMS v1.8», «Aviso legal» y candado). Instalar y avisar de un fallo pasan a la ventana de información.
+
+## Cambios de la v1.7
 - **Cables prioritarios** (tarifa parcial de PureLink, 23-11-2026: «los cables en los que podemos ser mucho más competitivos»): lo que el panel AVHUB ADMIN marca ⭐ PRIORITARIO se propone primero. En un tramo en el que vale tanto un extensor HDBaseT como un cable de fibra, si el cable es prioritario y el extensor no, se propone el cable y el extensor queda como alternativa. Los equipos prioritarios llevan ⭐ en las tablas y en las fichas.
 - **Reproductores de signage** (tipo nuevo del panel: MagicInfo, VXT, webOS, como el SBB de Samsung o el WP601 de LG): cuando el display no lleva reproductor integrado, se propone el de su misma marca (y el prioritario, si lo hay).
 
