@@ -4,6 +4,11 @@
 
 **Versión actual: v1.9 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
+
+## Icono
+
+Icono de pestaña y de app (noviembre 2026) en el estilo de placa de la familia AVHUB: placa con degradado negro a morado, filete negro y sombra verde, con el isotipo de la app. El logo de la cabecera no cambia.
+
 ## Para qué sirve
 
 Reúne en una sola consola los cálculos que se hacen al diseñar y montar un sistema audiovisual, con los equipos de las marcas del catálogo. Funciona en el navegador, en español, inglés y catalán, y en TV, ordenador, tablet y móvil.
