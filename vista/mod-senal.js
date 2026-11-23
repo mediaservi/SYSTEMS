@@ -83,7 +83,7 @@ function esquema(r, o = {}) {
 }
 const eq = (x, n, tit, rec) => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}</td></tr></table></div>` : '';
 function tabla(r) {
-  const fila = (L, nom, d) => { const g = {}; L.forEach((t) => { const k = t.txt; g[k] = g[k] || { t, n: 0 }; g[k].n++; }); return Object.values(g).map((x) => `<tr><td>${esc(T(nom))}</td><td class="m">${x.n} × ${d} m</td><td>${esc(T(x.t.txt))}</td><td class="m">${esc([x.t.eq && x.t.eq.id, x.t.eq2 && x.t.eq2.id, x.t.cat ? 'MC1000' : ''].filter(Boolean).join(' + '))}</td></tr>`).join(''); };
+  const fila = (L, nom, d) => { const g = {}; L.forEach((t) => { const k = t.txt; g[k] = g[k] || { t, n: 0 }; g[k].n++; }); return Object.values(g).map((x) => `<tr><td>${esc(T(nom))}</td><td class="m">${x.n} × ${d} m</td><td>${esc(T(x.t.txt))}</td><td class="m">${x.t.eq && x.t.eq.prioritario ? '⭐ ' : ''}${esc([x.t.eq && x.t.eq.id, x.t.eq2 && x.t.eq2.id, x.t.cat ? 'MC1000' : ''].filter(Boolean).join(' + '))}</td></tr>`).join(''); };
   return `<p class="alt-t">${esc(T('Tramos'))}</p><table class="tabla-v"><tr><th></th><th>${esc(T('Tramo'))}</th><th>${esc(T('Cable o extensor'))}</th><th></th></tr>${fila(r.ida, 'Ida', S.dF)}${fila(r.vuelta, 'Vuelta', S.dD)}</table>`;
 }
 function resultado(r) {

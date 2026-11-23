@@ -19,7 +19,14 @@ export const RES = { '1080': { gbps: 4.5, nom: '1080p' }, '4k': { gbps: 18, nom:
 const pl = (id) => equipos(['conmutador', 'extensor', 'cable'], 'PURELINK').find((x) => x.id === id);
 
 /* cable o extensor para un tramo de d metros con la señal r ('1080' | '4k' | '8k'); usb: hace falta llevar USB (KVM) */
+/* v1.7 · cables prioritarios (tarifa parcial de PureLink en el panel, ⭐): si la alternativa válida es prioritaria y la propuesta no, se proponen al revés */
 export function tramo(d, r, o = {}) {
+  const x = tramoBase(d, r, o);
+  if (x && x.alt && x.alt.prioritario && !(x.eq && x.eq.prioritario) && x.alt.tipo === 'cable' && !o.usb)
+    return { tipo: 'fibra-c', txt: o.dp ? 'Cable DisplayPort de fibra' : 'Cable HDMI de fibra (activo)', eq: x.alt, alt: x.eq, prio: true };
+  return x;
+}
+function tramoBase(d, r, o = {}) {
   const usb = !!o.usb, dp = !!o.dp, hdbtSale = !!o.hdbtSale;
   if (hdbtSale && d <= 100) return { tipo: 'hdbt-int', txt: 'Salida HDBaseT del equipo + receptor junto al destino', eq: pl('MC1000'), nota: 'Cable Cat6A S-FTP; comprueba en la ficha el receptor que admite.' };
   if (d <= 5 && !(r === '8k' && d > 3)) return { tipo: 'pasivo', txt: dp ? 'Cable DisplayPort pasivo' : 'Cable HDMI pasivo', eq: pl(r === '8k' ? 'FI-H100' : dp ? 'PI5010' : 'PI1000') };
