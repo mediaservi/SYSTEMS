@@ -50,6 +50,7 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta-anterior`: la beta previa.
 
 ## Cambios de la versión actual (v1.9)
+- **Direcciones de carpeta sin la barra final (24-11-2026):** con la app ya visitada o instalada, abrir una dirección como `/blocks` daba «No se puede acceder a este sitio web» (ERR_FAILED), porque el service worker entregaba tal cual la respuesta redirigida por el servidor. Ahora devuelve una redirección limpia; caché renovada (`systems-v18`).
 - Móvil vertical: las pestañas de módulo (Electrónica, Displays, Señal, Audio, Videoconf.) caben en una fila sin cortarse, y las opciones cortas como LED / Proyección / Displays van en fila en lugar de una por línea.
 
 ## Cambios de la v1.8
