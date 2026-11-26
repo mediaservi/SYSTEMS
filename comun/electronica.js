@@ -7,7 +7,7 @@
 */
 (function () {
   'use strict';
-  const ELEC_PX_PUERTO = 650000;          // píxeles por puerto Ethernet (8 bit, 60 Hz)
+  let ELEC_PX_PUERTO = 650000;          // píxeles por puerto Ethernet (8 bit, 60 Hz)
   const ELEC_PX_4K = 3840 * 2160;         // píxeles de una salida 4K UHD (la misma constante que la consola)
   const ELEC_CVT = { ref: 'CVT10 Pro', porCvt: 10, desc: 'Conv. fibra→10 RJ45 (pantalla)' };
   const CHARMEX_NOVASTAR = 'https://charmex.net/novastar-';
@@ -232,5 +232,15 @@
     });
     return out;
   };
-  globalThis.SC_ELEC = { aplicaListas, listas: () => LISTAS, ELEC_BLEND, calcularBlending, ELEC_PX_PUERTO, ELEC_PX_4K, ELEC_CVT, CHARMEX_NOVASTAR, charmexBusca, ELEC_DEVICES, ELEC_MX_CHASIS, ELEC_MX_TARJ_OUT, ELEC_MX_SFP, ELEC_MX_CVT, ELEC_H_CHASIS, ELEC_H_IN_BASE, ELEC_H_PREVIO, ELEC_H_TARJ_RJ, ELEC_H_TARJ_FIB, ELEC_H_TARJ_IN, ELEC_MEDIASERVERS, elecNorm, elecMpx, elecDeHoja, calcularElectronicas, calcularMediaservers };
+  /* v11.49 · BRIAN (panel AVHUB ADMIN, tema «Electrónica LED · motor común», app TODAS): capacidades de puertos, conversores, ranuras y tarjetas.
+     Sin dato, las de siempre. Se llama con el objeto de parámetros ya leído por la app. */
+  const ELEC_DEF = { px: 650000, cvt: 10, mx2i: 2, mx2o: 2, mx6i: 8, mx6o: 8, mxOpt: 4, hRj: 20, hOpt: 2, hPpo: 8 };
+  function fijaParams(b) { const v = (k, d) => { const n = Number(String(b && b[k] != null ? b[k] : '').replace(',', '.')); return isFinite(n) && n > 0 ? n : d; };
+    ELEC_PX_PUERTO = v('elec.pixelesPorPuerto', ELEC_DEF.px); ELEC_CVT.porCvt = v('elec.conversor.puertos', ELEC_DEF.cvt);
+    ELEC_MX_CHASIS.MX2000.slotsIn = v('elec.mx2000.ranurasEntrada', ELEC_DEF.mx2i); ELEC_MX_CHASIS.MX2000.slotsOut = v('elec.mx2000.ranurasSalida', ELEC_DEF.mx2o);
+    ELEC_MX_CHASIS.MX6000.slotsIn = v('elec.mx6000.ranurasEntrada', ELEC_DEF.mx6i); ELEC_MX_CHASIS.MX6000.slotsOut = v('elec.mx6000.ranurasSalida', ELEC_DEF.mx6o);
+    ELEC_MX_TARJ_OUT.opt = v('elec.mx.tarjetaSalida.fibras', ELEC_DEF.mxOpt); ELEC_H_TARJ_RJ.puertos = v('elec.h.tarjetaRJ45.puertos', ELEC_DEF.hRj);
+    ELEC_H_TARJ_FIB.opt = v('elec.h.tarjetaFibra.fibras', ELEC_DEF.hOpt); ELEC_H_TARJ_FIB.ppo = v('elec.h.tarjetaFibra.puertosPorFibra', ELEC_DEF.hPpo);
+    if (globalThis.SC_ELEC) globalThis.SC_ELEC.ELEC_PX_PUERTO = ELEC_PX_PUERTO; }
+  globalThis.SC_ELEC = { fijaParams, aplicaListas, listas: () => LISTAS, ELEC_BLEND, calcularBlending, ELEC_PX_PUERTO, ELEC_PX_4K, ELEC_CVT, CHARMEX_NOVASTAR, charmexBusca, ELEC_DEVICES, ELEC_MX_CHASIS, ELEC_MX_TARJ_OUT, ELEC_MX_SFP, ELEC_MX_CVT, ELEC_H_CHASIS, ELEC_H_IN_BASE, ELEC_H_PREVIO, ELEC_H_TARJ_RJ, ELEC_H_TARJ_FIB, ELEC_H_TARJ_IN, ELEC_MEDIASERVERS, elecNorm, elecMpx, elecDeHoja, calcularElectronicas, calcularMediaservers };
 })();

@@ -1,6 +1,6 @@
 // SYSTEMS · reglas de señal y conectividad (conocimiento/systems-conectividad-reglas.md), comunes a SEÑAL Y CONECTIVIDAD y a ELECTRÓNICA
 // (proyección y displays): cómo se elige el conmutador y el cable o extensor de cada tramo. Solo con equipos de las listas. GPL-3.0 · mediaservi.com
-import { equipos } from './listas.js';
+import { equipos, P } from './listas.js';
 import { textos } from './util.js';
 textos({
   'Salida HDBaseT del equipo + receptor junto al destino': ['HDBaseT output of the unit + receiver at the destination', 'Sortida HDBaseT de l\'equip + receptor al costat de la destinació'],
@@ -16,6 +16,8 @@ textos({
 });
 
 export const RES = { '1080': { gbps: 4.5, nom: '1080p' }, '4k': { gbps: 18, nom: '4K60' }, '8k': { gbps: 48, nom: '8K' } };
+/* v2.4 · NORMA BRIAN: las distancias de cada tramo salen del panel (tema «Señal y conectividad · distancias»), con las de siempre de respaldo */
+const M = (k, d) => P('senal.' + k, d);
 const pl = (id) => equipos(['conmutador', 'extensor', 'cable'], 'PURELINK').find((x) => x.id === id);
 
 /* cable o extensor para un tramo de d metros con la señal r ('1080' | '4k' | '8k'); usb: hace falta llevar USB (KVM) */
@@ -28,15 +30,15 @@ export function tramo(d, r, o = {}) {
 }
 function tramoBase(d, r, o = {}) {
   const usb = !!o.usb, dp = !!o.dp, hdbtSale = !!o.hdbtSale;
-  if (hdbtSale && d <= 100) return { tipo: 'hdbt-int', txt: 'Salida HDBaseT del equipo + receptor junto al destino', eq: pl('MC1000'), nota: 'Cable Cat6A S-FTP; comprueba en la ficha el receptor que admite.' };
-  if (d <= 5 && !(r === '8k' && d > 3)) return { tipo: 'pasivo', txt: dp ? 'Cable DisplayPort pasivo' : 'Cable HDMI pasivo', eq: pl(r === '8k' ? 'FI-H100' : dp ? 'PI5010' : 'PI1000') };
-  if (r === '8k') return d <= 50 && !dp ? { tipo: 'fibra-c', txt: 'Cable HDMI de fibra 8K', eq: pl('FX-I380') } : d <= 100 && dp ? { tipo: 'fibra-c', txt: 'Cable DisplayPort de fibra', eq: pl('FX-I260') } : { tipo: 'fibra', txt: 'Extensor de fibra', eq: pl('PT-HDOF-100'), nota: 'Más de 50 m a 8K: comprueba en la ficha el ancho de banda del extensor.' };
-  if (r === '1080' && d <= 15) return { tipo: 'pasivo', txt: dp ? 'Cable DisplayPort' : 'Cable HDMI', eq: pl(dp ? 'PI5010' : 'PI1000'), nota: d > 5 ? 'A 1080p un cable de calidad llega a 15 m.' : '' };
-  if (d <= 15) return { tipo: 'fibra-c', txt: dp ? 'Cable DisplayPort de fibra' : 'Cable HDMI de fibra (activo)', eq: pl(dp ? 'FX-I260' : 'FX-I352') };
-  if (usb && d <= 100) return { tipo: 'hdbt3', txt: 'Extensor HDBaseT 3.0 con USB (KVM)', eq: pl('PT-HDBT-1020HU-TX'), eq2: pl('PT-HDBT-1020HU-RX'), cat: true };
-  if (d <= 40) return r === '1080' ? { tipo: 'hdbt', txt: 'Extensor HDBaseT', eq: pl('PT-HDBT-100'), cat: true } : { tipo: 'hdbt', txt: 'Extensor HDBaseT 18 Gbps', eq: pl('PT-HDBT-200'), cat: true, alt: pl('FX-I352') };
-  if (d <= 100) return { tipo: 'hdbt', txt: 'Extensor HDBaseT de largo alcance', eq: pl('PT-HDBT-150'), cat: true, alt: pl('FX-I352') };
-  return { tipo: 'fibra', txt: 'Extensor de fibra', eq: pl(d <= 300 ? 'FX-P350' : 'PT-HDOF-100'), nota: d <= 300 ? 'Fibra multimodo.' : 'Fibra monomodo.' };
+  if (hdbtSale && d <= M('hdbtSalida', 100)) return { tipo: 'hdbt-int', txt: 'Salida HDBaseT del equipo + receptor junto al destino', eq: pl('MC1000'), nota: 'Cable Cat6A S-FTP; comprueba en la ficha el receptor que admite.' };
+  if (d <= M('pasivo', 5) && !(r === '8k' && d > M('pasivo8k', 3))) return { tipo: 'pasivo', txt: dp ? 'Cable DisplayPort pasivo' : 'Cable HDMI pasivo', eq: pl(r === '8k' ? 'FI-H100' : dp ? 'PI5010' : 'PI1000') };
+  if (r === '8k') return d <= M('fibraHdmi8k', 50) && !dp ? { tipo: 'fibra-c', txt: 'Cable HDMI de fibra 8K', eq: pl('FX-I380') } : d <= M('fibraDp', 100) && dp ? { tipo: 'fibra-c', txt: 'Cable DisplayPort de fibra', eq: pl('FX-I260') } : { tipo: 'fibra', txt: 'Extensor de fibra', eq: pl('PT-HDOF-100'), nota: 'Más de 50 m a 8K: comprueba en la ficha el ancho de banda del extensor.' };
+  if (r === '1080' && d <= M('pasivo1080', 15)) return { tipo: 'pasivo', txt: dp ? 'Cable DisplayPort' : 'Cable HDMI', eq: pl(dp ? 'PI5010' : 'PI1000'), nota: d > M('pasivo', 5) ? 'A 1080p un cable de calidad llega a 15 m.' : '' };
+  if (d <= M('fibraActiva', 15)) return { tipo: 'fibra-c', txt: dp ? 'Cable DisplayPort de fibra' : 'Cable HDMI de fibra (activo)', eq: pl(dp ? 'FX-I260' : 'FX-I352') };
+  if (usb && d <= M('hdbt3', 100)) return { tipo: 'hdbt3', txt: 'Extensor HDBaseT 3.0 con USB (KVM)', eq: pl('PT-HDBT-1020HU-TX'), eq2: pl('PT-HDBT-1020HU-RX'), cat: true };
+  if (d <= M('hdbt', 40)) return r === '1080' ? { tipo: 'hdbt', txt: 'Extensor HDBaseT', eq: pl('PT-HDBT-100'), cat: true } : { tipo: 'hdbt', txt: 'Extensor HDBaseT 18 Gbps', eq: pl('PT-HDBT-200'), cat: true, alt: pl('FX-I352') };
+  if (d <= M('hdbtLargo', 100)) return { tipo: 'hdbt', txt: 'Extensor HDBaseT de largo alcance', eq: pl('PT-HDBT-150'), cat: true, alt: pl('FX-I352') };
+  return { tipo: 'fibra', txt: 'Extensor de fibra', eq: pl(d <= M('fibraMultimodo', 300) ? 'FX-P350' : 'PT-HDOF-100'), nota: d <= M('fibraMultimodo', 300) ? 'Fibra multimodo.' : 'Fibra monomodo.' };
 }
 /* conmutador: espejo (selector o distribuidor) o independiente (matriz); devuelve el equipo de la lista o null */
 export function conmutador(nIn, nOut, modo, o = {}) {

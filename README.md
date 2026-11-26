@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v2.3 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v2.4 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 
 ## Icono
@@ -52,7 +52,12 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v2.3)
+## Cambios de la versión actual (v2.4)
+- **Todo el cálculo con ajuste fino desde el panel AVHUB ADMIN:** SEÑAL (distancia de cada cable y extensor, AV sobre IP, salidas HDBaseT), DISPLAYS (brillo de escaparate, tamaños máximos, alturas de montaje y distancias de visión), CÁMARAS (alturas y distancias de USB y HDMI) y las alturas de la vista lateral de SONIDO se leen en vivo, con los valores de siempre como respaldo y copia para funcionar sin conexión.
+- **Motor común de electrónica LED** al día con SCREENS: píxeles por puerto, conversores, ranuras y tarjetas también desde el panel, los mismos valores para las dos apps.
+- Caché renovada (`systems-v23`).
+
+## Cambios de la v2.3
 - **Vistas técnicas como las de SCREENS** (`vista/vt.js`, las mismas piezas que `screens/vistas.js`): fondo oscuro, cotas con topes, escala en metros y la silueta oficial de 1,75 m. Botones de vista en la cabecera del dibujo, en SIMPLE y en PRO:
   - DISPLAYS: FRONTAL (ancho, alto y altura del borde inferior) y LATERAL (distancia de quien mira, altura de los ojos y ángulos hacia arriba y hacia abajo).
   - SONIDO: PLANTA y LATERAL (altura de los altavoces, plano del oído, cobertura hasta el público y retardos con su tiempo y distancia).

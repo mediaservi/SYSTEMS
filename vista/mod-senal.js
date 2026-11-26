@@ -2,7 +2,7 @@
 // (reglas de conocimiento/systems-conectividad-reglas.md). Pregunta siempre si las salidas son iguales (espejo) o independientes.
 // Solo con equipos de las listas del panel. GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
-import { equipos } from './listas.js';
+import { equipos, P } from './listas.js';
 import { tramo, conmutador, RES } from './conectividad.js';
 textos({
   'SEÑAL': ['SIGNAL', 'SENYAL'], 'Con USB': ['With USB', 'Amb USB'], '4K60': ['4K60', '4K60'], '8K': ['8K', '8K'], 'Señal y conectividad': ['Signal and connectivity', 'Senyal i connectivitat'],
@@ -13,7 +13,7 @@ textos({
   'Distancias': ['Distances', 'Distàncies'], 'Fuente → equipo (m)': ['Source → unit (m)', 'Font → equip (m)'], 'Equipo → destino (m)': ['Unit → destination (m)', 'Equip → destinació (m)'],
   'Resolución': ['Resolution', 'Resolució'], 'Esquema de la señal': ['Signal diagram', 'Esquema del senyal'], 'Conmutador': ['Switcher', 'Commutador'],
   'Ida': ['In', 'Anada'], 'Vuelta': ['Out', 'Tornada'], 'Tramos': ['Runs', 'Trams'], 'Tramo': ['Run', 'Tram'], 'Cable o extensor': ['Cable or extender', 'Cable o extensor'],
-  'Con más de 8 fuentes o destinos, o distancias de edificio: AV sobre IP (JUST ADD POWER), un emisor por fuente y un receptor por destino.': ['With more than 8 sources or destinations, or building-wide distances: AV over IP (JUST ADD POWER), one encoder per source and one decoder per destination.', 'Amb més de 8 fonts o destinacions, o distàncies d\'edifici: AV sobre IP (JUST ADD POWER), un emissor per font i un receptor per destinació.'],
+  'Con más de {n} fuentes o destinos, o distancias de edificio: AV sobre IP (JUST ADD POWER), un emisor por fuente y un receptor por destino.': ['With more than {n} sources or destinations, or building-wide distances: AV over IP (JUST ADD POWER), one encoder per source and one decoder per destination.', 'Amb més de {n} fonts o destinacions, o distàncies d\'edifici: AV sobre IP (JUST ADD POWER), un emissor per font i un receptor per destinació.'],
   'Un selector no es una matriz: si cada destino ve una fuente distinta, hace falta matriz.': ['A selector is not a matrix: if each destination shows a different source, a matrix is needed.', 'Un selector no és una matriu: si cada destinació mostra una font diferent, cal matriu.'],
   'HDCP y EDID: si alguna fuente no se ve, fija el EDID del conmutador a la resolución del destino.': ['HDCP and EDID: if a source is not shown, set the switcher EDID to the destination resolution.', 'HDCP i EDID: si alguna font no es veu, fixa l\'EDID del commutador a la resolució de la destinació.'],
   'Directo, sin conmutador': ['Direct, no switcher', 'Directe, sense commutador'], 'fuentes': ['sources', 'fonts'], 'destinos': ['destinations', 'destinacions'],
@@ -30,14 +30,14 @@ const COLS = ['#c6e04a', '#00b4ff', '#a033ff', '#ffb000', '#4fdc62', '#ff4d5e'];
 
 function calcula() {
   const av = [], r = { av, ida: [], vuelta: [] }, gb = RES[S.res].gbps;
-  r.ip = S.nf > 8 || S.nd > 8;
-  if (r.ip) { r.enc = equipos('avoip', 'JUST ADD POWER')[0] || null; av.push(['', T('Con más de 8 fuentes o destinos, o distancias de edificio: AV sobre IP (JUST ADD POWER), un emisor por fuente y un receptor por destino.')]); }
+  const NIP = P('senal.avoipDesde', 8); r.ip = S.nf > NIP || S.nd > NIP;   /* v2.4 · BRIAN */
+  if (r.ip) { r.enc = equipos('avoip', 'JUST ADD POWER')[0] || null; av.push(['', T('Con más de {n} fuentes o destinos, o distancias de edificio: AV sobre IP (JUST ADD POWER), un emisor por fuente y un receptor por destino.', { n: NIP })]); }
   if (S.modo === 'espejo' && S.nf > 2 && S.nd > 1) { r.sel = conmutador(S.nf, 1, 'espejo', { gbps: gb, kvm: S.usb }); r.dist = conmutador(1, S.nd, 'espejo', { gbps: gb }); }
-  else r.conm = conmutador(S.nf, S.nd, S.modo, { gbps: gb, kvm: S.usb, lejos: S.dD > 15 });
+  else r.conm = conmutador(S.nf, S.nd, S.modo, { gbps: gb, kvm: S.usb, lejos: S.dD > P('senal.hdbtLejos', 15) });
   const c = r.conm || r.dist;
   if (!r.ip && !c && !r.sel && (S.nf > 1 || S.nd > 1)) r.error = T('Ninguna matriz de las listas llega a {a} × {b}: con tantas fuentes y destinos va AV sobre IP.', { a: S.nf, b: S.nd });
   for (let i = 0; i < S.nf; i++) r.ida.push(tramo(S.dF, S.res, { usb: S.usb, dp: S.tipo === 'DP' }));
-  const hd = !!(c && c.hdbt && S.dD > 15);
+  const hd = !!(c && c.hdbt && S.dD > P('senal.hdbtLejos', 15));
   for (let i = 0; i < S.nd; i++) r.vuelta.push(tramo(S.dD, S.res, { hdbtSale: hd }));
   if (S.modo === 'espejo' && S.nd > 1 && S.nf > 1) av.push(['info', T('Un selector no es una matriz: si cada destino ve una fuente distinta, hace falta matriz.')]);
   av.push(['info', T('HDCP y EDID: si alguna fuente no se ve, fija el EDID del conmutador a la resolución del destino.')]);
