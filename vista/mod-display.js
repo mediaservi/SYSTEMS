@@ -3,7 +3,7 @@
 // Elección: el que cumple y está en stock; a igualdad, el orden de marcas SAMSUNG > LG > CLEVER (o la marca que se elija).
 // Solo con equipos de las listas del panel. GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
-import { equipos } from './listas.js';
+import { equipos, esInterno } from './listas.js';
 textos({
   'DISPLAYS': ['DISPLAYS', 'DISPLAYS'], 'Displays y señalética': ['Displays and signage', 'Displays i senyalització'],
   'Señalética y digital signage: el display que cumple con el sitio, el tamaño, las horas al día y el reproductor, de las marcas del catálogo.': ['Signage and digital signage: the display that meets the place, size, hours a day and player, from the catalogue brands.', 'Senyalització i digital signage: el display que compleix amb el lloc, la mida, les hores al dia i el reproductor, de les marques del catàleg.'],
@@ -110,13 +110,13 @@ function esquema(r, o = {}) {
 const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${x.prioritario ? '⭐ ' : ''}${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}</td></tr></table></div>` : '';
 function resultado(r) {
   let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : r.sem === 'R' ? 'mal' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
-  h += eq(r.disp, r.n, 'Display', true, r.disp ? ' · ' + T(r.disp.stock ? 'En stock' : 'Bajo pedido') : '') + eq(r.player, r.n, 'Reproductor', true);
+  h += eq(r.disp, r.n, 'Display', true, r.disp && esInterno() ? '<span class="st-int"> · ' + esc(T(r.disp.stock ? 'En stock' : 'Bajo pedido')) + '</span>' : '') + eq(r.player, r.n, 'Reproductor', true);
   if (r.av.length) h += `<ul class="avisos">${r.av.map((a) => `<li class="${a[0]}">${esc(a[1])}</li>`).join('')}</ul>`;
-  if (r.alts.length) h += `<p class="alt-t">${T('Alternativas')}</p>` + r.alts.map((x) => eq(x, r.n, '', false, ' · ' + T(x.stock ? 'En stock' : 'Bajo pedido'))).join('');
+  if (r.alts.length) h += `<p class="alt-t">${T('Alternativas')}</p>` + r.alts.map((x) => eq(x, r.n, '', false, (esInterno() ? '<span class="st-int"> · ' + esc(T(x.stock ? 'En stock' : 'Bajo pedido')) + '</span>' : ''))).join('');
   return h;
 }
 const cifras = (r) => [
-  { t: 'Display', v: r.disp ? r.disp.modelo : '—', s: r.disp ? r.disp.marca + (r.disp.stock ? ' · ' + T('En stock') : '') : '', ic: 'display', c: 'var(--verde-txt)' },
+  { t: 'Display', v: r.disp ? r.disp.modelo : '—', s: r.disp ? r.disp.marca : '', ic: 'display', c: 'var(--verde-txt)' },
   { t: 'Pantallas', v: String(r.n), u: '×', s: S.sitio === 'videowall' ? S.cols + ' × ' + S.filas : T(S.orient === 'v' ? 'Vertical' : 'Horizontal'), ic: 'tele', c: 'var(--azul)' },
   { t: 'Pulgadas', v: r.disp ? String(r.disp.pulgadas) : String(S.pulg), u: '″', s: r.vw ? N(r.vw.a, 2) + ' × ' + N(r.vw.h, 2) + ' m' : T('Pulgadas pedidas') + ' ' + S.pulg + '″', ic: 'regla', c: 'var(--violeta)' },
   { t: 'Brillo', v: r.disp && r.disp.nits ? N(r.disp.nits) : '—', u: 'nits', s: T((SITIOS.find((x) => x[0] === S.sitio) || SITIOS[0])[1]), ic: 'sol', c: 'var(--ambar)' },

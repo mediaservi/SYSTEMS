@@ -2471,16 +2471,45 @@ globalThis.SC_SISTEMAS = {
     "tipo": "camara",
     "marca": "AVER",
     "modelo": "CAM550",
-    "descripcion": "Cámara PTZ de doble lente 4K",
-    "sala": "grande"
+    "descripcion": "Cámara PTZ 4K de doble lente: zoom óptico 12× (24× total) y lente IA panorámica de 78°. Salidas USB, HDMI e IP; PoE+",
+    "sala": "grande",
+    "hfov": 76,
+    "zoom": 12,
+    "zoomTotal": 24,
+    "hfovIA": 78,
+    "vozNativa": false,
+    "presetLink": true,
+    "poe": "PoE+",
+    "salidas": [
+     "usb",
+     "hdmi",
+     "ip"
+    ],
+    "enfoqueMin": 1.5,
+    "altura": 1.5,
+    "techoKit": true
    },
    {
     "id": "CAM570",
     "tipo": "camara",
     "marca": "AVER",
     "modelo": "CAM570",
-    "descripcion": "Cámara PTZ de doble lente 4K",
-    "sala": "grande"
+    "descripcion": "Cámara PTZ 4K de doble lente con seguimiento por voz: zoom óptico 12× (36× total) y lente IA panorámica de 78°. Salidas USB, HDMI e IP; PoE+",
+    "sala": "grande",
+    "hfov": 82,
+    "zoom": 12,
+    "zoomTotal": 36,
+    "hfovIA": 78,
+    "vozNativa": true,
+    "vozAlcance": 10,
+    "presetLink": true,
+    "poe": "PoE+",
+    "salidas": [
+     "usb",
+     "hdmi",
+     "ip"
+    ],
+    "altura": 1.5
    },
    {
     "id": "FONE540",

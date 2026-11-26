@@ -537,6 +537,7 @@ table.mat a { color: inherit; text-decoration: underline; text-underline-offset:
 .admin-esq { position: absolute; left: calc(var(--u) * 12); bottom: calc(var(--u) * 6); width: max(11px, calc(var(--u) * 14)); height: max(11px, calc(var(--u) * 14)); padding: 0; display: block; line-height: 0; color: var(--tenue); opacity: .55; }
 .f1r .admin-esq { position: static; flex: none; align-self: flex-end; margin-bottom: calc(var(--u) * 6); }
 .admin-esq svg { width: 100%; height: 100%; display: block; }
+.admin-esq.on { color: #00a894; opacity: 1; }   /* v2.2 · llave de stock interno activa */
 .admin-esq:hover, .admin-esq:focus-visible { opacity: 1; color: var(--marca); }
 :root[data-tema="claro"] .admin-esq:hover, :root[data-tema="claro"] .admin-esq:focus-visible { color: #3d4a00; }
 /* ===== v10.48 · auditoría de uso: DESHACER en el aviso, grupos de modo separados, botones al dedo ===== */
@@ -610,6 +611,11 @@ table.mat a { color: inherit; text-decoration: underline; text-underline-offset:
   .f-hm > [data-blk="HM1"] .fila.grupo { gap: 4px !important; min-width: 0; }
   .f-hm > [data-blk="HM1"] .tog { flex: 1 1 auto !important; min-width: 0; padding: 0 3px !important; font-size: 10px !important; letter-spacing: 0 !important; }
   .f-hm > [data-blk="HM1"] .tog svg { display: none; }
+  /* v2.2 · ocho módulos: en móvil vertical, dos filas de cuatro pestañas iguales */
+  .f-hm > [data-blk="HM1"] { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 4px !important; }
+  .f-hm > [data-blk="HM1"] > .fila.grupo { display: contents !important; }
+  .f-hm > [data-blk="HM1"] > .grupo + .grupo::before { display: none; }
+  .f-hm > [data-blk="HM1"] .tog { min-height: 30px !important; }
   .blk-cu .fila.uno .tog { flex-basis: calc(33% - 8px) !important; }
 }
 @media (max-width: 389px) and (orientation: portrait) {

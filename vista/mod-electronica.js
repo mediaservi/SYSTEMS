@@ -3,7 +3,7 @@
 // PROYECCIÓN y DISPLAYS: conmutador (selector, distribuidor o matriz), blending, videowall y el cable o extensor de cada tramo.
 // Solo con las marcas de las listas del panel. GPL-3.0 · mediaservi.com
 import { T, TM, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
-import { equipos } from './listas.js';
+import { equipos, esInterno } from './listas.js';
 import { tramo, conmutador, RES } from './conectividad.js';
 import { TR_ELEC } from './tr-electronica.js';
 textos(TR_ELEC);
@@ -255,7 +255,7 @@ function equipoHTML(x, rec) {
     <table class="despiece">${filas.filter((f) => f[1]).map((f) => `<tr><td>${f[0]}×</td><td class="ref">${esc(f[1])}</td><td class="des">${esc(TM(f[2]))}</td></tr>`).join('')}</table>
     ${(x.urlFab || x.pdf) ? `<div class="eq-links">${x.urlFab ? `<a href="${esc(x.urlFab)}" target="_blank" rel="noopener">${T('Página del producto')} ↗</a>` : ''}${x.pdf ? `<a href="${esc(x.pdf)}" target="_blank" rel="noopener">${T('Ficha técnica')} ↗</a>` : ''}</div>` : ''}</div>`;
 }
-const eqSimple = (x, cant, tit, rec) => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${cant}×</td><td class="ref">${esc(x.id || x.modelo)}</td><td class="des">${esc(x.descripcion || x.resumen || '')}${x.stock ? ' · ' + esc(T('En stock')) : ''}</td></tr></table></div>` : '';
+const eqSimple = (x, cant, tit, rec) => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${cant}×</td><td class="ref">${esc(x.id || x.modelo)}</td><td class="des">${esc(x.descripcion || x.resumen || '')}${x.stock && esInterno() ? '<span class="st-int"> · ' + esc(T('En stock')) + '</span>' : ''}</td></tr></table></div>` : '';
 function tablaTramos(r) {
   const g = {}; r.tramos.forEach((t) => { const k = t.txt + '|' + ((t.eq || {}).id || ''); g[k] = g[k] || { t, n: 0 }; g[k].n++; });
   return `<p class="alt-t">${esc(T('Tramos'))}</p><table class="tabla-v"><tr><th>${esc(T('Tramo'))}</th><th>${esc(T('Cable o extensor'))}</th><th></th></tr>${Object.values(g).map((x) => `<tr><td class="m">${x.n} × ${S.dist} m</td><td>${esc(T(x.t.txt))}</td><td class="m">${x.t.eq && x.t.eq.prioritario ? '⭐ ' : ''}${esc([x.t.eq && x.t.eq.id, x.t.eq2 && x.t.eq2.id, x.t.cat ? 'MC1000' : ''].filter(Boolean).join(' + '))}</td></tr>`).join('')}</table>`;

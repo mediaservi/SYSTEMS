@@ -75,7 +75,7 @@ svg .t-mar { fill: var(--verde-txt); }
 @media print {
   @page { size: A4; margin: 12mm 11mm; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .f-h1, .f-hm, .velo, #ss-asis, .ss-acc, [data-asis], .admin-esq, #hueco-comun, .tostada { display: none !important; }
+  .f-h1, .f-hm, .velo, #ss-asis, .ss-acc, [data-asis], .admin-esq, #hueco-comun, .tostada, .st-int { display: none !important; }
   html, body { overflow: visible !important; height: auto !important; background: #fff !important; }
   .blocks { position: static !important; display: block !important; }
   /* v1.3 · cabecera igual que la del PDF de SCREENS: tres piezas del mismo alto visible, alineadas a izquierda, centro y derecha */
@@ -146,3 +146,5 @@ html.ss-apila .ss-linea > .ss-fit { white-space: normal; }
 @media (max-width: 2200px) { [data-blk="HM1"] .tog[data-mod] svg { display: none; } }
 /* v2.0 · seis módulos en la barra (SONORIZACIÓN): un poco más de sitio para los botones de módulo en ordenador y TV */
 .f-hm { grid-template-columns: 800fr 838fr 282fr; }
+/* v2.2 · ocho módulos (CÁMARAS y CONTROL): la barra de módulos se queda con más ancho y la petición escrita, con algo menos */
+.f-hm { grid-template-columns: 1040fr 598fr 282fr; }

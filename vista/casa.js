@@ -10,11 +10,13 @@ import AUDIO from './mod-audio.js';
 import VIDEO from './mod-video.js';
 import DISP from './mod-display.js';
 import SONIDO from './mod-sonido.js';
-import { cargar } from './listas.js';
+import CAMARAS from './mod-camaras.js';
+import CONTROL from './mod-control.js';
+import { cargar, esInterno, urlInterno, salirInterno } from './listas.js';
 
-export const VERSION = 'v2.1';
+export const VERSION = 'v2.2';
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
-const MODS = [ELEC, DISP, SENAL, AUDIO, SONIDO, VIDEO];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage · v2.0 · SONORIZACIÓN
+const MODS = [ELEC, DISP, SENAL, AUDIO, SONIDO, VIDEO, CAMARAS, CONTROL];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage · v2.0 · SONORIZACIÓN · v2.2 · CÁMARAS y CONTROL
 fijarIdioma(idiomaInicial());
 
 textos({
@@ -33,6 +35,7 @@ textos({
   'Cambiar': ['Change', 'Canviar'],
   'Ver en PRO': ['See in PRO', 'Veure a PRO'],
   'PDF': ['PDF', 'PDF'],
+  'Acceso interno activo: tócalo para cerrarlo': ['Internal access on: tap to close it', 'Accés intern actiu: toca\'l per tancar-lo'],
   'Restablecer': ['Reset', 'Restablir'],
   'SALTAR': ['SKIP', 'SALTAR'], 'SIGUIENTE': ['NEXT', 'SEGÜENT'], 'LISTO': ['DONE', 'FET'], 'ATRÁS': ['BACK', 'ENRERE'], 'Cerrar': ['Close', 'Tancar'],
   'Paso {a} de {b}': ['Step {a} of {b}', 'Pas {a} de {b}'],
@@ -80,7 +83,7 @@ function marco() {
       <div data-blk="HM2">${bt('pega', 'Pegar una petición copiada', 'data-pega')}<div class="pide-caja"><input class="pide" id="pide" type="text" autocomplete="off" spellcheck="false" placeholder="" aria-label="" value="${esc(G.texto)}"><button type="button" class="pide-res" id="pide-res" hidden title="${esc(T('Resultado del cálculo. Toca para escribir otra petición'))}"></button></div>${bt('copia', 'Copiar el texto de la casilla (la petición o el resultado)', 'data-copiatxt')}</div>
       <div data-blk="HM3"><button type="button" class="calcular" id="calcular">${esc(T('CALCULAR'))} →</button></div></div>
     <main id="cuerpo"></main>
-    <footer class="franja f-f1"><div data-blk="F1L" id="pie-l"><span class="nota" data-aviso-calc><svg class="av-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6 2.4 20.2h19.2z"/><path d="M12 9.6v5"/><path d="M12 17.6h.01"/></svg><span>${esc(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'))}</span></span></div><div data-blk="F1C" id="pie-c" class="f-cred" data-crudo></div><div data-blk="F1R" class="f1r" id="hueco-comun"></div><a class="admin-esq" href="${ADMIN_URL}" target="_blank" rel="noopener" title="${esc(T('Panel de administración'))}" aria-label="${esc(T('Panel de administración'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a></footer>
+    <footer class="franja f-f1"><div data-blk="F1L" id="pie-l"><span class="nota" data-aviso-calc><svg class="av-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6 2.4 20.2h19.2z"/><path d="M12 9.6v5"/><path d="M12 17.6h.01"/></svg><span>${esc(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'))}</span></span></div><div data-blk="F1C" id="pie-c" class="f-cred" data-crudo></div><div data-blk="F1R" class="f1r" id="hueco-comun"></div><a class="admin-esq${esInterno() ? ' on' : ''}" href="${esInterno() ? '#' : urlInterno()}"${esInterno() ? ' data-salir-int' : ''} title="${esc(T(esInterno() ? 'Acceso interno activo: tócalo para cerrarlo' : 'Panel de administración'))}" aria-label="${esc(T(esInterno() ? 'Acceso interno activo: tócalo para cerrarlo' : 'Panel de administración'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a></footer>
   </div><div class="velo" id="velo"></div><div class="tostada" id="tostada" role="status" aria-live="polite"></div>`;
   pintaPie();
   const r = $('#hueco-comun');
@@ -215,6 +218,7 @@ document.addEventListener('click', (e) => {
   if (q('[data-nuevo]')) { M().reset(); G.texto = ''; const i = $('#pide'); if (i) i.value = ''; EDITA = true; pinta(); return; }
   if (q('[data-idioma]')) { fijarIdioma(IDIOMAS[(IDIOMAS.indexOf(idioma()) + 1) % IDIOMAS.length]); marco(); return; }
   if (q('button[data-tema]')) { G.tema = G.tema === 'claro' ? 'oscuro' : 'claro'; document.documentElement.dataset.tema = G.tema; guardaCasa(); return; }
+  if (q('[data-salir-int]')) { e.preventDefault(); salirInterno(); return; }
   if (q('[data-pdf]')) { imprimir(); return; }
   if (q('[data-info]')) { info(); if (movilV()) { const cu = document.querySelector('#velo .vent-cu'), hc = $('#hueco-comun'); if (cu && hc) { cu.insertAdjacentHTML('afterbegin', '<div class="fila info-comun" id="info-comun"></div>'); [...hc.children].filter((x) => !x.classList.contains('admin-esq')).forEach((x) => $('#info-comun').appendChild(x)); } } return; }
   if (q('[data-aviso-calc]') && movilV()) { tostada(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'), 6000); return; }
