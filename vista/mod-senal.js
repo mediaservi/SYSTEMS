@@ -135,7 +135,7 @@ export default {
   info: 'Selector, distribuidor o matriz, y el cable o extensor de cada tramo según la distancia y la resolución.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
   reconoce: (t) => /matriz|matriu|matrix|selector|distribuidor|splitter|switcher|commutador|hdbaset|extensor|extender|port[àá]til|portatil|laptop|usb-c/i.test(t),
-  esquema: (r, o) => ({ tit: 'Esquema de la señal', ic: 'sim', html: esquema(r, o) }),
+  esquema: (r, o) => ({ tit: 'Esquema de la señal', ic: 'senal', html: esquema(r, o) }),
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * (k === 'dF' || k === 'dD' ? 5 : 1)),
   accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); }, reset: () => { S = Object.assign({}, DEF); },
 };

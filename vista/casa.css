@@ -172,3 +172,38 @@ html.ss-apila .ss-linea > .ss-fit { white-space: normal; }
 /* v2.6 · los equipos del resultado abren su ficha */
 .equipo { cursor: pointer; } .equipo:hover { border-color: var(--azul); }
 .vent .ficha { max-width: 640px; margin: 0 auto; }
+
+/* v2.8 · nombres de producto enlazados a su ficha (pestaña nueva) */
+a.prod { color: inherit; text-decoration: underline dotted; text-underline-offset: .18em; text-decoration-thickness: 1px; cursor: pointer; }
+a.prod:hover { color: var(--azul); text-decoration-style: solid; }
+svg a.prod text { text-decoration: underline dotted; cursor: pointer; }
+svg a.prod:hover text { fill: var(--azul); }
+/* v2.8 · simulación a escala de displays (la de SCREENS): pared, persona, pantallas con contenido, foto oficial y mandos encima */
+.lienzo-s > .sim-caja, .ss-lienzo > .sim-caja { position: absolute; inset: 0; }
+.sim-caja { position: relative; overflow: hidden; border-radius: inherit; background: #2a2b30; }
+.sim-caja > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sim-fotos { position: absolute; left: 10px; top: 10px; bottom: 10px; width: clamp(84px, 15%, 170px); display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.sim-foto { pointer-events: auto; flex: none; display: flex; flex-direction: column; gap: 3px; padding: 6px 6px 7px; border-radius: 10px; background: #fff; color: #17181c; text-decoration: none; box-shadow: 0 6px 18px rgba(0, 0, 0, .35); border: 1px solid rgba(0, 0, 0, .25); }
+.sim-foto img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; display: block; }
+.sim-foto span { font: 800 11px/1.2 Inter, system-ui, sans-serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sim-foto small { font: 600 9px/1.2 Inter, system-ui, sans-serif; color: #5a5d66; text-transform: uppercase; letter-spacing: .06em; }
+.sim-foto:hover { outline: 2px solid var(--azul); }
+.sim-mandos { position: absolute; right: 10px; top: 10px; display: flex; gap: 8px; align-items: stretch; }
+.sim-sel { display: flex; align-items: center; gap: 6px; padding: 0 8px; border-radius: 9px; background: rgba(20, 21, 25, .86); border: 1px solid #000; color: #e9ecf1; font: 700 11px Inter, system-ui, sans-serif; text-transform: uppercase; letter-spacing: .06em; }
+.sim-sel select { background: transparent; color: #fff; border: 0; font: 700 12px Inter, system-ui, sans-serif; padding: 7px 2px; cursor: pointer; }
+.sim-sel select option { color: #17181c; }
+.sim-mandos .sim-cont { flex: none; width: auto; min-height: 0; padding: 7px 12px; background: rgba(20, 21, 25, .86); color: #fff; }
+.sim-velo { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, .55); }
+.sim-velo .vent { max-width: 94vw; }
+.sim-vcu { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px; overflow: auto; }
+.sim-vcu .fila { display: flex; gap: 8px; flex-wrap: wrap; }
+.sim-vcu .fila .pide { flex: 1 1 220px; min-width: 0; }
+.sim-vcu .calcular { flex: 1; }
+.sim-nota { margin: 0; font-size: 12px; color: var(--tenue); }
+@media (max-width: 600px) { .sim-fotos { width: 78px; } .sim-foto { padding: 4px; } .sim-foto small { display: none; } .sim-sel > span { display: none; } }
+@media print { .sim-mandos { display: none; } }
+.sim-fuentes { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.sim-fuentes .tog span { font-size: 13px; }
+.sim-velo .vent-cab .tog { flex: none; width: auto; padding: 6px 14px; }
+/* v2.8 · con cuatro vistas, en el móvil vertical las pestañas van en su propia línea bajo el título (que no se corte) */
+@media (max-width: 600px) { .ss-tit:has(.vistas) { flex-wrap: wrap; row-gap: 6px; } .ss-tit .vistas { flex-basis: 100%; margin-left: 0; } }

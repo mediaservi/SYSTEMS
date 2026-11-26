@@ -52,7 +52,15 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v2.7)
+## Cambios de la versión actual (v2.8)
+- **Simulación a escala, como la de SCREENS**, en DISPLAYS (vista de entrada) y en VIDEOCONFERENCIA: la pared con textura a escala real (hormigón, madera, mármol, ladrillos o sin pared), la persona de 1,75 m, cada display a su tamaño real con la carta de ajuste o el contenido que elijas (fuentes de prueba, YouTube, Vimeo, una imagen o un vídeo, o un archivo tuyo), las cotas y la foto oficial del modelo, que abre su ficha. En un videowall, un solo contenido para todo el muro. La simulación 3D muestra también la carta o la imagen elegida.
+- **Ficha de producto en pestaña nueva**: cualquier nombre de producto que aparece (resultado, despiece, cifras y esquemas) es un enlace a su ficha, en una página propia que se puede imprimir o compartir, con la foto oficial del fabricante.
+- **Fotos oficiales** de 460 referencias de las listas, según información de los fabricantes.
+- Las descripciones de los equipos salen en inglés y catalán.
+- Icono propio para las cámaras (PTZ), distinto del de simulación.
+- En el móvil vertical, las pestañas de vista van debajo del título para que no se corte.
+
+## Cambios de la v2.7
 - Petición escrita como la de SCREENS: entiende números con letra («dos micros», «quatre», «twelve»), medidas en cm o mm, «10 metros de ancho por 16 de largo», «6 by 4 m» y «metros» en español, inglés y catalán.
 - Los textos del esquema de CONTROL (y de los calculadores de AUDIO) ya no salen en negro en el modo oscuro: toman el color del tema.
 - La petición va al apartado que la reconoce aunque estés en otro (videoconferencia, cámaras, control, displays, señal, electrónica, sonido y audio, por ese orden), y reconoce también las palabras en catalán e inglés.

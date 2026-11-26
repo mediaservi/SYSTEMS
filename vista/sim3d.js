@@ -83,7 +83,14 @@ export class Sala3D {
   /* una pantalla en la pared frontal (o donde se diga), con la imagen encendida */
   pantalla(w, h, x, yBajo, z, txt, o = {}) {
     this.caja(w + 0.04, h + 0.04, 0.06, x, yBajo + h / 2, z + 0.03, 0x111114, { metal: 0.6 });
-    this.caja(w, h, 0.01, x, yBajo + h / 2, z + 0.065, COL.imagen, { emis: 0.55, rough: 0.3 });
+    if (o.tex) {   /* v2.8 · la imagen en la pantalla (carta de ajuste o el contenido elegido); uv = trozo de la imagen para un videowall */
+      const g = new THREE.PlaneGeometry(w, h), uv = o.uv || [0, 0, 1, 1], at = g.attributes.uv;
+      for (let i = 0; i < at.count; i++) at.setXY(i, uv[0] + at.getX(i) * (uv[2] - uv[0]), uv[1] + at.getY(i) * (uv[3] - uv[1]));
+      const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false });
+      this._tex = this._tex || {}; let t = this._tex[o.tex];
+      if (!t) { t = this._tex[o.tex] = new THREE.TextureLoader().load(o.tex, () => this.render()); t.colorSpace = THREE.SRGBColorSpace; }
+      mat.map = t; const m = new THREE.Mesh(g, mat); m.position.set(x, yBajo + h / 2, z + 0.072); this.grupo.add(m);
+    } else this.caja(w, h, 0.01, x, yBajo + h / 2, z + 0.065, COL.imagen, { emis: 0.55, rough: 0.3 });
     if (txt) this.etiqueta(txt, x, yBajo + h + 0.3, z + 0.1, 0.3, '#ffd600');
   }
   limpiar() { this._limpiar(); }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--
+  SYSTEMS · ficha de producto en su propia página (v2.8): se abre en pestaña nueva al tocar el nombre de un equipo.
+  La misma ficha de SCREENS (comun/ficha.js). Sin precios ni stock. Licencia GPL-3.0 · mediaservi.com
+-->
+<html lang="es" data-tema="oscuro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SYSTEMS · ficha</title>
+  <meta name="theme-color" content="#232325">
+  <link rel="icon" href="assets/systems-icono-placa.svg?v=placa" type="image/svg+xml">
+  <link rel="stylesheet" href="vista/blocks.css?v=2.8">
+  <link rel="stylesheet" href="comun/ficha.css?v=2.8">
+  <link rel="stylesheet" href="vista/ficha-pag.css?v=2.8">
+  <script>(function(){try{var g=JSON.parse(localStorage.getItem('systems_casa')||'{}');document.documentElement.dataset.tema=g.tema==='claro'?'claro':'oscuro';}catch(e){}})();</script>
+</head>
+<body class="fp">
+  <header class="fp-cab"><a class="fp-logo" href="./"><img class="t-osc" src="assets/systems-logo.svg" alt="SYSTEMS"><img class="t-cla" src="assets/systems-logo-claro.svg" alt="SYSTEMS"></a><span class="fp-sep"></span>
+    <button type="button" class="fp-bt" id="fp-imp" hidden></button></header>
+  <main class="fp-cu" id="fp-cu"><p class="fp-nada">…</p></main>
+  <footer class="fp-pie" id="fp-pie"></footer>
+  <noscript>SYSTEMS necesita JavaScript.</noscript>
+  <script src="credito.js?v=2.8"></script>
+  <script src="comun/equipos.js?v=2.8"></script>
+  <script src="comun/sistemas.js?v=2.8"></script>
+  <script src="comun/ficha.js?v=2.8"></script>
+  <script src="comun/fotos.js?v=2.8"></script>
+  <script src="comun/motor-i18n.js?v=2.8"></script>
+  <script type="module" src="vista/ficha-pag.js?v=2.8"></script>
+</body>
+</html>

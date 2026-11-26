@@ -1,6 +1,7 @@
 // SYSTEMS · utilidades comunes de la consola (textos en es/en/ca, números y escapado) · GPL-3.0 · mediaservi.com
 import { T as T0, idioma } from '../textos.js';
 
+export const VERSION = 'v2.8';
 const DIC = {};
 // cada módulo registra sus textos: { 'texto en español': ['english', 'català'] }
 export const textos = (d) => Object.assign(DIC, d);
