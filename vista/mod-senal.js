@@ -1,7 +1,8 @@
 // SYSTEMS · módulo SEÑAL Y CONECTIVIDAD: fuentes → selector, distribuidor o matriz → destinos, con el cable o extensor de cada tramo
 // (reglas de conocimiento/systems-conectividad-reglas.md). Pregunta siempre si las salidas son iguales (espejo) o independientes.
 // Solo con equipos de las listas del panel. GPL-3.0 · mediaservi.com
-import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
+import { traduceDes } from './fichaprod.js';
+import { T, N, esc, textos, lee, guarda, togs, num, etq, lang } from './util.js';
 import { equipos, P } from './listas.js';
 import { tramo, conmutador, RES } from './conectividad.js';
 textos({
@@ -95,7 +96,7 @@ function resultado(r) {
 const cifras = (r) => { const c = r.conm || r.dist; return [
   { t: 'Fuentes', v: String(S.nf), u: '× ' + S.tipo, s: S.dF + ' m', ic: 'media', c: 'var(--violeta)' },
   { t: 'Destinos', v: String(S.nd), s: T(S.modo === 'espejo' ? 'Iguales (espejo)' : 'Independientes'), ic: 'tele', c: 'var(--azul)' },
-  { t: 'Conmutador', v: c ? c.modelo : '—', s: c ? c.descripcion.split(' ').slice(0, 4).join(' ') : '', ic: 'chip', c: 'var(--verde-txt)' },
+  { t: 'Conmutador', v: c ? c.modelo : '—', s: c ? traduceDes(c.descripcion.split(' ').slice(0, 5).join(' '), lang()) : '', ic: 'chip', c: 'var(--verde-txt)' },
   { t: 'Resolución', v: RES[S.res].nom, s: RES[S.res].gbps + ' Gbps', ic: 'calidad', c: 'var(--ambar)' },
   { t: 'Tramos', v: String(S.nf + S.nd), s: T(r.vuelta[0].txt), ic: 'dist', c: 'var(--magenta, #e24bf0)' }]; };
 function datos() {

@@ -56,6 +56,7 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - **Simulación a escala, como la de SCREENS**, en DISPLAYS (vista de entrada) y en VIDEOCONFERENCIA: la pared con textura a escala real (hormigón, madera, mármol, ladrillos o sin pared), la persona de 1,75 m, cada display a su tamaño real con la carta de ajuste o el contenido que elijas (fuentes de prueba, YouTube, Vimeo, una imagen o un vídeo, o un archivo tuyo), las cotas y la foto oficial del modelo, que abre su ficha. En un videowall, un solo contenido para todo el muro. La simulación 3D muestra también la carta o la imagen elegida.
 - **Ficha de producto en pestaña nueva**: cualquier nombre de producto que aparece (resultado, despiece, cifras y esquemas) es un enlace a su ficha, en una página propia que se puede imprimir o compartir, con la foto oficial del fabricante.
 - **Fotos oficiales** de 460 referencias de las listas, según información de los fabricantes.
+- **PDF en dos hojas, como el de SCREENS**, con vista previa (guardar o imprimir): hoja 1, el resumen, el dibujo de la vista elegida (también la simulación a escala o la 3D) y las cifras con sus avisos; hoja 2, la lista de material y la ficha de cada equipo con su foto oficial. Sin precios ni stock.
 - Las descripciones de los equipos salen en inglés y catalán.
 - Icono propio para las cámaras (PTZ), distinto del de simulación.
 - En el móvil vertical, las pestañas de vista van debajo del título para que no se corte.

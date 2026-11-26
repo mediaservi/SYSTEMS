@@ -95,6 +95,14 @@ function marco() {
   if (window.AVFALLO) r.appendChild(window.AVFALLO.boton({ app: 'SYSTEMS', version: VERSION, idioma }));
   pinta();
 }
+/* v2.8 · PDF en dos hojas como el de SCREENS (vista/pdfsys.js con pdf.js); si algo falla, la hoja de impresión de siempre */
+let HACIENDO = false;
+async function pdfDirecto() {
+  if (HACIENDO) return; HACIENDO = true;
+  try { const m = M(), { hacePDF } = await import('./pdfsys.js'); await hacePDF({ m, R, caja: document.querySelector('[data-blk="S1A"] .lienzo-s') || document.querySelector('.ss-lienzo'), esqHtml: (() => { try { return m.esquema(R, {}).html; } catch (e) { return ''; } })(), cifras: m.cifras(R), nombreMod: m.nom, tostada }); }
+  catch (e) { imprimir(); }
+  finally { HACIENDO = false; }
+}
 /* v1.3 · PDF: hoja en claro con la cabecera de SCREENS (logo de SYSTEMS · web y fecha · logo de AVHUB) y el pie de la app */
 function imprimir() {
   const hoy = new Date(), l = idioma(), fecha = hoy.toLocaleDateString(l === 'en' ? 'en-GB' : 'es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' · ' + hoy.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
@@ -262,7 +270,7 @@ document.addEventListener('click', (e) => {
   if (q('button[data-tema]')) { G.tema = G.tema === 'claro' ? 'oscuro' : 'claro'; document.documentElement.dataset.tema = G.tema; guardaCasa(); return; }
   if (q('[data-salir-int]')) { e.preventDefault(); salirInterno(); return; }
   if ((b = q('.equipo')) && !q('a, button')) { const ref = b.querySelector('.ref'); if (ref && abreFicha(ref.textContent.trim())) return; }
-  if (q('[data-pdf]')) { imprimir(); return; }
+  if (q('[data-pdf]')) { pdfDirecto(); return; }
   if (q('[data-info]')) { info(); if (movilV()) { const cu = document.querySelector('#velo .vent-cu'), hc = $('#hueco-comun'); if (cu && hc) { cu.insertAdjacentHTML('afterbegin', '<div class="fila info-comun" id="info-comun"></div>'); [...hc.children].filter((x) => !x.classList.contains('admin-esq')).forEach((x) => $('#info-comun').appendChild(x)); } } return; }
   if (q('[data-aviso-calc]') && movilV()) { tostada(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'), 6000); return; }
   if (q('[data-cierra]') || e.target.id === 'velo') { cierra(); return; }

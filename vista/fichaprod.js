@@ -83,10 +83,10 @@ const COLOR = new Set(['blanco', 'blanca', 'blancos', 'negro', 'negra', 'negras'
 const caso = (w, t) => !t ? t : (w === w.toUpperCase() && /[A-ZÁÉÍÓÚÑ]{2}/.test(w) ? t.toUpperCase() : (w[0] === w[0].toUpperCase() && w[0] !== w[0].toLowerCase() ? t[0].toUpperCase() + t.slice(1) : t));
 export function traduceDes(txt, l) {
   if (!txt || !l || l === 'es') return String(txt || '');
-  const i = l === 'en' ? 0 : 1; let s = String(txt);
+  const i = l === 'en' ? 0 : 1; let s = String(txt); const letras = s.replace(/[^A-Za-zÁÉÍÓÚÑÜáéíóúñü]/g, ''), MAY = letras.length > 6 && letras.replace(/[^A-ZÁÉÍÓÚÑÜ]/g, '').length / letras.length > 0.8;
   FRASES.forEach((f) => { s = s.replace(new RegExp('(^|[^A-Za-zÁÉÍÓÚÑÜáéíóúñü])(' + f[0] + ')(?![A-Za-zÁÉÍÓÚÑÜáéíóúñü])', 'gi'), (m, a, w) => a + '\u0001' + caso(w, f[i + 1]) + '\u0002'); });
   const tok = s.match(/\u0001[^\u0002]*\u0002|[A-Za-zÁÉÍÓÚÑÜáéíóúñü]+|[^A-Za-zÁÉÍÓÚÑÜáéíóúñü\u0001]+/g) || [];
-  const tr = (w) => { if (w[0] === '\u0001') return w.slice(1, -1); const g = GLO[w.toLowerCase()]; return g ? caso(w, g[i]) : w; };
+  const tr = (w) => { if (w[0] === '\u0001') return w.slice(1, -1); const g = GLO[w.toLowerCase()]; if (!g) return w; const t = caso(w, g[i]); return MAY && w === w.toUpperCase() ? t.toUpperCase() : t; };
   const esP = (w) => !!w && (w[0] === '\u0001' || !!(GLO[w.toLowerCase()] && GLO[w.toLowerCase()][i]));
   const out = [];
   for (let k = 0; k < tok.length; k++) {

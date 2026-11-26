@@ -207,3 +207,10 @@ svg a.prod:hover text { fill: var(--azul); }
 .sim-velo .vent-cab .tog { flex: none; width: auto; padding: 6px 14px; }
 /* v2.8 · con cuatro vistas, en el móvil vertical las pestañas van en su propia línea bajo el título (que no se corte) */
 @media (max-width: 600px) { .ss-tit:has(.vistas) { flex-wrap: wrap; row-gap: 6px; } .ss-tit .vistas { flex-basis: 100%; margin-left: 0; } }
+/* v2.8 · vista previa del PDF (la de SCREENS) */
+.pv-velo .vent.previa { width: 80vw; height: 86dvh; max-width: none; }
+.pv-velo .vent-cab .tog { flex: none; width: auto; padding: 6px 14px; }
+.pv-velo .vent-cab .tog[data-pv="guarda"] { background: var(--verde-txt); color: #10140a; border-color: transparent; }
+.pv-hojas { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; }
+.pv-hoja { width: min(100%, 820px); height: auto; box-shadow: 0 6px 24px rgba(0, 0, 0, .45); background: #fff; }
+@media (max-width: 600px) { .pv-velo .vent.previa { width: 100vw; height: 100dvh; border-radius: 0; } }
