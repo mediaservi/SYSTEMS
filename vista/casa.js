@@ -14,7 +14,7 @@ import CAMARAS from './mod-camaras.js';
 import CONTROL from './mod-control.js';
 import { cargar, esInterno, urlInterno, salirInterno } from './listas.js';
 
-export const VERSION = 'v2.4';
+export const VERSION = 'v2.5';
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
 const MODS = [ELEC, DISP, SENAL, AUDIO, SONIDO, VIDEO, CAMARAS, CONTROL];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage · v2.0 · SONORIZACIÓN · v2.2 · CÁMARAS y CONTROL
 fijarIdioma(idiomaInicial());
@@ -137,7 +137,15 @@ function pinta() {
     c.innerHTML = h;
   }
   if (m.despues) m.despues(c, R);
-  pintaRes(); guardaCasa(); ajusta();
+  pintaRes(); guardaCasa(); ajusta(); monta3D(m, R);
+}
+/* v2.5 · simulación 3D: se monta cuando el dibujo trae su lienzo y se suelta entera al repintar (sin contextos WebGL colgando) */
+let S3 = null, n3 = 0;
+async function monta3D(m, r) {
+  if (S3) { try { S3.destruir(); } catch (e) {} S3 = null; }
+  const cv = document.querySelector('canvas[data-sim3d]'), yo = ++n3; if (!cv || !m.escena3d) return;
+  try { const { Sala3D } = await import('./sim3d.js'); if (yo !== n3 || !cv.isConnected) return; S3 = new Sala3D(cv); m.escena3d(S3, r); S3.encuadra(); }
+  catch (e) { if (cv.isConnected) cv.insertAdjacentHTML('afterend', `<p class="sim-err">${esc(T('La simulación 3D no está disponible en este navegador.'))}</p>`); }
 }
 /* la casilla de la petición: tras CALCULAR enseña el resultado en una línea (como SCREENS) */
 function pintaRes() {

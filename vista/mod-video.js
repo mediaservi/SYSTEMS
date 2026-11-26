@@ -3,7 +3,7 @@
 // Solo con equipos de las listas del panel (AVER, SENNHEISER, XILICA, NUREVA, displays SAMSUNG, LG y CLEVER). GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos, esInterno, P } from './listas.js';
-import { COL, escala, cota, persona, suelo, etiqueta, lienzo, pestanas, fmt } from './vt.js';
+import { COL, escala, cota, persona, suelo, etiqueta, lienzo, lienzo3D, pestanas, fmt } from './vt.js';
 textos({
   'Vista lateral': ['Side view', 'Vista lateral'], 'La sala vista de lado': ['The room seen from the side', 'La sala vista de costat'], 'oído': ['ear', 'oïda'], 'ojos': ['eyes', 'ulls'],
   'VIDEOCONF.': ['VIDEO CONF.', 'VIDEOCONF.'], 'Videoconferencia': ['Video conferencing', 'Videoconferència'],
@@ -72,6 +72,19 @@ function calcula() {
   guarda('systems_video', S); return r;
 }
 
+
+/* v2.5 · simulación 3D: pantalla a su altura, cámara o barra con su campo de visión, mesa, público y micrófonos de techo */
+function escena3d(V, r) {
+  const A = S.ancho, F = S.fondo, H = 2.8, p = r.disp ? r.disp.pulgadas : r.pulg, w = p * 0.0254 * 0.8716, h = p * 0.0254 * 0.4903, bajo = Math.max(0.75, 1.3 - h / 2);
+  V.sala(A, F, H);
+  for (let i = 0; i < S.np; i++) V.pantalla(w, h, (i - (S.np - 1) / 2) * (w + 0.2), bajo, 0, i === 0 ? (r.disp ? r.disp.modelo + ' · ' : '') + p + '″' : '');
+  const hc = bajo + h + 0.1, fh = r.cam ? (r.cam.fovH || (r.cam.fovD ? r.cam.fovD * 0.87 : 80)) : 80;
+  if (r.cam) { V.caja(r.ptz ? 0.18 : 0.6, 0.1, 0.1, 0, hc, 0.08, 0x1b1b1e, { metal: 0.6 }); V.cono([0, hc, 0.15], [0, 1.1, F - 0.3], fh, 0x00b4ff, 0.08); V.etiqueta(r.cam.modelo, 0, hc + 0.8, 0.2, 0.36); }
+  const x1 = Math.min(S.fila, F - 0.6), x2 = Math.max(x1 + 0.6, F - 0.6), tw = Math.min(A * 0.4, 1.4);
+  V.caja(tw, 0.05, x2 - x1, 0, 0.74, (x1 + x2) / 2, 0x3a3b42, { rough: 0.6 });
+  const lado = Math.max(1, Math.ceil(S.pers / 2)); for (let i = 0; i < Math.min(S.pers, 30); i++) { const izq = i % 2 === 0, j = Math.floor(i / 2), z = x1 + (j + .5) * (x2 - x1) / lado; V.persona(izq ? -tw / 2 - 0.4 : tw / 2 + 0.4, z, izq ? Math.PI / 2 : -Math.PI / 2, 0.6); }
+  if (r.mic) { const rr = Math.sqrt(r.mic.m2 / Math.PI); for (let i = 0; i < r.nmic; i++) { const z = F * (i + .5) / r.nmic; V.caja(0.5, 0.04, 0.5, 0, H - 0.02, z, 0x00ff04, { emis: 0.3 }); V.cono([0, H - 0.05, z], [0, 1.1, z], 2 * Math.atan(rr / (H - 1.1)) * 180 / Math.PI, 0x00ff04, 0.06); } }
+}
 /* v2.3 · vista LATERAL como las de SCREENS: la pantalla a su altura, la cámara encima, la mesa y la mirada del espectador más lejano */
 let VT = 'planta';
 function lateral(r, o = {}) {
@@ -155,7 +168,8 @@ export default {
   info: 'Sala de reuniones: tamaño de pantalla, cámara o barra con su campo de visión y micrófonos por cobertura.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
   reconoce: (t) => /videoconf|sala de reuni|teams|zoom|meeting room|personas/i.test(t),
-  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : 'Plano de la sala', ic: 'cubo', html: VT === 'lateral' ? lateral(r, o) : esquema(r, o), extra: pestanas(['planta', 'lateral'], VT) }),
+  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : VT === '3d' ? 'Simulación 3D' : 'Plano de la sala', ic: 'cubo', html: VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : esquema(r, o), extra: pestanas(['planta', 'lateral', '3d'], VT) }),
+  escena3d,
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * (k === 'pers' || k === 'np' ? 1 : k === 'fila' ? 0.1 : 0.5)),
   accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
 };

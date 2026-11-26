@@ -4,7 +4,7 @@
 // Solo con equipos de las listas del panel. GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos, esInterno, P as BP } from './listas.js';
-import { COL, escala, cota, persona, suelo, etiqueta, lienzo, pestanas, fmt } from './vt.js';
+import { COL, escala, cota, persona, suelo, etiqueta, lienzo, lienzo3D, pestanas, fmt } from './vt.js';
 textos({
   'DISPLAYS': ['DISPLAYS', 'DISPLAYS'], 'Displays y señalética': ['Displays and signage', 'Displays i senyalització'],
   'Señalética y digital signage: el display que cumple con el sitio, el tamaño, las horas al día y el reproductor, de las marcas del catálogo.': ['Signage and digital signage: the display that meets the place, size, hours a day and player, from the catalogue brands.', 'Senyalització i digital signage: el display que compleix amb el lloc, la mida, les hores al dia i el reproductor, de les marques del catàleg.'],
@@ -123,7 +123,18 @@ function lateral(r, o) {
   g += cota(X(xMax) - 10, Y(0), X(xMax) - 10, Y(ojo), fmt(ojo), 1);
   return lienzo(VW, VH, g, 'La instalación vista de lado');
 }
-const esquema = (r, o = {}) => (VT === 'lateral' ? lateral(r, o) : frontal(r, o));
+
+/* v2.5 · simulación 3D: la pared con las pantallas a su altura, el tótem si lo es y una persona a la distancia de visión */
+function escena3d(V, r) {
+  const G = geo(r), A = Math.max(4, G.W + 3), d = Math.max(1.2, Math.min(12, (S.sitio === 'tactil' ? BP('display.distanciaTactil', 0.6) : (S.sitio === 'escaparate' || S.sitio === 'exterior' ? BP('display.factorDistanciaCalle', 4) : BP('display.factorDistancia', 3)) * G.h1))), F = d + 2, H = Math.max(3, G.base + G.H + 0.8);
+  V.sala(A, F, H);
+  for (let f = 0; f < G.fil; f++) for (let c = 0; c < G.cols; c++) { const x = -G.W / 2 + c * (G.w1 + G.gap) + G.w1 / 2, y = G.base + f * (G.h1 + G.gap);
+    V.pantalla(G.w1, G.h1, x, y, S.sitio === 'totem' ? 0.4 : 0, f === G.fil - 1 && c === 0 ? (r.disp ? r.disp.modelo + ' · ' : '') + G.p + '″' : '');
+    if (S.sitio === 'totem') V.caja(G.w1 * 0.4, G.base, 0.3, x, G.base / 2, 0.45, 0x1b1b1e, { metal: 0.6 }); }
+  V.persona(0.4, d, Math.PI, 1);
+  V.cota([0.4, 0, 0], [0.4, 0, d], fmt(d) + ' m', 0.4);
+}
+const esquema = (r, o = {}) => (VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : frontal(r, o));
 const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${x.prioritario ? '⭐ ' : ''}${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}</td></tr></table></div>` : '';
 function resultado(r) {
   let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : r.sem === 'R' ? 'mal' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
@@ -177,7 +188,8 @@ export default {
   info: 'Señalética y digital signage: el display que cumple con el sitio, el tamaño, las horas al día y el reproductor, de las marcas del catálogo.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
   reconoce: (t) => /se[ñn]al[eé]tica|signage|cartel|escaparate|t[oó]tem|videowall|video wall/i.test(t),
-  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : 'Vista frontal', ic: 'display', html: esquema(r, o), extra: pestanas(['frontal', 'lateral'], VT) }),
+  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : VT === '3d' ? 'Simulación 3D' : 'Vista frontal', ic: 'display', html: esquema(r, o), extra: pestanas(['frontal', 'lateral', '3d'], VT) }),
+  escena3d,
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d),
   accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
 };

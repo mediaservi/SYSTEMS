@@ -4,7 +4,7 @@
 // Solo con cámaras de las listas del panel. Según información de los fabricantes. GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos, esInterno, P } from './listas.js';
-import { COL as VC, escala, cota, persona, suelo, etiqueta, lienzo, pestanas, fmt } from './vt.js';
+import { COL as VC, escala, cota, persona, suelo, etiqueta, lienzo, lienzo3D, pestanas, fmt } from './vt.js';
 textos({
   'Vista lateral': ['Side view', 'Vista lateral'], 'La sala vista de lado': ['The room seen from the side', 'La sala vista de costat'], 'oído': ['ear', 'oïda'], 'ojos': ['eyes', 'ulls'],
   'CÁMARAS': ['CAMERAS', 'CÀMERES'], 'Cámaras': ['Cameras', 'Càmeres'],
@@ -97,6 +97,21 @@ function calcula() {
   guarda('systems_camaras', S); return r;
 }
 
+
+/* v2.5 · simulación 3D: escenario con el ponente, cámaras con el cono del encuadre (y la de público), público y lente IA */
+function escena3d(V, r) {
+  const D = S.dist, A = Math.max(S.ancho + 2, 6), F = D + 1.5, H = /auditorio|directo/.test(S.uso) ? 5 : 3, hc = /auditorio|directo/.test(S.uso) ? P('camaras.alturaAuditorio', 2.0) : P('camaras.alturaSala', 1.5);
+  const cen = { primer: 1.55, medio: 1.35, americano: 1.1 }[S.encuadre] || 1.35;
+  V.sala(A, F, H);
+  V.caja(S.ancho, 0.02, 2, 0, 0.01, 1, 0x3a3b42, { rough: 0.7 });
+  V.persona(0, 0.8, 0, 1);
+  const camara = (x, z) => V.caja(0.18, 0.2, 0.2, x, hc, z, 0x1b1b1e, { metal: 0.6 }) && V.caja(0.04, hc - 0.1, 0.04, x, (hc - 0.1) / 2, z, 0x55555c);
+  camara(0, D); V.cono([0, hc, D - 0.1], [0, cen, 0.8], r.cam ? r.tele : r.aNec, 0x00b4ff, 0.12);
+  if (r.cam) V.etiqueta(r.cam.modelo + ' · ' + fmt(r.tele, 1) + '°', 0, hc + 0.45, D, 0.4);
+  if (r.cam && PLAN[S.planos] >= 3 && r.cam.hfovIA) V.cono([0, hc, D - 0.1], [0, 1.2, 0.5], r.cam.hfovIA, 0xffb000, 0.05);
+  if (r.n > 1) { camara(-S.ancho / 2 + 0.3, 0.4); V.cono([-S.ancho / 2 + 0.3, hc, 0.5], [0, 1.2, (S.cerca + D) / 2], 60, 0xb566ff, 0.08); }
+  for (let z = Math.max(1.2, S.cerca); z < D - 0.6; z += Math.max(1.1, (D - S.cerca) / 7)) for (let x = -S.ancho / 2 + 0.6; x < S.ancho / 2 - 0.3; x += 1.2) V.persona(x, z, Math.PI, 0.45);
+}
 /* v2.3 · vista LATERAL como las de SCREENS: el ponente, la cámara a su altura y distancia, el cono del encuadre y el público */
 let VT = 'planta';
 function lateral(r, o = {}) {
@@ -182,7 +197,8 @@ export default {
   info: 'Cámaras PTZ: el zoom que pide la distancia al ponente, cuántas hacen falta por planos, seguimiento, salida y alimentación.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
   reconoce: (t) => /c[áa]mara|camera|càmera|ptz|streaming|retransm/i.test(t),
-  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : 'Plano de cámaras', ic: 'camara', html: VT === 'lateral' ? lateral(r, o) : esquema(r, o), extra: pestanas(['planta', 'lateral'], VT) }),
+  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : VT === '3d' ? 'Simulación 3D' : 'Plano de cámaras', ic: 'camara', html: VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : esquema(r, o), extra: pestanas(['planta', 'lateral', '3d'], VT) }),
+  escena3d,
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * 0.5),
   accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
 };
