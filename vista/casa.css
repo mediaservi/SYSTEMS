@@ -167,3 +167,7 @@ html.ss-apila .ss-linea > .ss-fit { white-space: normal; }
 .sim3d-ayuda { position: absolute; left: 10px; bottom: 8px; margin: 0; font: 400 11px 'Share Tech Mono', ui-monospace, monospace; color: #9a9aa6; pointer-events: none; }
 .sim-err { color: var(--tenue); font-size: 13px; }
 @media (max-width: 600px), (pointer: coarse) { .sim3d-ayuda { display: none; } }
+
+/* v2.6 · los equipos del resultado abren su ficha */
+.equipo { cursor: pointer; } .equipo:hover { border-color: var(--azul); }
+.vent .ficha { max-width: 640px; margin: 0 auto; }
