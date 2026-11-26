@@ -1,6 +1,7 @@
 // SYSTEMS · la casa: la misma consola de SCREENS (cabecera, barra de módulos, petición escrita, CALCULAR, SIMPLE / PRO y pie)
 // para todos los módulos (ELECTRÓNICA, SEÑAL Y CONECTIVIDAD, AUDIO, VIDEOCONFERENCIA y los que vengan). Cada módulo da sus datos,
 // su esquema, su resultado y sus cifras; aquí se pintan siempre en los mismos sitios. Licencia GPL-3.0 · mediaservi.com
+import { normaliza } from './peticion.js';
 import { IDIOMAS, idioma, fijarIdioma, idiomaInicial } from '../textos.js';
 import { T, textos, esc, $, lee, guarda } from './util.js';
 import { IC, ic, icb } from './iconos.js';
@@ -12,9 +13,9 @@ import DISP from './mod-display.js';
 import SONIDO from './mod-sonido.js';
 import CAMARAS from './mod-camaras.js';
 import CONTROL from './mod-control.js';
-import { cargar, esInterno, urlInterno, salirInterno } from './listas.js';
+import { cargar, esInterno, urlInterno, salirInterno, marcas } from './listas.js';
 
-export const VERSION = 'v2.4';
+export const VERSION = 'v2.7';
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
 const MODS = [ELEC, DISP, SENAL, AUDIO, SONIDO, VIDEO, CAMARAS, CONTROL];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage · v2.0 · SONORIZACIÓN · v2.2 · CÁMARAS y CONTROL
 fijarIdioma(idiomaInicial());
@@ -35,6 +36,14 @@ textos({
   'Cambiar': ['Change', 'Canviar'],
   'Ver en PRO': ['See in PRO', 'Veure a PRO'],
   'PDF': ['PDF', 'PDF'],
+  'Tamaño': ['Size', 'Mida'], 'Resolución': ['Resolution', 'Resolució'], 'Brillo': ['Brightness', 'Brillantor'], 'Horas al día': ['Hours a day', 'Hores al dia'], 'Canales': ['Channels', 'Canals'], 'Potencia': ['Power', 'Potència'],
+  'Entradas': ['Inputs', 'Entrades'], 'Salidas': ['Outputs', 'Sortides'], 'Ancho de banda': ['Bandwidth', 'Amplada de banda'], 'Ángulo horizontal': ['Horizontal angle', 'Angle horitzontal'], 'Zoom óptico': ['Optical zoom', 'Zoom òptic'], 'Zoom total': ['Total zoom', 'Zoom total'],
+  'Lente panorámica': ['Wide lens', 'Lent panoràmica'], 'Campo de visión': ['Field of view', 'Camp de visió'], 'Fondo de sala': ['Room depth', 'Fons de sala'], 'Cobertura': ['Coverage', 'Cobertura'], 'Zonas': ['Zones', 'Zones'], 'Personas': ['People', 'Persones'], 'PoE': ['PoE', 'PoE'], 'Alto de rack': ['Rack height', 'Alçada de rack'],
+  'Referencia': ['Reference', 'Referència'], 'Altavoz': ['Loudspeaker', 'Altaveu'], 'Subgrave': ['Subwoofer', 'Subgreu'], 'Micrófono': ['Microphone', 'Micròfon'], 'Cápsula': ['Capsule', 'Càpsula'], 'Transmisor': ['Transmitter', 'Transmissor'], 'Receptor': ['Receiver', 'Receptor'],
+  'Cámara': ['Camera', 'Càmera'], 'Barra de vídeo': ['Video bar', 'Barra de vídeo'], 'Display': ['Display', 'Display'], 'Kit de audio': ['Audio kit', 'Kit d\'àudio'], 'Audio para videoconferencia': ['Video conferencing audio', 'Àudio per a videoconferència'], 'Etapa': ['Amplifier', 'Etapa'],
+  'Procesador de audio': ['Audio processor', 'Processador d\'àudio'], 'Conmutador': ['Switcher', 'Commutador'], 'Extensor': ['Extender', 'Extensor'], 'Cable': ['Cable', 'Cable'], 'AV sobre IP': ['AV over IP', 'AV sobre IP'], 'Accesorio': ['Accessory', 'Accessori'], 'Soporte': ['Bracket', 'Suport'],
+  'Antena': ['Antenna', 'Antena'], 'Cargador': ['Charger', 'Carregador'], 'Interfaz de audio': ['Audio interface', 'Interfície d\'àudio'], 'Tarjeta de audio': ['Audio card', 'Targeta d\'àudio'], 'Conferencia': ['Conference', 'Conferència'], 'Tratamiento acústico': ['Acoustic treatment', 'Tractament acústic'],
+  'Servicio': ['Service', 'Servei'], 'Reproductor': ['Player', 'Reproductor'], 'Equipo de sala': ['Room system', 'Equip de sala'], 'Ficha del fabricante': ['Manufacturer datasheet', 'Fitxa del fabricant'], 'Sí': ['Yes', 'Sí'],
   'Acceso interno activo: tócalo para cerrarlo': ['Internal access on: tap to close it', 'Accés intern actiu: toca\'l per tancar-lo'],
   'Restablecer': ['Reset', 'Restablir'],
   'SALTAR': ['SKIP', 'SALTAR'], 'SIGUIENTE': ['NEXT', 'SEGÜENT'], 'LISTO': ['DONE', 'FET'], 'ATRÁS': ['BACK', 'ENRERE'], 'Cerrar': ['Close', 'Tancar'],
@@ -137,7 +146,15 @@ function pinta() {
     c.innerHTML = h;
   }
   if (m.despues) m.despues(c, R);
-  pintaRes(); guardaCasa(); ajusta();
+  pintaRes(); guardaCasa(); ajusta(); monta3D(m, R);
+}
+/* v2.5 · simulación 3D: se monta cuando el dibujo trae su lienzo y se suelta entera al repintar (sin contextos WebGL colgando) */
+let S3 = null, n3 = 0;
+async function monta3D(m, r) {
+  if (S3) { try { S3.destruir(); } catch (e) {} S3 = null; }
+  const cv = document.querySelector('canvas[data-sim3d]'), yo = ++n3; if (!cv || !m.escena3d) return;
+  try { const { Sala3D } = await import('./sim3d.js'); if (yo !== n3 || !cv.isConnected) return; S3 = new Sala3D(cv); m.escena3d(S3, r); S3.encuadra(); }
+  catch (e) { if (cv.isConnected) cv.insertAdjacentHTML('afterend', `<p class="sim-err">${esc(T('La simulación 3D no está disponible en este navegador.'))}</p>`); }
 }
 /* la casilla de la petición: tras CALCULAR enseña el resultado en una línea (como SCREENS) */
 function pintaRes() {
@@ -159,6 +176,23 @@ let tT = 0;
 function tostada(t, ms = 3200) { const e = $('#tostada'); if (!e) return; e.textContent = t; e.classList.add('on'); clearTimeout(tT); tT = setTimeout(() => e.classList.remove('on'), ms); }
 function ventana(tit, html) {
   const v = $('#velo'); v.innerHTML = `<div class="vent" role="dialog" aria-modal="true"><div class="vent-cab"><b>${esc(tit)}</b><span class="sep"></span><button type="button" class="ic-bt" data-cierra aria-label="${esc(T('Cerrar'))}">${IC.x}</button></div><div class="vent-cu">${html}</div></div>`; v.classList.add('on');
+}
+/* v2.6 · ficha de producto como la de SCREENS (comun/ficha.js): al tocar un equipo del resultado, foto (o dibujo), marca, modelo,
+   especificaciones de la lista y enlace al fabricante. Sin precios ni stock (la ficha es pública y sale en el PDF). */
+const TIPO = { altavoz: 'Altavoz', subgrave: 'Subgrave', microfono: 'Micrófono', capsula: 'Cápsula', transmisor: 'Transmisor', receptor: 'Receptor', camara: 'Cámara', 'barra-vc': 'Barra de vídeo', display: 'Display', control: 'Control',
+  'kit-audio': 'Kit de audio', 'audio-vc': 'Audio para videoconferencia', etapa: 'Etapa', 'procesador-audio': 'Procesador de audio', conmutador: 'Conmutador', extensor: 'Extensor', cable: 'Cable', avoip: 'AV sobre IP', accesorio: 'Accesorio', soporte: 'Soporte',
+  antena: 'Antena', cargador: 'Cargador', 'interfaz-audio': 'Interfaz de audio', 'tarjeta-audio': 'Tarjeta de audio', conferencia: 'Conferencia', tratamiento: 'Tratamiento acústico', servicio: 'Servicio', signage: 'Reproductor', 'pc-vc': 'Equipo de sala' };
+const ICONO = { altavoz: 'altavoz', subgrave: 'altavoz', microfono: 'micro', capsula: 'micro', transmisor: 'micro', receptor: 'micro', camara: 'camara', 'barra-vc': 'camara', display: 'display', control: 'control', 'kit-audio': 'altavoz', 'audio-vc': 'micro', proyector: 'proy' };
+const SPEC = [['pulgadas', 'Tamaño', '″'], ['res', 'Resolución', ''], ['nits', 'Brillo', ' nits'], ['horas', 'Horas al día', ''], ['canales', 'Canales', ''], ['w', 'Potencia', ' W'], ['inp', 'Entradas', ''], ['out', 'Salidas', ''], ['gbps', 'Ancho de banda', ' Gbps'],
+  ['hfov', 'Ángulo horizontal', '°'], ['zoom', 'Zoom óptico', '×'], ['zoomTotal', 'Zoom total', '×'], ['hfovIA', 'Lente panorámica', '°'], ['fovH', 'Campo de visión', '°'], ['fondoMax', 'Fondo de sala', ' m'], ['m2', 'Cobertura', ' m²'], ['zonas', 'Zonas', ''], ['personas', 'Personas', ''], ['poe', 'PoE', ''], ['u', 'Alto de rack', ' U']];
+function abreFicha(id) {
+  const M = marcas(); let x = null, mk = '';
+  Object.keys(M).some((k) => (M[k] || []).some((y) => { if (y && y.id === id) { x = y; mk = k; return true; } return false; }));
+  if (!x || !window.SC_FICHA) return false;
+  const specs = SPEC.filter((s) => x[s[0]] != null && x[s[0]] !== '' && x[s[0]] !== false && typeof x[s[0]] !== 'object').map((s) => [T(s[1]), (x[s[0]] === true ? T('Sí') : x[s[0]]) + s[2]]);
+  const enl = [x.url, x.web, x.fuente].find((u) => /^https?:\/\//.test(String(u || '')));
+  const html = window.SC_FICHA.fichaHTML({ cat: T(TIPO[x.tipo] || x.tipo || ''), icono: ICONO[x.tipo] || 'elec', marca: x.marca || mk, modelo: x.modelo || x.id, foto: x.urlFoto || x.foto, fotoTrasera: x.urlFotoTrasera, specs: [[T('Referencia'), x.id]].concat(specs), notas: x.descripcion ? [x.descripcion] : [], enlace: enl, enlaceTxt: T('Ficha del fabricante'), acento: '#00b4ff', sel: true });
+  ventana((x.marca || mk) + ' ' + (x.modelo || x.id), html); return true;
 }
 const movilV = () => matchMedia('(max-width: 559px) and (orientation: portrait)').matches;   /* v1.8 · móvil vertical */
 const cierra = () => { const ic = $('#info-comun'), hc = $('#hueco-comun'); if (ic && hc) [...ic.children].forEach((x) => hc.insertBefore(x, hc.querySelector('.admin-esq'))); const v = $('#velo'); v.classList.remove('on'); v.innerHTML = ''; };
@@ -194,7 +228,7 @@ function responde(v) { const m = M(), q = m.pregunta(ASIS.claves[ASIS.i], R); q.
 function cambiaModulo(id) { if (id === G.mod) return; G.mod = id; EDITA = true; const i = $('#pide'); if (i) { i.value = ''; G.texto = ''; } pinta(); if (G.vista === 'simple' && !lee('systems_asis_' + id)) asis(M().pasos(), true); }
 function calcular() {
   const i = $('#pide'), t = (i ? i.value : '').trim(); G.texto = t;
-  if (t) { const ok = M().pide(t); if (!ok) { const otro = MODS.find((m) => m !== M() && m.reconoce && m.reconoce(t)); if (otro) { G.mod = otro.id; otro.pide(t); } else tostada(T('No he entendido la petición: prueba con los botones o escríbela de otra forma.'), 5000); } }
+  if (t) { const n = normaliza(t), cual = (M().reconoce && M().reconoce(n)) ? null : [VIDEO, CAMARAS, CONTROL, DISP, SENAL, ELEC, SONIDO, AUDIO].find((m) => m !== M() && m.reconoce && m.reconoce(n)); if (cual) { G.mod = cual.id; cual.pide(n); } else if (!M().pide(n)) tostada(T('No he entendido la petición: prueba con los botones o escríbela de otra forma.'), 5000); }
   EDITA = false; pinta();
   const b = $('#calcular'); b.classList.remove('pulso'); void b.offsetWidth; b.classList.add('pulso');
 }
@@ -219,6 +253,7 @@ document.addEventListener('click', (e) => {
   if (q('[data-idioma]')) { fijarIdioma(IDIOMAS[(IDIOMAS.indexOf(idioma()) + 1) % IDIOMAS.length]); marco(); return; }
   if (q('button[data-tema]')) { G.tema = G.tema === 'claro' ? 'oscuro' : 'claro'; document.documentElement.dataset.tema = G.tema; guardaCasa(); return; }
   if (q('[data-salir-int]')) { e.preventDefault(); salirInterno(); return; }
+  if ((b = q('.equipo')) && !q('a, button')) { const ref = b.querySelector('.ref'); if (ref && abreFicha(ref.textContent.trim())) return; }
   if (q('[data-pdf]')) { imprimir(); return; }
   if (q('[data-info]')) { info(); if (movilV()) { const cu = document.querySelector('#velo .vent-cu'), hc = $('#hueco-comun'); if (cu && hc) { cu.insertAdjacentHTML('afterbegin', '<div class="fila info-comun" id="info-comun"></div>'); [...hc.children].filter((x) => !x.classList.contains('admin-esq')).forEach((x) => $('#info-comun').appendChild(x)); } } return; }
   if (q('[data-aviso-calc]') && movilV()) { tostada(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'), 6000); return; }

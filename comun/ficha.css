@@ -1,0 +1,94 @@
+/* SCREENS · ficha de equipo común (cabinets, proyectores, electrónicas y mediaservers) · GPL-3.0 · mediaservi.com */
+.ficha { --fi-ac: #00ff04; position: relative; display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 10px; min-width: 0;
+  background: linear-gradient(180deg, #2b2b2f 0%, #212124 100%); border: 1px solid #0b0b0c; border-left: 3px solid var(--fi-ac);
+  box-shadow: 0 2px 0 #000, inset 0 1px 0 rgba(255,255,255,.06); color: #e9e9ec; font-family: 'Inter', Arial, sans-serif; }
+.ficha.fi-sel { box-shadow: 0 0 0 1px var(--fi-ac), 0 0 14px color-mix(in srgb, var(--fi-ac) 35%, transparent), inset 0 1px 0 rgba(255,255,255,.06); }
+.fi-cab { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
+.fi-cat { font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--fi-ac); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* v10.50 · stock solo con su icono (caja verde = de stock; tarjeta con reloj naranja = a pedir): nunca en texto */
+.sc-stock { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 1.7em; height: 1.7em; border-radius: .42em; border: 1px solid currentColor; background: color-mix(in srgb, currentColor 13%, transparent); vertical-align: middle; }
+.sc-stock svg { width: 74%; height: 74%; display: block; }
+.sc-stock.si { color: #3fdc5b; } .sc-stock.no { color: #ff9a1f; }
+:root[data-tema="claro"] .sc-stock.si { color: #17842f; } :root[data-tema="claro"] .sc-stock.no { color: #b85e00; }
+.fi-cab .sc-stock { font-size: 11px; }
+.fi-cuerpo { display: grid; grid-template-columns: minmax(64px, 96px) minmax(0, 1fr); gap: 10px; align-items: center; }
+.fi-foto { position: relative; aspect-ratio: 4 / 3; border-radius: 7px; background: #fff; border: 1px solid #0b0b0c; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.fi-foto svg { width: 78%; height: 78%; }
+.fi-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 6px; box-sizing: border-box; background: #fff; }
+.fi-dat { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.fi-marca { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #9d9da6; }
+.fi-modelo { font: 400 15px/1.2 'Share Tech Mono', ui-monospace, monospace; color: #fff; overflow-wrap: anywhere; }
+.fi-specs { margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 104px), 1fr)); gap: 2px 10px; }
+.fi-specs div { min-width: 0; display: flex; flex-direction: column; padding: 3px 0 2px; border-top: 1px solid rgba(255,255,255,.07); }
+.fi-specs dt { font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #8d8d96; }
+.fi-specs dd { margin: 0; font: 400 12.5px/1.25 'Share Tech Mono', ui-monospace, monospace; color: #e9e9ec; overflow-wrap: anywhere; }
+.fi-piezas { list-style: none; margin: 0; padding: 6px 0 0; border-top: 1px solid rgba(255,255,255,.08); display: grid; gap: 3px; }
+.fi-piezas li { display: grid; grid-template-columns: 2.6em minmax(0, auto) minmax(0, 1fr); gap: 8px; align-items: baseline; font-size: 11px; color: #c9c9ce; }
+.fi-piezas b { text-align: right; font: 400 12px 'Share Tech Mono', ui-monospace, monospace; color: var(--fi-ac); }
+.fi-ref { font: 400 12px 'Share Tech Mono', ui-monospace, monospace; color: #fff; white-space: nowrap; }
+.fi-desc { min-width: 0; color: #a9a9b2; }
+.fi-aviso, .fi-nota { margin: 0; font-size: 11px; line-height: 1.35; }
+.fi-aviso { color: #ffc94d; } .fi-nota { color: #a9a9b2; }
+.fi-enlaces { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 14px; }
+.fi-enlace { align-self: flex-end; font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--fi-ac); text-decoration: none; }
+.fi-enlace:hover { text-decoration: underline; }
+@media (max-width: 420px) { .fi-piezas li { grid-template-columns: 2.4em minmax(0, 1fr); } .fi-desc { grid-column: 2; } }
+/* v10.60 · la lista de piezas, en texto corrido con sangría: cantidad, referencia y, a continuación, la descripción, que al partir línea sigue debajo de la
+   referencia. Antes cada línea repartía el ancho por su cuenta y, con una referencia larga, la descripción se partía en una columna estrecha y desordenada */
+@media (min-width: 421px) {
+  .fi-piezas li { display: block; padding-left: 38px; text-indent: -38px; line-height: 1.4; }
+  .fi-piezas li > b { display: inline-block; width: 30px; margin-right: 8px; text-indent: 0; }
+  .fi-piezas .fi-ref { margin-right: 8px; }
+}
+/* v7.8 · foto que se pulsa para verla en grande (con un distintivo de lupa) */
+.fi-zoom { cursor: zoom-in; }
+.fi-zoom::after { content: ''; position: absolute; right: 4px; bottom: 4px; z-index: 2; width: 18px; height: 18px; border-radius: 5px; background: rgba(12,12,14,.72) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6'/%3E%3Cpath d='M15 15l5 5M8 10.5h5M10.5 8v5'/%3E%3C/svg%3E") center / 12px no-repeat; pointer-events: none; }
+.fi-zoom:hover { box-shadow: 0 0 0 2px var(--fi-ac); }
+.fi-zoom:focus-visible { outline: 2px solid var(--fi-ac); outline-offset: 2px; }
+
+/* ---------- v7.8 · visor de fotos del equipo (trasera y frontal en grande, paginación y cerrar) ---------- */
+html.vf-abierto, html.vf-abierto body { overflow: hidden !important; }
+.vf { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: center; justify-content: center; padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); box-sizing: border-box; }
+.vf[hidden] { display: none !important; }
+.vf-fondo { position: absolute; inset: 0; background: rgba(6,6,8,.86); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+.vf-caja { position: relative; display: flex; flex-direction: column; gap: 10px; width: min(980px, 100%); max-height: 100%; box-sizing: border-box; padding: 12px;
+  border-radius: 12px; background: linear-gradient(180deg, #2b2b2f 0%, #1c1c1f 100%); border: 1px solid #0b0b0c; box-shadow: 0 20px 60px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.07);
+  color: #e9e9ec; font-family: 'Inter', Arial, sans-serif; }
+.vf-cab { display: flex; align-items: center; gap: 10px; min-width: 0; min-height: 40px; padding: 0 52px 0 4px; }
+.vf-lado { flex: none; font: 800 10px/1 'Inter', Arial, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #00ff04; padding: 5px 8px; border: 1px solid currentColor; border-radius: 5px; }
+.vf-tit { min-width: 0; font: 400 15px/1.25 'Share Tech Mono', ui-monospace, monospace; color: #fff; overflow-wrap: anywhere; }
+/* las reglas de la app para botones táctiles (alto mínimo de 44 px) no se aplican al visor: cada botón tiene su medida */
+.vf button { -webkit-appearance: none; appearance: none; margin: 0; padding: 0; min-width: 0 !important; min-height: 0 !important; font: inherit; line-height: 1; cursor: pointer; }
+.vf-x { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 9px;
+  background: linear-gradient(180deg, #36363b, #26262a); border: 1px solid #0b0b0c; color: #e9e9ec; box-shadow: 0 2px 0 #000, inset 0 1px 0 rgba(255,255,255,.08); }
+.vf-x svg { width: 18px; height: 18px; }
+.vf-x:hover, .vf-ant:hover, .vf-sig:hover { color: #00ff04; }
+.vf-foto { position: relative; flex: 1 1 auto; min-height: 0; height: min(70vh, 660px); display: flex; align-items: center; justify-content: center; overflow: hidden;
+  background: #fff; border-radius: 8px; border: 1px solid #0b0b0c; touch-action: pan-y; user-select: none; }
+.vf-foto img { width: 100%; height: 100%; object-fit: contain; padding: 14px; box-sizing: border-box; -webkit-user-drag: none; }
+.vf-foto img[hidden] { display: none; }
+.vf-error { margin: 0; padding: 0 16px; font-size: 13px; color: #55555e; text-align: center; }
+.vf-pie { display: flex; align-items: center; justify-content: center; gap: 16px; min-height: 44px; }
+.vf-pie[hidden] { display: none !important; }
+.vf-ant, .vf-sig { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%;
+  background: linear-gradient(180deg, #36363b, #26262a); border: 1px solid #0b0b0c; color: #e9e9ec; box-shadow: 0 2px 0 #000, inset 0 1px 0 rgba(255,255,255,.08); }
+.vf-ant svg, .vf-sig svg { width: 20px; height: 20px; }
+.vf-pag { display: flex; align-items: center; gap: 10px; }
+.vf-punto { width: 12px !important; height: 12px !important; border-radius: 50%; background: #3a3a40 !important; border: 1px solid #0b0b0c !important; box-shadow: inset 0 1px 1px rgba(0,0,0,.5); }
+.vf-punto.on { background: #00ff04 !important; box-shadow: 0 0 8px rgba(0,255,4,.6); }
+.vf-num { margin-left: 4px; font: 400 12px/1 'Share Tech Mono', ui-monospace, monospace; color: #9d9da6; letter-spacing: .08em; }
+@media (max-width: 560px) { .vf { padding: 8px; } .vf-caja { padding: 10px; gap: 8px; } .vf-foto { height: min(62vh, 520px); } .vf-tit { font-size: 13px; } }
+@media (max-height: 480px) { .vf-foto { height: calc(100vh - 150px); } .vf-cab { min-height: 34px; } .vf-pie { min-height: 40px; } .vf-ant, .vf-sig { width: 40px; height: 40px; } }
+@media print {
+  .vf { display: none !important; } .fi-zoom::after { display: none !important; } .fi-zoom:hover { box-shadow: none !important; }
+  .ficha { background: #fff !important; color: #111 !important; border: 1px solid #c9c9d2 !important; border-left: 3px solid var(--fi-ac) !important; box-shadow: none !important; break-inside: avoid; }
+  .fi-modelo, .fi-ref, .fi-specs dd { color: #111 !important; } .fi-marca, .fi-specs dt, .fi-desc, .fi-nota { color: #555 !important; }
+  .fi-cat { color: #4a0a8c !important; } .fi-enlace { display: none !important; } .fi-aviso { color: #8a5a00 !important; }
+}
+/* v10.70 · semáforo de stock por batch: 3 rayas junto al icono */
+.sc-sem { flex: none; display: inline-flex; align-items: flex-end; gap: 2px; height: 1.7em; margin-left: .35em; vertical-align: middle; padding-bottom: .2em; box-sizing: border-box; }
+.sc-sem i { display: block; width: .32em; border-radius: 1px; background: color-mix(in srgb, currentColor 22%, transparent); }
+.sc-sem i:nth-child(1) { height: 40%; } .sc-sem i:nth-child(2) { height: 65%; } .sc-sem i:nth-child(3) { height: 90%; }
+.sc-sem.n1 i:nth-child(-n+1) { background: #ff4b3e; } .sc-sem.n2 i:nth-child(-n+2) { background: #ffb000; } .sc-sem.n3 i { background: #3fdc5b; }
+:root[data-tema="claro"] .sc-sem.n3 i { background: #17842f; } :root[data-tema="claro"] .sc-sem.n2 i:nth-child(-n+2) { background: #b86e00; }
+.fi-cab .sc-sem { font-size: 11px; }

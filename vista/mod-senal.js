@@ -134,7 +134,7 @@ export default {
   id: 'senal', nom: 'Señal y conectividad', corto: 'SEÑAL', ic: 'senal', ejemplo: 'Escríbela: «4 portátiles a 2 pantallas, distintas, 4K, a 30 m»',
   info: 'Selector, distribuidor o matriz, y el cable o extensor de cada tramo según la distancia y la resolución.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
-  reconoce: (t) => /matriz|matrix|selector|distribuidor|splitter|hdbaset|extensor|portátil|portatil|usb-c/i.test(t),
+  reconoce: (t) => /matriz|matriu|matrix|selector|distribuidor|splitter|switcher|commutador|hdbaset|extensor|extender|port[àá]til|portatil|laptop|usb-c/i.test(t),
   esquema: (r, o) => ({ tit: 'Esquema de la señal', ic: 'sim', html: esquema(r, o) }),
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * (k === 'dF' || k === 'dD' ? 5 : 1)),
   accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); }, reset: () => { S = Object.assign({}, DEF); },

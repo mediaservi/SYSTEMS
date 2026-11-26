@@ -4,7 +4,7 @@
 // Solo con equipos de las listas del panel. Orientativo: hay que validar el diseño. GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos, P } from './listas.js';
-import { COL, escala, cota, persona, suelo, techo, etiqueta, lienzo, pestanas, fmt } from './vt.js';
+import { COL, escala, cota, persona, suelo, techo, etiqueta, lienzo, lienzo3D, pestanas, fmt } from './vt.js';
 textos({
   'Vista lateral': ['Side view', 'Vista lateral'], 'La sala vista de lado': ['The room seen from the side', 'La sala vista de costat'], 'oído': ['ear', 'oïda'], 'ojos': ['eyes', 'ulls'],
   'Sonorización': ['Sound system', 'Sonorització'], 'SONIDO': ['SOUND', 'SO'],
@@ -215,6 +215,28 @@ function calcula() {
 }
 
 
+
+/* v2.5 · simulación 3D de la sala (vista/sim3d.js): altavoces con su cobertura, retardos con su tiempo, subgraves, pantalla y público */
+function escena3d(V, r) {
+  const A = S.ancho, F = S.fondo, H = S.alto, OIDO = P('sonido.oido', 1.2), HCOL = P('sonido.alturaColgante', 6);
+  V.sala(A, F, H);
+  if (S.pantalla) V.pantalla(A * 0.4, Math.min(H - 1.2, A * 0.4 * 9 / 16), 0, 1.0, 0, '');
+  const alt = (x, y, z, c) => V.caja(0.22, 0.34, 0.2, x, y, z, 0x1b1b1e, { metal: 0.6 }) && V.caja(0.2, 0.3, 0.01, x, y, z + 0.105, c, { emis: 0.25 });
+  if (r.techo && r.techo.nx && S.montaje === 'techo') {
+    const { nx, ny, D } = r.techo, h = Math.min(H, HCOL), ang = 2 * Math.atan((D / 2) / Math.max(0.3, h - OIDO)) * 180 / Math.PI;
+    for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) { const x = -A / 2 + (i + .5) * A / nx, z = (j + .5) * F / ny; V.caja(0.25, 0.08, 0.25, x, h - 0.04, z, 0x00b4ff, { emis: 0.3 }); if (nx * ny <= 40) V.cono([x, h - 0.08, z], [x, OIDO, z], ang, 0x00b4ff, 0.07); }
+  } else if (r.mains.length) {
+    const h = Math.max(2.2, Math.min(H - 0.3, Math.max(P('sonido.alturaPrincipalMin', 2.5), F / P('sonido.alturaPrincipalFondo', 6)))), hasta = r.delays.length ? r.delays[0].y : F;
+    [-1, 1].forEach((sx) => { const x = sx * A * 0.38; alt(x, h, 0.15, 0x00b4ff); V.cono([x, h, 0.3], [x * 0.4, OIDO, Math.min(F, hasta + 1)], 60, 0x00b4ff, 0.09); });
+    V.etiqueta(r.mains[0].modelo, -A * 0.38, h + 0.45, 0.2, 0.3);
+  }
+  const hR = Math.max(2.2, Math.min(H - 0.3, P('sonido.alturaRetardos', 3)));
+  r.delays.forEach((d, k) => { const hasta = (r.delays[k + 1] || {}).y || F;
+    for (let i = 0; i < d.n; i++) { const x = -A / 2 + (i + .5) * A / d.n; alt(x, hR, d.y, 0xffb000); V.cono([x, hR, d.y + 0.15], [x * 0.9, OIDO, Math.min(F, hasta + 1)], 60, 0xffb000, 0.07); }
+    V.etiqueta(d.ms + ' ms', A / 2 - 0.6, hR + 0.45, d.y, 0.3, '#ffb000'); });
+  if (r.subs.length && !/CMR/.test(r.subs[0].id)) [-1, 1].forEach((sx) => V.caja(0.5, 0.5, 0.55, sx * A * 0.3, 0.25, 0.4, 0xb566ff, { metal: 0.3 }));
+  const paso = Math.max(1.6, Math.min(A, F) / 5); for (let z = 2; z < F - 0.5; z += paso) for (let x = -A / 2 + 1; x < A / 2 - 0.5; x += paso) V.persona(x, z, Math.PI, 0.55);
+}
 /* v2.3 · vista LATERAL como las de SCREENS: altura de los altavoces, el plano del oído, la cobertura hasta el público y los retardos con su tiempo */
 let VT = 'planta';
 function lateral(r, o = {}) {
@@ -326,8 +348,9 @@ export default {
   id: 'sonido', nom: 'Sonorización', corto: 'SONIDO', ic: 'altavoz', ejemplo: 'Escríbela: «sala de 10 x 16 m con 2 micros y pantalla»',
   info: 'El sistema de sonido completo de una sala: altavoces, subgraves, retardos, electrónica, micrófonos y control.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
-  reconoce: (t) => /altavoc|sonoriz|megafon|hilo musical|evacuaci|speaker|sound system/i.test(t),
-  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : 'Plano de la sala', ic: 'cubo', html: VT === 'lateral' ? lateral(r, o) : esquema(r, o), extra: pestanas(['planta', 'lateral'], VT) }),
+  reconoce: (t) => /altavoc|altaveu|sonoriz|micros?\b|micr[óò]fon|microphone|sonorit|megafon|hilo musical|fil musical|evacuaci|speaker|sound system|loudspeaker/i.test(t),
+  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : VT === '3d' ? 'Simulación 3D' : 'Plano de la sala', ic: 'cubo', html: VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : esquema(r, o), extra: pestanas(['planta', 'lateral', '3d'], VT) }),
+  escena3d,
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * (k === 'alto' ? 0.1 : ['zonas', 'mano', 'cuerpo', 'mesa'].includes(k) ? 1 : 0.5)),
   accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
   _S: () => S,

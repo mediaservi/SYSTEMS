@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v2.4 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v2.5 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 
 ## Icono
@@ -52,7 +52,23 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v2.4)
+## Cambios de la versión actual (v2.7)
+- Petición escrita como la de SCREENS: entiende números con letra («dos micros», «quatre», «twelve»), medidas en cm o mm, «10 metros de ancho por 16 de largo», «6 by 4 m» y «metros» en español, inglés y catalán.
+- Los textos del esquema de CONTROL (y de los calculadores de AUDIO) ya no salen en negro en el modo oscuro: toman el color del tema.
+- La petición va al apartado que la reconoce aunque estés en otro (videoconferencia, cámaras, control, displays, señal, electrónica, sonido y audio, por ese orden), y reconoce también las palabras en catalán e inglés.
+
+## Cambios de la v2.6
+- Ficha de producto como la de SCREENS: al tocar un equipo del resultado se abre su ficha (foto o dibujo, marca, modelo, datos técnicos según información de los fabricantes y enlace a la ficha del fabricante), en español, inglés y catalán.
+
+## Cambios de la v2.5
+- **Simulación 3D de la sala**, con la misma base que la de SCREENS (three.js local, mismo render, la figura humana extruida, etiquetas y cotas en el suelo, misma navegación: arrastrar para girar, rueda o + − para acercar, flechas para desplazarse, 0 para volver). Botón 3D junto a las vistas técnicas:
+  - SONIDO: altavoces principales y retardos con su cono de cobertura y su tiempo, malla de techo, subgraves, pantalla y público.
+  - VIDEOCONFERENCIA: pantallas a su altura, cámara o barra con su campo de visión, mesa con la gente y micrófonos de techo con su cobertura.
+  - CÁMARAS: escenario con el ponente, cámara con el cono del encuadre, lente IA, cámara de público y el público.
+  - DISPLAYS: la pared con las pantallas (o el tótem) y una persona a la distancia de visión.
+- La simulación se carga solo al pulsar 3D y se suelta entera al cambiar de vista. Caché renovada (`systems-v24`).
+
+## Cambios de la v2.4
 - **Todo el cálculo con ajuste fino desde el panel AVHUB ADMIN:** SEÑAL (distancia de cada cable y extensor, AV sobre IP, salidas HDBaseT), DISPLAYS (brillo de escaparate, tamaños máximos, alturas de montaje y distancias de visión), CÁMARAS (alturas y distancias de USB y HDMI) y las alturas de la vista lateral de SONIDO se leen en vivo, con los valores de siempre como respaldo y copia para funcionar sin conexión.
 - **Motor común de electrónica LED** al día con SCREENS: píxeles por puerto, conversores, ranuras y tarjetas también desde el panel, los mismos valores para las dos apps.
 - Caché renovada (`systems-v23`).
