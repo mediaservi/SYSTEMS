@@ -52,7 +52,10 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v2.5)
+## Cambios de la versión actual (v2.6)
+- Ficha de producto como la de SCREENS: al tocar un equipo del resultado se abre su ficha (foto o dibujo, marca, modelo, datos técnicos según información de los fabricantes y enlace a la ficha del fabricante), en español, inglés y catalán.
+
+## Cambios de la v2.5
 - **Simulación 3D de la sala**, con la misma base que la de SCREENS (three.js local, mismo render, la figura humana extruida, etiquetas y cotas en el suelo, misma navegación: arrastrar para girar, rueda o + − para acercar, flechas para desplazarse, 0 para volver). Botón 3D junto a las vistas técnicas:
   - SONIDO: altavoces principales y retardos con su cono de cobertura y su tiempo, malla de techo, subgraves, pantalla y público.
   - VIDEOCONFERENCIA: pantallas a su altura, cámara o barra con su campo de visión, mesa con la gente y micrófonos de techo con su cobertura.
@@ -233,7 +236,3 @@ Código abierto bajo la licencia **GNU GPL v3**.
 Software gratuito y de código abierto, hecho con pasión por un aficionado en su tiempo libre. No es un producto profesional. Se ofrece «tal cual», sin garantías de ningún tipo; los resultados son orientativos y hay que comprobarlos siempre; se usa bajo la responsabilidad de cada cual, hasta donde lo permita la ley aplicable. El aviso completo (es/en/ca) está en la propia app, en el enlace «Aviso legal» que acompaña a la línea de crédito. Licencia GPL-3.0.
 
 Documentos legales del repositorio: [`LEGAL.md`](LEGAL.md) (aviso legal), [`DISCLAIMER.md`](DISCLAIMER.md) (garantías y responsabilidad), [`PRIVACY.md`](PRIVACY.md) (privacidad), [`COOKIES.md`](COOKIES.md) (cookies y almacenamiento local) y [`LICENSE`](LICENSE) (GPL-3.0). Sin publicidad, afiliación ni ingresos de ningún tipo.
-
-## v2.6
-- Ficha de producto como la de SCREENS: al tocar un equipo del resultado se abre su ficha (foto o dibujo, marca, modelo, datos técnicos según información de los fabricantes y enlace a la ficha del fabricante), en español, inglés y catalán.
-
