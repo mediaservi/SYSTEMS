@@ -6,7 +6,17 @@ let PANEL = null;
 try { const c = JSON.parse(localStorage.getItem('sc_eq1') || 'null'); if (c && c.marcas) PANEL = c; } catch (e) {}
 const FAB = () => Object.assign({}, (globalThis.SC_EQUIPOS || {}).marcas || {}, (globalThis.SC_SISTEMAS || {}).marcas || {});
 /* todas las marcas: las del panel mandan sobre las de fábrica */
-export function marcas() { const f = FAB(), p = (PANEL && PANEL.marcas) || {}; const o = Object.assign({}, f); Object.keys(p).forEach((k) => { if (Array.isArray(p[k])) o[k] = p[k]; }); return o; }
+/* v2.0 · el panel manda en cada campo que trae; lo que le falta a una referencia (datos de cálculo) lo completa la lista de fábrica,
+   y las referencias de fábrica que el panel aún no tiene se añaden. Así una lista antigua del panel no deja sin datos al cálculo. */
+let MEMO = null, MEMOk = null;
+export function marcas() {
+  const f = FAB(), p = (PANEL && PANEL.marcas) || {}; if (MEMO && MEMOk === PANEL) return MEMO;
+  const o = Object.assign({}, f);
+  Object.keys(p).forEach((k) => { if (!Array.isArray(p[k])) return; const fab = {}; (f[k] || []).forEach((x) => { if (x && x.id) fab[x.id] = x; });
+    const ya = new Set(); o[k] = p[k].map((x) => { if (!x || !x.id) return x; ya.add(x.id); const d = fab[x.id]; if (!d) return x; const y = Object.assign({}, d); Object.keys(x).forEach((c) => { if (x[c] !== '' && x[c] != null) y[c] = x[c]; }); return y; })
+      .concat((f[k] || []).filter((x) => x && x.id && !ya.has(x.id))); });
+  MEMO = o; MEMOk = PANEL; return o;
+}
 /* equipos activos de un tipo (o de varios), con su marca */
 export function equipos(tipos, marca) {
   const T = [].concat(tipos), M = marcas(), out = [];
