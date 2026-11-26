@@ -292,7 +292,7 @@ function cifras(r) {
 
 /* ---------- datos (PRO) ---------- */
 function datos() {
-  const dest = `${togs('cant', [['una', 'UNA'], ['varias', 'VARIAS']], S.cant, 'dos')}${togs('dest', [['led', 'LED'], ['proy', 'PROYECCIÓN'], ['disp', 'DISPLAYS']], S.dest, 'uno')}`;
+  const dest = `${togs('cant', [['una', 'UNA'], ['varias', 'VARIAS']], S.cant, 'dos')}${togs('dest', [['led', 'LED'], ['proy', 'PROYECCIÓN'], ['disp', 'DISPLAYS']], S.dest, '')}`;
   const fuentes = (con) => etq('Fuentes') + `<div class="nums">${num(con ? 'salidas' : 'fuentes', con ? 'Salidas' : 'Fuentes', con ? S.salidas : S.fuentes, '', 1, 1, 16)}${con ? `<select class="sel" data-sel="tipo" aria-label="${esc(T('Tipo de salida'))}">${['DP', 'HDMI', 'SDI'].map((t) => `<option value="${t}"${S.tipo === t ? ' selected' : ''}>${t === 'DP' ? 'DisplayPort' : t}</option>`).join('')}</select>` : ''}</div>`;
   if (S.dest === 'led') {
     const pant = S.cant === 'una'

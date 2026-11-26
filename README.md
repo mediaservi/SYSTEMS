@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v1.9 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v2.0 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 
 ## Icono
@@ -22,10 +22,11 @@ Reúne en una sola consola los cálculos que se hacen al diseñar y montar un si
 - **ELECTRÓNICA** (como en SCREENS: UNA o VARIAS pantallas y LED, PROYECCIÓN o DISPLAYS)
   - *LED:* con la resolución (o el cabinet), las salidas de la fuente, cable de red o fibra y backup: líneas, reparto de la señal, procesador con su despiece, alternativas, conversores de fibra CVT10 junto a la pantalla (dibujados en el esquema) y avisos. Hasta 4 pantallas a la vez.
   - *PROYECCIÓN:* la misma imagen, distintas o fundida (blending): distribuidor, matriz o equipo de blending de las listas, y el cable o extensor de cada tramo.
-  - *DISPLAYS:* monitores SAMSUNG, LG y CLEVER (lista del CRM de Charmex) por tamaño, uso (interior, escaparate, exterior, interactivo, tótem) y horas al día; espejo, distintas o videowall.
+  - *DISPLAYS:* monitores SAMSUNG, LG y CLEVER por tamaño, uso (interior, escaparate, exterior, interactivo, tótem) y horas al día; espejo, distintas o videowall.
 - **SEÑAL Y CONECTIVIDAD:** fuentes → selector, distribuidor o matriz (PURELINK) → destinos, con el cable o extensor de cada tramo según la distancia y la resolución (1080p, 4K60 a 18 Gbps u 8K a 48 Gbps), USB/KVM y AV sobre IP a partir de 8 fuentes o destinos.
 - **AUDIO:** los 26 calculadores de audio y escenario (acústica, arrays, electrónica de audio, cableado, iluminación y vídeo, electricidad, música y grabación, medidas y referencia), con sus gráficas, tablas, resumen y notas.
-- **VIDEOCONFERENCIA:** con las medidas de la sala y la gente, el tamaño de pantalla (espectador más lejano a 6 veces la altura de imagen, o 4 para documentos), la barra o cámara AVER por fondo de sala y campo de visión, y los micrófonos de techo SENNHEISER por cobertura.
+- **SONORIZACIÓN** (nuevo en la v2.0): el sistema de sonido completo de una sala, no un altavoz suelto. Con las medidas, el uso (música de fondo, megafonía, sala con micros o eventos), pared o techo y los micrófonos propone altavoces, subgraves, retardos con su tiempo, etapas, micrófonos, control y accesorios, con avisos de diseño. RCF, SENNHEISER y XILICA; EZ ACOUSTICS (tratamiento acústico) y FOHHN (altavoces a medida, PoE y Dante) solo como consulta.
+- **VIDEOCONFERENCIA:** con las medidas de la sala y la gente, el tamaño de pantalla (espectador más lejano a 6 veces la altura de imagen, o 4 para documentos), la barra o cámara AVER por fondo de sala y campo de visión, y los micrófonos de techo SENNHEISER por cobertura, con el kit completo con XILICA cuando la sala lo pide.
 
 En SIMPLE, un asistente pregunta lo justo la primera vez y cada línea de «Lo que pides» se cambia tocándola. En PRO se ven y cambian todos los datos, el esquema y el despiece. También se puede escribir la petición («pantalla LED de 8960 x 1536 con 3 salidas DP por fibra», «4 portátiles a 2 pantallas, distintas, 4K, a 30 m», «sala de 6 x 4 m para 10 personas») y pulsar CALCULAR.
 
@@ -33,7 +34,7 @@ En SIMPLE, un asistente pregunta lo justo la primera vez y cada línea de «Lo q
 
 ## Listas de equipos
 
-`comun/equipos.js` (procesadores LED: NOVASTAR, COEX y PIXELHUE, la misma de SCREENS) y `comun/sistemas.js` (displays SAMSUNG, LG y CLEVER; PURELINK; AVER; NUREVA; RCF; SENNHEISER; JUST ADD POWER) son las listas de fábrica, sin precios. El panel AVHUB ADMIN las carga y, una vez guardadas allí, la app usa las del panel (`?accion=equipos`).
+`comun/equipos.js` (procesadores LED: NOVASTAR, COEX y PIXELHUE, la misma de SCREENS) y `comun/sistemas.js` (displays SAMSUNG, LG y CLEVER; PURELINK; AVER; NUREVA; RCF; SENNHEISER; XILICA; JUST ADD POWER; y, solo para proyectos, EZ ACOUSTICS y FOHHN) son las listas de fábrica, según información de los fabricantes y sin precios. El panel AVHUB ADMIN las carga y, una vez guardadas allí, la app usa las del panel (`?accion=equipos`).
 
 ## Avisos
 
@@ -41,7 +42,7 @@ Los cálculos son orientativos: hay que comprobar siempre los datos del fabrican
 
 ## Tecnología
 
-HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`vista/casa.js`) y sus módulos (`vista/mod-electronica.js`, `mod-senal.js`, `mod-audio.js`, `mod-video.js`), con las reglas de conectividad en `vista/conectividad.js`, las listas en `vista/listas.js`, los calculadores en `calculos.js` y los textos en `textos.js` y en cada módulo. `audio.html` y `blocks/` llevan a la consola. Es una app web instalable: `manifest.json`, el service worker `sw.js` e `instalar.js`. Al añadir archivos que deban estar disponibles sin conexión desde la primera visita, apúntalos en la lista `BASICO` de `sw.js`.
+HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`vista/casa.js`) y sus módulos (`vista/mod-electronica.js`, `mod-senal.js`, `mod-audio.js`, `mod-sonido.js`, `mod-video.js`), con las reglas de conectividad en `vista/conectividad.js`, las listas en `vista/listas.js`, los calculadores en `calculos.js` y los textos en `textos.js` y en cada módulo. `audio.html` y `blocks/` llevan a la consola. Es una app web instalable: `manifest.json`, el service worker `sw.js` e `instalar.js`. Al añadir archivos que deban estar disponibles sin conexión desde la primera visita, apúntalos en la lista `BASICO` de `sw.js`.
 
 ## Ramas
 
@@ -49,7 +50,14 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v1.9)
+## Cambios de la versión actual (v2.0)
+- **Nuevo módulo SONORIZACIÓN** (botón SONIDO): resuelve la sala entera. Principales en pared (columnas junto a la pantalla, WMR o Compact M por alcance) o en techo (malla por altura y cobertura), retardos cada 4 m a partir de los 6 m con su tiempo en el plano, subgraves que combinan con cada caja, etapas KPS con cada altavoz en su canal (versión D con red Dante), DMA para hilo musical, AM o ZM 2000 para megafonía por zonas, cadena EN 54 para evacuación y columnas VSA de haz orientable en salas grandes y reverberantes. Micrófonos SENNHEISER según el uso (SpeechLine en reuniones y aulas; EW-D o EW-DX en eventos; flexo con su base), con cargadores y antenas cuando hacen falta.
+- **Avisos de diseño:** soportes de los Compact M 05 a 12, phantom de los micros de condensador con KPS (mezclador PR 4093), TILE-BRIDGE en falso techo modular, base de los flexos, nada de MR con micrófonos, cadena EN 54 completa, sala reverberante (tratamiento acústico antes que equipo), potencia de 100 V con un 20 % de margen y «valida el diseño».
+- **Listas de audio completas** según información de los fabricantes: RCF (175 referencias de instalación), SENNHEISER (119), NUREVA (20, con HDX como «consultar») y la marca nueva XILICA (16, cotización por proyecto). EZ ACOUSTICS y FOHHN, con lista propia, solo como consulta.
+- **VIDEOCONFERENCIA:** el kit de techo (TCC, TCC MEDIUM o TCC LARGE) se elige por superficie y lleva dentro el micrófono, el procesador Xilica, el amplificador y los altavoces; avisa del servicio de configuración y del switch PoE, y de Nureva HDX si además hay que sonorizar la sala.
+- Barra de módulos con seis botones: cada uno a la medida de su rótulo, sin cortes en ordenador, TV, tableta ni móvil. ELECTRÓNICA en PRO: LED / PROYECCIÓN / DISPLAYS en una fila, para que el bloque no se corte. Caché renovada (`systems-v19`).
+
+## Cambios de la v1.9
 - **Direcciones de carpeta sin la barra final (24-11-2026):** con la app ya visitada o instalada, abrir una dirección como `/blocks` daba «No se puede acceder a este sitio web» (ERR_FAILED), porque el service worker entregaba tal cual la respuesta redirigida por el servidor. Ahora devuelve una redirección limpia; caché renovada (`systems-v18`).
 - Móvil vertical: las pestañas de módulo (Electrónica, Displays, Señal, Audio, Videoconf.) caben en una fila sin cortarse, y las opciones cortas como LED / Proyección / Displays van en fila en lugar de una por línea.
 
@@ -57,7 +65,7 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - **Móvil vertical más limpio**, igual que SCREENS (pedido por Josep, 23-11-2026): cabecera en una sola fila (isotipo, burbuja SIMPLE / PRO que cambia de modo al tocarla, iconos y el logo de AVHUB, que lleva a todas las apps; fuera los logos de las otras apps) y pie en una sola fila (triángulo de aviso que al tocarlo enseña el texto, «SYSTEMS v1.8», «Aviso legal» y candado). Instalar y avisar de un fallo pasan a la ventana de información.
 
 ## Cambios de la v1.7
-- **Cables prioritarios** (tarifa parcial de PureLink, 23-11-2026: «los cables en los que podemos ser mucho más competitivos»): lo que el panel AVHUB ADMIN marca ⭐ PRIORITARIO se propone primero. En un tramo en el que vale tanto un extensor HDBaseT como un cable de fibra, si el cable es prioritario y el extensor no, se propone el cable y el extensor queda como alternativa. Los equipos prioritarios llevan ⭐ en las tablas y en las fichas.
+- **Cables prioritarios:** lo que el panel AVHUB ADMIN marca ⭐ PRIORITARIO se propone primero. En un tramo en el que vale tanto un extensor HDBaseT como un cable de fibra, si el cable es prioritario y el extensor no, se propone el cable y el extensor queda como alternativa. Los equipos prioritarios llevan ⭐ en las tablas y en las fichas.
 - **Reproductores de signage** (tipo nuevo del panel: MagicInfo, VXT, webOS, como el SBB de Samsung o el WP601 de LG): cuando el display no lleva reproductor integrado, se propone el de su misma marca (y el prioritario, si lo hay).
 
 ## Cambios de la v1.6
@@ -78,7 +86,7 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 
 ## Cambios de la v1.2
 
-- Listas de fábrica de audio sacadas del CRM de Charmex: RCF (altavoces, subgraves, etapas, procesadores y micrófonos), SENNHEISER (TeamConnect, inalámbricos, mesa y cuerpo) y NUREVA (HDL200, HDL310, HDL410 y HDX).
+- Listas de fábrica de audio: RCF (altavoces, subgraves, etapas, procesadores y micrófonos), SENNHEISER (TeamConnect, inalámbricos, mesa y cuerpo) y NUREVA (HDL200, HDL310, HDL410 y HDX).
 - VIDEOCONFERENCIA propone como alternativa de audio el sistema NUREVA que cubre la sala.
 - Para el panel AVHUB ADMIN v12.10: los tipos nuevos (display, conmutador, extensor, cable, AV sobre IP, videoconferencia, micrófono, altavoz, etapa…) y el botón AÑADIR LAS MARCAS NUEVAS DE FÁBRICA.
 

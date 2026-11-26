@@ -1,6 +1,6 @@
 // SYSTEMS · módulo VIDEOCONFERENCIA: por el tamaño de la sala y la gente, el tamaño de pantalla (regla del espectador más lejano),
 // la cámara o barra (campo de visión y fondo de sala del fabricante) y la microfonía (cobertura del fabricante).
-// Solo con equipos de las listas del panel (AVER, SENNHEISER, displays SAMSUNG, LG y CLEVER). GPL-3.0 · mediaservi.com
+// Solo con equipos de las listas del panel (AVER, SENNHEISER, XILICA, NUREVA, displays SAMSUNG, LG y CLEVER). GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos } from './listas.js';
 textos({
@@ -19,6 +19,9 @@ textos({
   'Comprueba en la ficha de {m} el campo de visión: hacen falta {a}° horizontales.': ['Check the field of view in the {m} datasheet: {a}° horizontal are needed.', 'Comprova a la fitxa de {m} el camp de visió: calen {a}° horitzontals.'],
   'Con más fondo del que cubre la barra, los micrófonos van en el techo: {n} × {m} (hasta {a} m² cada uno).': ['With more depth than the bar covers, the microphones go on the ceiling: {n} × {m} (up to {a} m² each).', 'Amb més fons del que cobreix la barra, els micròfons van al sostre: {n} × {m} (fins a {a} m² cadascun).'],
   'Sala más grande que la que cubren las barras de la lista: cámara PTZ con micrófonos de techo y procesador.': ['Room larger than the bars in the list cover: PTZ camera with ceiling microphones and a processor.', 'Sala més gran que la que cobreixen les barres de la llista: càmera PTZ amb micròfons de sostre i processador.'],
+  'El kit {k} lleva el micrófono, el procesador Xilica Solaro QR1 UC (cancelación de eco y USB), el amplificador Sonia Amp y los altavoces Sonia C5. Añade el servicio de configuración y un switch de red PoE.': ['The {k} kit includes the microphone, the Xilica Solaro QR1 UC processor (echo cancellation and USB), the Sonia Amp amplifier and the Sonia C5 loudspeakers. Add the configuration service and a PoE network switch.', 'El kit {k} porta el micròfon, el processador Xilica Solaro QR1 UC (cancel·lació d\'eco i USB), l\'amplificador Sonia Amp i els altaveus Sonia C5. Afegeix el servei de configuració i un switch de xarxa PoE.'],
+  'Varios micrófonos de techo: procesador Xilica Solaro con cancelación de eco y un switch de red PoE; Xilica se cotiza por proyecto, con su configuración.': ['Several ceiling microphones: Xilica Solaro processor with echo cancellation and a PoE network switch; Xilica is quoted per project, with its configuration.', 'Diversos micròfons de sostre: processador Xilica Solaro amb cancel·lació d\'eco i un switch de xarxa PoE; Xilica es cotitza per projecte, amb la seva configuració.'],
+  'Si además hay que sonorizar la sala (vídeo, música o refuerzo de voz): Nureva HDX, consultar precio y plazo.': ['If the room also needs a sound system (video, music or speech reinforcement): Nureva HDX, ask for price and lead time.', 'Si a més cal sonoritzar la sala (vídeo, música o reforç de veu): Nureva HDX, consultar preu i termini.'],
   'Barra de vídeo': ['Video bar', 'Barra de vídeo'], 'hasta {f} m de fondo': ['up to {f} m deep', 'fins a {f} m de fons'],
   '¿Cuánto mide la sala?': ['How big is the room?', 'Quant fa la sala?'], '¿Cuántas personas?': ['How many people?', 'Quantes persones?'], '¿Qué se ve en la pantalla?': ['What is shown on screen?', 'Què es veu a la pantalla?'], '¿Qué pantalla?': ['Which screen?', 'Quina pantalla?'],
   'Solo se ve': ['Display only', 'Només es veu'], 'Táctil, se escribe encima': ['Touch, you can write on it', 'Tàctil, s\'hi escriu a sobre'], 'personas': ['people', 'persones'],
@@ -50,10 +53,15 @@ function calcula() {
   r.area = S.ancho * S.fondo;
   if (r.ptz || (r.cam && r.cam.fondoMax && r.cam.fondoMax < S.fondo)) {
     const M = equipos('microfono').filter((x) => x.m2).sort((a, b) => a.m2 - b.m2), m = M.find((x) => x.m2 >= r.area) || M[M.length - 1];
-    if (m) { r.mic = m; r.nmic = Math.ceil(r.area / m.m2); r.kit = equipos('kit-audio', 'SENNHEISER').find((x) => (m.m2 >= 80 ? /^TCC-LARGE$/ : /^TCC$/).test(x.id)) || null;
-      av.push(['info', T('Con más fondo del que cubre la barra, los micrófonos van en el techo: {n} × {m} (hasta {a} m² cada uno).', { n: r.nmic, m: m.modelo, a: m.m2 })]); }
+    if (m) { r.mic = m; r.nmic = Math.ceil(r.area / m.m2);
+      /* v2.0 · kit completo (micrófono + Xilica Solaro QR1 UC + Sonia Amp + Sonia C5) por superficie, según información del fabricante */
+      r.kit = r.nmic === 1 ? equipos('kit-audio', 'SENNHEISER').filter((x) => x.m2 && x.m2 >= r.area).sort((a, b) => a.m2 - b.m2)[0] || null : null;
+      av.push(['info', T('Con más fondo del que cubre la barra, los micrófonos van en el techo: {n} × {m} (hasta {a} m² cada uno).', { n: r.nmic, m: m.modelo, a: m.m2 })]);
+      if (r.kit) av.push(['info', T('El kit {k} lleva el micrófono, el procesador Xilica Solaro QR1 UC (cancelación de eco y USB), el amplificador Sonia Amp y los altavoces Sonia C5. Añade el servicio de configuración y un switch de red PoE.', { k: r.kit.modelo })]);
+      else av.push(['info', T('Varios micrófonos de techo: procesador Xilica Solaro con cancelación de eco y un switch de red PoE; Xilica se cotiza por proyecto, con su configuración.')]); }
   }
   /* alternativa de audio: el sistema NUREVA que cubre la sala (ancho y fondo del fabricante) */
+  if (r.mic && r.area > 60) av.push(['info', T('Si además hay que sonorizar la sala (vídeo, música o refuerzo de voz): Nureva HDX, consultar precio y plazo.')]);
   if (r.mic) r.nureva = equipos('audio-vc', 'NUREVA').filter((x) => x.salaAncho && Math.min(x.salaAncho, x.salaFondo) >= Math.min(S.ancho, S.fondo) && Math.max(x.salaAncho, x.salaFondo) >= Math.max(S.ancho, S.fondo)).sort((a, b) => a.salaAncho * a.salaFondo - b.salaAncho * b.salaFondo)[0] || null;
   r.sem = av.some((a) => !a[0]) ? 'A' : 'V';
   r.semTxt = r.sem === 'A' ? T('Hay solución, con avisos') : T('Hay solución');
@@ -83,7 +91,7 @@ function esquema(r, o = {}) {
 const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}${x.stock ? ' · ' + esc(T('En stock')) : ''}</td></tr></table></div>` : '';
 function resultado(r) {
   let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
-  h += eq(r.disp, S.np, 'Pantalla', true) + eq(r.cam, 1, r.ptz ? 'Cámara' : 'Barra de vídeo', true, r.cam && r.cam.fondoMax ? ' · ' + T('hasta {f} m de fondo', { f: r.cam.fondoMax }) : '') + eq(r.mic, r.nmic, 'Micrófonos', true) + eq(r.kit, 1, '', false);
+  h += eq(r.disp, S.np, 'Pantalla', true) + eq(r.cam, 1, r.ptz ? 'Cámara' : 'Barra de vídeo', true, r.cam && r.cam.fondoMax ? ' · ' + T('hasta {f} m de fondo', { f: r.cam.fondoMax }) : '') + (r.kit ? eq(r.kit, 1, 'Micrófonos', true) : eq(r.mic, r.nmic, 'Micrófonos', true));
   if (r.av.length) h += `<ul class="avisos">${r.av.map((a) => `<li class="${a[0]}">${esc(a[1])}</li>`).join('')}</ul>`;
   if (r.altsD.length || r.nureva) h += `<p class="alt-t">${T('Alternativas')}</p>` + r.altsD.map((x) => eq(x, S.np, '', false)).join('') + eq(r.nureva, 1, 'Micrófonos', false, r.nureva ? ' · ' + r.nureva.salaAncho + ' × ' + r.nureva.salaFondo + ' m' : '');
   return h;

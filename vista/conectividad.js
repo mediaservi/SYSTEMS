@@ -19,7 +19,7 @@ export const RES = { '1080': { gbps: 4.5, nom: '1080p' }, '4k': { gbps: 18, nom:
 const pl = (id) => equipos(['conmutador', 'extensor', 'cable'], 'PURELINK').find((x) => x.id === id);
 
 /* cable o extensor para un tramo de d metros con la señal r ('1080' | '4k' | '8k'); usb: hace falta llevar USB (KVM) */
-/* v1.7 · cables prioritarios (tarifa parcial de PureLink en el panel, ⭐): si la alternativa válida es prioritaria y la propuesta no, se proponen al revés */
+/* v1.7 · cables prioritarios (marcados ⭐ en el panel): si la alternativa válida es prioritaria y la propuesta no, se proponen al revés */
 export function tramo(d, r, o = {}) {
   const x = tramoBase(d, r, o);
   if (x && x.alt && x.alt.prioritario && !(x.eq && x.eq.prioritario) && x.alt.tipo === 'cable' && !o.usb)

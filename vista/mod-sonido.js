@@ -1,0 +1,304 @@
+// SYSTEMS · módulo SONORIZACIÓN (v2.0): el sistema de sonido completo de una sala, no un altavoz suelto.
+// Con la sala, el uso, el montaje y los micrófonos propone altavoces, subgraves, retardos, electrónica, micrófonos, control y accesorios,
+// con las reglas de diseño según información de los fabricantes (RCF, SENNHEISER, XILICA; EZ ACOUSTICS y FOHHN solo como consulta).
+// Solo con equipos de las listas del panel. Orientativo: hay que validar el diseño. GPL-3.0 · mediaservi.com
+import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
+import { equipos } from './listas.js';
+textos({
+  'Sonorización': ['Sound system', 'Sonorització'], 'SONIDO': ['SOUND', 'SO'],
+  'El sistema de sonido completo de una sala: altavoces, subgraves, retardos, electrónica, micrófonos y control.': ['The complete sound system for a room: loudspeakers, subwoofers, delays, electronics, microphones and control.', 'El sistema de so complet d\'una sala: altaveus, subgreus, retards, electrònica, micròfons i control.'],
+  'Escríbela: «sala de 10 x 16 m con 2 micros y pantalla»': ['Type it: “10 x 16 m room with 2 mics and a screen”', 'Escriu-la: «sala de 10 x 16 m amb 2 micros i pantalla»'],
+  'Sala': ['Room', 'Sala'], 'Ancho (m)': ['Width (m)', 'Amplada (m)'], 'Fondo (m)': ['Depth (m)', 'Fons (m)'], 'Alto (m)': ['Height (m)', 'Alçada (m)'], 'Zonas': ['Zones', 'Zones'],
+  'Uso': ['Use', 'Ús'], 'Montaje': ['Mounting', 'Muntatge'], 'Acabado': ['Finish', 'Acabat'], 'Pared': ['Wall', 'Paret'], 'Techo': ['Ceiling', 'Sostre'], 'Negro': ['Black', 'Negre'], 'Blanco': ['White', 'Blanc'],
+  'Música de fondo': ['Background music', 'Música de fons'], 'Megafonía': ['Paging', 'Megafonia'], 'Sala con micros': ['Room with mics', 'Sala amb micros'], 'Eventos': ['Events', 'Esdeveniments'],
+  'Hilo musical, tiendas, restaurantes': ['Background music, shops, restaurants', 'Fil musical, botigues, restaurants'], 'Avisos y música en 100 V: colegio, oficina, nave': ['Announcements and music on 100 V: school, office, warehouse', 'Avisos i música en 100 V: escola, oficina, nau'], 'Reuniones, formación, aulas': ['Meetings, training, classrooms', 'Reunions, formació, aules'], 'Presentaciones: voz y música con subgraves': ['Presentations: speech and music with subwoofers', 'Presentacions: veu i música amb subgreus'],
+  'Micrófonos': ['Microphones', 'Micròfons'], 'De mano': ['Handheld', 'De mà'], 'De cuerpo': ['Body-worn', 'De cos'], 'Sobremesa': ['Tabletop', 'Sobretaula'], 'Solapa': ['Lavalier', 'Solapa'], 'Diadema': ['Headset', 'Diadema'],
+  'Proyecto': ['Project', 'Projecte'], 'Pantalla delante': ['Screen at front', 'Pantalla davant'], 'Falso techo': ['Drop ceiling', 'Fals sostre'], 'Red Dante': ['Dante network', 'Xarxa Dante'], 'Montaje y acabado': ['Mounting and finish', 'Muntatge i acabat'],
+  'Evacuación EN 54': ['EN 54 voice alarm', 'Evacuació EN 54'], 'Reverberante': ['Reverberant', 'Reverberant'], 'Que no se vea': ['Hidden', 'Que no es vegi'],
+  'Sí': ['Yes', 'Sí'], 'No': ['No', 'No'],
+  'Plano de la sala': ['Room plan', 'Planta de la sala'], 'Principales': ['Mains', 'Principals'], 'Retardos': ['Delays', 'Retards'], 'Altavoces': ['Loudspeakers', 'Altaveus'], 'Subgraves': ['Subwoofers', 'Subgreus'],
+  'Electrónica': ['Electronics', 'Electrònica'], 'Control': ['Control', 'Control'], 'Accesorios': ['Accessories', 'Accessoris'], 'Superficie': ['Area', 'Superfície'], 'Potencia': ['Power', 'Potència'],
+  'Sin micrófonos': ['No microphones', 'Sense micròfons'], '1 de mano': ['1 handheld', '1 de mà'], '2 de mano': ['2 handheld', '2 de mà'], 'Mano + solapa': ['Handheld + lavalier', 'Mà + solapa'],
+  '2 de sobremesa': ['2 tabletop', '2 de sobretaula'], 'personas': ['people', 'persones'],
+  '¿Cuánto mide la sala?': ['How big is the room?', 'Quant fa la sala?'], '¿Para qué es el sonido?': ['What is the sound for?', 'Per a què és el so?'], '¿Dónde van los altavoces?': ['Where do the loudspeakers go?', 'On van els altaveus?'],
+  'La pared rinde más': ['The wall performs better', 'La paret rendeix més'], 'Cuando la arquitectura no deja': ['When the architecture does not allow it', 'Quan l\'arquitectura no ho permet'],
+  '¿Qué micrófonos?': ['Which microphones?', 'Quins micròfons?'], '¿Lleva evacuación por voz (EN 54)?': ['Is there an EN 54 voice alarm?', 'Porta evacuació per veu (EN 54)?'],
+  'Sistema certificado completo': ['Complete certified system', 'Sistema certificat complet'], 'Sonido normal': ['Standard sound', 'So normal'],
+  'Hay solución': ['There is a solution', 'Hi ha solució'], 'Hay solución, con avisos': ['There is a solution, with warnings', 'Hi ha solució, amb avisos'],
+  'Recomendado': ['Recommended', 'Recomanat'], 'En stock': ['In stock', 'En estoc'], 'consultar': ['enquire', 'consultar'],
+  'Etapas': ['Amplifiers', 'Etapes'], 'canales': ['channels', 'canals'], 'retardo ≈ {t} ms': ['delay ≈ {t} ms', 'retard ≈ {t} ms'], 'fila a {d} m': ['row at {d} m', 'fila a {d} m'],
+  'cada altavoz en su canal': ['each loudspeaker on its own channel', 'cada altaveu al seu canal'], 'línea de 100 V': ['100 V line', 'línia de 100 V'], 'por zona': ['per zone', 'per zona'],
+  /* avisos */
+  'Retardos cada 4 m a partir de los 6 m: unos 3 ms por metro de distancia a los principales, cada altavoz en su canal; se ajustan en la sala.': ['Delays every 4 m beyond 6 m: about 3 ms per metre of distance to the mains, each loudspeaker on its own channel; fine-tune them in the room.', 'Retards cada 4 m a partir dels 6 m: uns 3 ms per metre de distància als principals, cada altaveu al seu canal; s\'ajusten a la sala.'],
+  'Los Compact M 05 a 12 no traen soporte: va añadido en la lista.': ['Compact M 05 to 12 come without a bracket: it is added to the list.', 'Els Compact M 05 a 12 no porten suport: s\'hi ha afegit a la llista.'],
+  'Las etapas KPS no dan phantom: los micrófonos de condensador entran por el mezclador PR 4093.': ['KPS amplifiers do not provide phantom power: condenser microphones go through the PR 4093 mixer.', 'Les etapes KPS no donen phantom: els micròfons de condensador entren pel mesclador PR 4093.'],
+  'Más micrófonos de los que conviene llevar a la etapa: mezclador PR 4093 delante.': ['More microphones than the amplifier should take: PR 4093 mixer in front.', 'Més micròfons dels que convé portar a l\'etapa: mesclador PR 4093 al davant.'],
+  'En falso techo modular, los CMR montan con TILE-BRIDGE (kits de 4): añadidos.': ['In a modular suspended ceiling, CMR speakers mount with TILE-BRIDGE (kits of 4): added.', 'En fals sostre modular, els CMR munten amb TILE-BRIDGE (kits de 4): afegits.'],
+  'Cada flexo va con su base MAT: sin base no se puede usar (son 2 líneas).': ['Each gooseneck goes with its MAT base: it cannot be used without it (2 lines).', 'Cada flexo va amb la seva base MAT: sense base no es pot fer servir (són 2 línies).'],
+  'Con micrófonos en la sala, MR no: hace falta un altavoz con respuesta lineal (WMR o Compact M) para aguantar el volumen antes del acople.': ['With microphones in the room, not MR: a loudspeaker with a flat response (WMR or Compact M) is needed to hold level before feedback.', 'Amb micròfons a la sala, MR no: cal un altaveu amb resposta lineal (WMR o Compact M) per aguantar el volum abans de l\'acoblament.'],
+  'Evacuación por voz: la cadena entera ha de ser certificada (amplificadores EN 54-16 y altavoces EN 54-24) y con un proyecto de evacuación firmado.': ['Voice alarm: the whole chain must be certified (EN 54-16 amplifiers and EN 54-24 loudspeakers) with a signed evacuation design.', 'Evacuació per veu: tota la cadena ha de ser certificada (amplificadors EN 54-16 i altaveus EN 54-24) i amb un projecte d\'evacuació signat.'],
+  'Sala muy reverberante: un procesador no lo arregla. Antes del equipo, un estudio de tratamiento acústico (EZ ACOUSTICS, consultar).': ['Very reverberant room: a processor will not fix it. Before the equipment, an acoustic treatment study (EZ ACOUSTICS, enquire).', 'Sala molt reverberant: un processador no ho arregla. Abans de l\'equip, un estudi de tractament acústic (EZ ACOUSTICS, consultar).'],
+  'Sala grande y reverberante: columnas VSA de haz orientable, que dirigen la voz al público.': ['Large, reverberant room: VSA steerable-beam columns that aim speech at the audience.', 'Sala gran i reverberant: columnes VSA de feix orientable, que dirigeixen la veu al públic.'],
+  'Si el altavoz no se ha de ver, ha de ir a medida o todo por cable de red: FOHHN (beam steering y PoE + Dante), solo por proyecto: consultar.': ['If the loudspeaker must not be seen, must be custom-made or everything over network cable: FOHHN (beam steering and PoE + Dante), project-only: enquire.', 'Si l\'altaveu no s\'ha de veure, ha d\'anar a mida o tot per cable de xarxa: FOHHN (beam steering i PoE + Dante), només per projecte: consultar.'],
+  'Techo de más de 6 m: altavoces colgantes PMR bajados a unos 3 m.': ['Ceiling higher than 6 m: PMR pendant loudspeakers lowered to about 3 m.', 'Sostre de més de 6 m: altaveus penjants PMR baixats a uns 3 m.'],
+  'Potencia de la línea de 100 V = suma de las tomas de los altavoces + 20 %.': ['100 V line power = sum of the loudspeaker taps + 20 %.', 'Potència de la línia de 100 V = suma de les preses dels altaveus + 20 %.'],
+  'A partir de 4 micrófonos inalámbricos UHF: estudio de RF, distribuidor y antenas activas (añadidos).': ['From 4 UHF wireless microphones: RF study, distributor and active antennas (added).', 'A partir de 4 micròfons sense fil UHF: estudi de RF, distribuïdor i antenes actives (afegits).'],
+  'Con más de 8 puestos de palabra, mejor un sistema de conferencias (RCF Forum 3000, hasta 80 pupitres).': ['With more than 8 speaking positions, a conference system is better (RCF Forum 3000, up to 80 units).', 'Amb més de 8 llocs de paraula, millor un sistema de conferències (RCF Forum 3000, fins a 80 pupitres).'],
+  'Sistema grande: valora un procesador DX 1616 con etapas IPS en lugar de las KPS.': ['Large system: consider a DX 1616 processor with IPS amplifiers instead of KPS.', 'Sistema gran: valora un processador DX 1616 amb etapes IPS en lloc de les KPS.'],
+  'Con red Dante, la etapa principal en versión D.': ['With a Dante network, the main amplifier in its D version.', 'Amb xarxa Dante, l\'etapa principal en versió D.'],
+  'Orientativo: los tamaños de sala y las combinaciones de subgraves son de partida. Valida el diseño antes de presupuestar.': ['Indicative: room sizes and subwoofer pairings are a starting point. Validate the design before quoting.', 'Orientatiu: les mides de sala i les combinacions de subgreus són de partida. Valida el disseny abans de pressupostar.'],
+  'Más zonas de las que admite el sistema ZM 2000 (54): repartir en varios sistemas.': ['More zones than the ZM 2000 system supports (54): split into several systems.', 'Més zones de les que admet el sistema ZM 2000 (54): repartir en diversos sistemes.'],
+  'La central ZM 2124 da 240 W: para más potencia, etapas UP de apoyo.': ['The ZM 2124 unit gives 240 W: for more power, add UP amplifiers.', 'La central ZM 2124 dona 240 W: per a més potència, etapes UP de suport.'],
+  'Ningún altavoz de la lista para este caso.': ['No loudspeaker in the list for this case.', 'Cap altaveu de la llista per a aquest cas.'],
+});
+const DEF = { ancho: 10, fondo: 16, alto: 3, zonas: 1, uso: 'evento', montaje: 'pared', color: 'negro', mano: 1, cuerpo: 1, tipoC: 'solapa', mesa: 0, pantalla: true, falso: false, dante: true, en54: false, reverb: false, discreto: false };
+let S = Object.assign({}, DEF, lee('systems_sonido') || {});
+const NUMS = { ancho: [2, 80, 1], fondo: [2, 120, 1], alto: [2, 25, 1], zonas: [1, 54, 0], mano: [0, 16, 0], cuerpo: [0, 16, 0], mesa: [0, 40, 0] };
+const BOOL = ['pantalla', 'falso', 'dante', 'en54', 'reverb', 'discreto'];
+const USOS = [['musica', 'Música de fondo', 'Hilo musical, tiendas, restaurantes', 'onda'], ['avisos', 'Megafonía', 'Avisos y música en 100 V: colegio, oficina, nave', 'altavoz'], ['sala', 'Sala con micros', 'Reuniones, formación, aulas', 'micro'], ['evento', 'Eventos', 'Presentaciones: voz y música con subgraves', 'personas']];
+const nomUso = (u) => (USOS.find((x) => x[0] === u) || USOS[2])[1];
+const RAD = Math.PI / 180, C = 343;
+
+/* busca un equipo de las listas por su referencia (con la variante blanca si la hay) */
+const TODO = () => equipos(['altavoz', 'subgrave', 'etapa', 'procesador-audio', 'microfono', 'control', 'accesorio', 'soporte', 'receptor', 'transmisor', 'antena', 'cargador', 'kit-audio', 'conferencia']);
+let IDX = null, IDXn = -1;
+function ref(id) { const t = TODO(); if (!IDX || IDXn !== t.length) { IDX = {}; t.forEach((x) => { IDX[x.id] = x; }); IDXn = t.length; } return IDX[id] || null; }
+function col(id) { if (S.color !== 'blanco') return ref(id) || ref(id.replace(/-W$/, ''));
+  for (const k of [id + '-W', id.replace(/-B$/, '-W'), id.replace(/-BLACK$/, '-W')]) { const x = ref(k); if (x) return x; } return ref(id); }
+const negro = (id) => S.color === 'blanco' ? (ref(id.replace(/-B$/, '-W')) || ref(id)) : ref(id);
+
+function calcula() {
+  const av = [], L = [], r = { av, L, mains: [], delays: [], subs: [], techo: null, mic: 0 };
+  const add = (g, x, n, nota = '') => { if (!x || n <= 0) return null; const o = L.find((y) => y.x.id === x.id && y.g === g); if (o) { o.n += n; return o; } const y = { g, x, n, nota }; L.push(y); return y; };
+  const A = S.ancho, F = S.fondo, H = S.alto; r.area = A * F;
+  const mics = S.mano + S.cuerpo + S.mesa; r.mic = 0;
+  let uso = S.uso;
+  if (uso === 'musica' && mics > 0) { uso = 'sala'; av.push(['', T('Con micrófonos en la sala, MR no: hace falta un altavoz con respuesta lineal (WMR o Compact M) para aguantar el volumen antes del acople.')]); }
+  r.uso = uso;
+  /* --- altavoces en techo: malla con solape mínimo (cobertura a 90°, oído a 1,2 m) --- */
+  const malla = (ang = 90, oido = 1.2, borde = false) => { const D = 2 * Math.max(0.6, Math.min(H, 6) - oido) * Math.tan(ang / 2 * RAD), s = borde ? D : D / Math.SQRT2;
+    const nx = Math.max(1, Math.ceil(A / s)), ny = Math.max(1, Math.ceil(F / s)); r.techo = { nx, ny, D }; return nx * ny; };
+  const cuelga = H > 6;
+  let W100 = 0;   // suma de tomas en 100 V
+  if (S.en54) {
+    /* evacuación por voz: altavoces EN 54-24 y amplificadores EN 54-16 */
+    const x = S.montaje === 'techo' ? ref('MF-33-EN') : ref('WMF-33EN');
+    const n = S.montaje === 'techo' ? malla(120, 1.6, true) : Math.max(2, Math.ceil(r.area / 40));
+    if (x) { add('Altavoces', x, n, '10 W · ' + T('línea de 100 V')); r.mains = Array(n).fill(x); W100 = n * 10; }
+    amp100(true);
+    av.push(['', T('Evacuación por voz: la cadena entera ha de ser certificada (amplificadores EN 54-16 y altavoces EN 54-24) y con un proyecto de evacuación firmado.')]);
+  } else if (uso === 'musica' || uso === 'avisos') {
+    let x, n, tap;
+    if (S.montaje === 'techo' && cuelga) { x = col('PMR-60T-B'); n = malla(90, 1.2); tap = 20; av.push(['info', T('Techo de más de 6 m: altavoces colgantes PMR bajados a unos 3 m.')]); }
+    else if (S.montaje === 'techo') { x = uso === 'musica' ? ref('CMR-60T-W') : (S.color === 'blanco' ? ref('PL-6X') : ref('PL-6X-B')); n = malla(90, 1.2, uso === 'avisos'); tap = uso === 'musica' ? 10 : 6; }
+    else if (uso === 'musica') { x = col('MR-50T'); n = Math.max(1, Math.ceil(r.area / 50)); tap = 15; }   // parejas
+    else { x = S.color === 'blanco' ? ref('DM-61') : ref('MQ-80P-B'); n = Math.max(2, Math.ceil(r.area / 45)); tap = 10; }
+    if (x) { add('Altavoces', x, n, tap + ' W · ' + T('línea de 100 V')); r.mains = Array(n).fill(x); W100 = n * tap * (x.pareja ? 2 : 1); }
+    else av.push(['', T('Ningún altavoz de la lista para este caso.')]);
+    if (x && /^CMR-/.test(x.id) && S.falso) { add('Accesorios', ref('TILE-BRIDGE-4X-CMR'), Math.ceil(n / 4)); av.push(['info', T('En falso techo modular, los CMR montan con TILE-BRIDGE (kits de 4): añadidos.')]); }
+    if (uso === 'musica') musica(); else amp100(false);
+  } else {
+    /* sala con micrófonos o eventos: KPS, cada altavoz en su canal */
+    let ch = 0, wMax = 0;
+    const vsa = S.reverb && (r.area > 150 || H > 6) && S.montaje === 'pared';
+    if (vsa) {
+      const id = F <= 15 ? 'VSA-850-II' : F <= 25 ? 'VSA-1250-II' : 'VSA-2050-II', x = S.color === 'blanco' ? ref(id) : ref(id + '-B');
+      add('Altavoces', x, 2); r.mains = [x, x];
+      av.push(['info', T('Sala grande y reverberante: columnas VSA de haz orientable, que dirigen la voz al público.')]);
+    } else if (S.montaje === 'techo') {
+      const x = cuelga ? col('PMR-60T-B') : ref('CMR-60T-W'), n = malla(90, 1.2);
+      /* en techo, los altavoces van en paralelo en línea de 100 V: un canal por zona (mínimo 2), 10 W por toma */
+      if (x) { add('Altavoces', x, n, '10 W · ' + T('línea de 100 V')); r.mains = Array(n).fill(x); ch += Math.max(2, S.zonas); wMax = Math.max(wMax, n * 10 * 1.2 / Math.max(2, S.zonas) > 160 ? 300 : 0); }
+      if (cuelga) av.push(['info', T('Techo de más de 6 m: altavoces colgantes PMR bajados a unos 3 m.')]);
+      if (x && /^CMR-/.test(x.id) && S.falso) { add('Accesorios', ref('TILE-BRIDGE-4X-CMR'), Math.ceil(n / 4)); av.push(['info', T('En falso techo modular, los CMR montan con TILE-BRIDGE (kits de 4): añadidos.')]); }
+      if (uso === 'evento' && x && /^CMR-/.test(x.id)) { const s = ref('CMR-S-60T-W'), k = Math.max(1, Math.floor(n / 2)); add('Subgraves', s, k); r.subs = Array(k).fill(s); }
+    } else {
+      /* principales en pared: columnas a los lados de la pantalla, o pareja por alcance */
+      const alc = Math.min(F, 6 + 0);
+      let x;
+      if (S.pantalla) x = col('L-2406T');
+      else if (uso === 'sala') x = col('WMR-60T');
+      else { const d = Math.min(F, 18); x = col(d <= 8 ? 'COMPACT-M-06' : d <= 12 ? 'COMPACT-M-08' : d <= 16 ? 'COMPACT-M-10' : 'COMPACT-M-12'); }
+      if (x) { add('Altavoces', x, 2, T('Principales')); r.mains = [x, x]; ch += 2; wMax = Math.max(wMax, x.w || 0); }
+      /* retardos: una fila cada 4 m a partir de los 6 m, cada altavoz en su canal */
+      const filas = F > alc ? Math.ceil((F - alc) / 4) : 0;
+      if (filas) {
+        const d = col('COMPACT-M-04'), porFila = Math.max(2, Math.ceil(A / 8));
+        for (let i = 0; i < filas; i++) { const y = F * (i + 1) / (filas + 1), ms = Math.round(y / C * 1000); r.delays.push({ y, ms, n: porFila, x: d }); }
+        if (d) { add('Altavoces', d, filas * porFila, T('Retardos') + ' · ' + r.delays.map((q) => T('retardo ≈ {t} ms', { t: q.ms })).join(' / ')); ch += filas * porFila; wMax = Math.max(wMax, d.w || 0); }
+        av.push(['info', T('Retardos cada 4 m a partir de los 6 m: unos 3 ms por metro de distancia a los principales, cada altavoz en su canal; se ajustan en la sala.')]);
+      }
+      /* subgraves en eventos: 1 por pareja de cajas, el que combina con el principal */
+      if (uso === 'evento' && x) {
+        const base = x.id.replace(/-W$/, ''), s = equipos('subgrave', 'RCF').filter((q) => (q.combina || []).includes(base) && q.activo !== false)[0];
+        if (s) { add('Subgraves', s, 2); r.subs = [s, s]; }
+      }
+      /* soportes de los Compact M 05 a 12 */
+      L.filter((q) => q.x.familia === 'COMPACT M' && q.x.soporteIncl === false).forEach((q) => { const sp = ref((q.x.soportes || [])[0]); add('Accesorios', sp, q.n); });
+      if (L.some((q) => q.x.familia === 'COMPACT M' && q.x.soporteIncl === false)) av.push(['info', T('Los Compact M 05 a 12 no traen soporte: va añadido en la lista.')]);
+    }
+    /* etapas KPS: 16x hasta 200 W por caja; 80x por encima. La primera, en D si hay red Dante */
+    if (ch) {
+      const g = wMax > 200 ? '80' : '16'; let resto = ch, prim = true;
+      while (resto > 0) { const c = resto > 4 ? 8 : resto > 2 ? 4 : 2; const id = 'KPS-' + g + c + (prim && S.dante ? 'D' : ''); add('Electrónica', ref(id), 1, c + ' ' + T('canales')); resto -= c; prim = false; }
+      if (S.dante) av.push(['info', T('Con red Dante, la etapa principal en versión D.')]);
+    }
+    if (r.subs.length && !/CMR/.test(r.subs[0].id)) { const w = r.subs[0].w || 400; add('Electrónica', ref(w > 160 ? 'KPS-802' : 'KPS-162'), Math.ceil(r.subs.length / 2), T('Subgraves')); }
+    if (ch || r.subs.length) add('Control', col('RC-KPS-B'), 1);
+    if (r.area > 400 && uso === 'evento') av.push(['info', T('Sistema grande: valora un procesador DX 1616 con etapas IPS en lugar de las KPS.')]);
+    micros(vsa || ch > 0);
+  }
+  if (S.reverb) av.push(['', T('Sala muy reverberante: un procesador no lo arregla. Antes del equipo, un estudio de tratamiento acústico (EZ ACOUSTICS, consultar).')]);
+  if (S.discreto) av.push(['info', T('Si el altavoz no se ha de ver, ha de ir a medida o todo por cable de red: FOHHN (beam steering y PoE + Dante), solo por proyecto: consultar.')]);
+  av.push(['info', T('Orientativo: los tamaños de sala y las combinaciones de subgraves son de partida. Valida el diseño antes de presupuestar.')]);
+
+  /* --- amplificación en 100 V (avisos y evacuación) --- */
+  function amp100(en54) {
+    const need = Math.ceil(W100 * 1.2); r.W = need; av.push(['info', T('Potencia de la línea de 100 V = suma de las tomas de los altavoces + 20 %.')]);
+    if (en54) {
+      const z = S.zonas, porZ = need / z;
+      const id = z >= 4 || porZ <= 125 ? 'UP-8504' : z >= 2 || porZ <= 250 ? 'UP-8502' : 'UP-8501', x = ref(id), cz = x ? x.canales : 1, wc = x ? x.w : 500;
+      const k = Math.max(Math.ceil(z / cz), Math.ceil(need / (cz * wc))); add('Electrónica', x, k, S.zonas + ' ' + T('Zonas')); return;
+    }
+    if (S.zonas > 1) {
+      if (S.zonas > 54) av.push(['', T('Más zonas de las que admite el sistema ZM 2000 (54): repartir en varios sistemas.')]);
+      const z = Math.min(54, S.zonas);
+      add('Electrónica', ref('ZM-2124'), 1, '6 ' + T('Zonas') + ' · 240 W'); if (z > 6) add('Electrónica', ref('ZE-2200'), Math.min(8, Math.ceil((z - 6) / 6)), '+6 ' + T('Zonas'));
+      add('Micrófonos', ref('BM-2006'), 1); if (z > 6) add('Control', ref('BE-2012'), Math.min(4, Math.ceil((z - 6) / 12)));
+      if (need > 240) { av.push(['', T('La central ZM 2124 da 240 W: para más potencia, etapas UP de apoyo.')]); add('Electrónica', ref('UP-8501'), Math.ceil((need - 240) / 500)); }
+      return;
+    }
+    const id = need <= 80 ? 'AM-2080' : need <= 160 ? 'AM-2160' : need <= 320 ? 'AM-2320' : 'UP-8501', x = ref(id);
+    add('Electrónica', x, id === 'UP-8501' ? Math.ceil(need / 500) : 1, need + ' W');
+    if (id === 'UP-8501') add('Electrónica', ref('PR-4093'), 1);
+    add('Micrófonos', ref('BM-3001'), 1);
+  }
+  /* --- hilo musical: DMA, mando por zona --- */
+  function musica() {
+    const z = S.zonas, porZ = W100 / z; r.W = Math.ceil(W100 * 1.2);
+    const main = ref(porZ <= 80 && z <= 2 ? 'DMA-82' : 'DMA-162'); add('Electrónica', main, 1, Math.min(2, z) + ' ' + T('Zonas'));
+    if (z > 2) add('Electrónica', ref('DMA-162P'), Math.ceil((z - 2) / 2), T('por zona'));
+    add('Control', col('RC-401-EU-B'), z, T('por zona'));
+  }
+  /* --- micrófonos (SENNHEISER; avisos y conferencias, RCF) --- */
+  function micros(kps) {
+    r.mic = mics; const corp = uso === 'sala';   // corporativo y educación: SpeechLine (DECT, sin coordinar frecuencias)
+    let uhf = 0, dect = 0, cond = 0;
+    if (S.mano) { if (corp) { add('Micrófonos', ref('SL-HANDHELD-SET'), S.mano); dect += S.mano; }
+      else if (S.mano >= 4) { add('Micrófonos', ref('EW-DX-835-Q1-9'), Math.ceil(S.mano / 2)); uhf += S.mano; }
+      else { add('Micrófonos', ref('EW-D-835-SET-Q1-6'), S.mano); uhf += S.mano; } }
+    if (S.cuerpo) { const dia = S.tipoC === 'diadema';
+      if (corp) { add('Micrófonos', ref(dia ? 'SL-HEADMIC-SET' : 'SL-DW-3-LAVALIER-SET'), S.cuerpo); dect += S.cuerpo; }
+      else if (S.cuerpo >= 4 && !dia) { add('Micrófonos', ref('EW-DX-MKE-2-Q1-9'), Math.ceil(S.cuerpo / 2)); uhf += S.cuerpo; }
+      else { add('Micrófonos', ref(dia ? 'EW-D-ME3-SET-Q1-6' : 'EW-D-ME2-SET-Q1-6'), S.cuerpo); uhf += S.cuerpo; } }
+    if (S.mesa) { add('Micrófonos', ref('MEG-14-40-B'), S.mesa); add('Accesorios', ref('MAT-133-S-B'), S.mesa); cond += S.mesa;
+      av.push(['info', T('Cada flexo va con su base MAT: sin base no se puede usar (son 2 líneas).')]);
+      if (S.mesa > 8) av.push(['info', T('Con más de 8 puestos de palabra, mejor un sistema de conferencias (RCF Forum 3000, hasta 80 pupitres).')]); }
+    if (uhf >= 4) { add('Accesorios', ref('EDW-ASA'), 1); add('Accesorios', ref('EW-D-AB-Q'), 2); av.push(['info', T('A partir de 4 micrófonos inalámbricos UHF: estudio de RF, distribuidor y antenas activas (añadidos).')]); }
+    if (dect >= 3) add('Accesorios', ref('AWM-4'), 1);
+    if (uhf) add('Accesorios', ref('EW-D-CHARGING-SET'), Math.ceil(uhf / 2));
+    if (dect) add('Accesorios', ref('CHG-4N'), Math.ceil(dect / 4));
+    if (kps && (cond || mics > 4)) { add('Electrónica', ref('PR-4093'), Math.ceil(mics / 6));
+      av.push(['info', T(cond ? 'Las etapas KPS no dan phantom: los micrófonos de condensador entran por el mezclador PR 4093.' : 'Más micrófonos de los que conviene llevar a la etapa: mezclador PR 4093 delante.')]); }
+  }
+
+  /* --- resumen --- */
+  const nAlt = L.filter((q) => q.g === 'Altavoces').reduce((s, q) => s + q.n * (q.x.pareja ? 2 : 1), 0), nSub = L.filter((q) => q.g === 'Subgraves').reduce((s, q) => s + q.n, 0);
+  const el = L.filter((q) => q.g === 'Electrónica'); r.nAlt = nAlt; r.nSub = nSub; r.elec = el;
+  r.sem = av.some((a) => !a[0]) ? 'A' : 'V'; r.semTxt = r.sem === 'A' ? T('Hay solución, con avisos') : T('Hay solución');
+  r.lineaTxt = [L.filter((q) => q.g === 'Altavoces').map((q) => q.n + ' × ' + q.x.modelo).join(' + '), nSub ? nSub + ' × ' + r.subs[0].modelo : '', el.map((q) => (q.n > 1 ? q.n + ' × ' : '') + q.x.modelo).join(' + '), r.mic ? r.mic + ' ' + T('Micrófonos').toLowerCase() : ''].filter(Boolean).join(' · ');
+  r.linea = esc(r.lineaTxt).replace(/^([^·]+)/, '<b>$1</b>') || esc(T('Ningún altavoz de la lista para este caso.'));
+  guarda('systems_sonido', S); return r;
+}
+
+/* plano de la sala: principales, retardos con su tiempo, subgraves y malla de techo */
+function esquema(r, o = {}) {
+  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, pad = 46;
+  const k = Math.min((VW - 2 * pad) / S.ancho, (VH - 2 * pad - 24) / S.fondo), w = S.ancho * k, h = S.fondo * k, x0 = (VW - w) / 2, y0 = pad;
+  let s = `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="none" stroke="var(--linea)" stroke-width="3"/>`;
+  if (S.pantalla) s += `<rect x="${x0 + w * .3}" y="${y0 - 9}" width="${w * .4}" height="9" rx="2" fill="var(--verde-txt)"/>`;
+  const caja = (cx, cy, c, t) => `<rect x="${cx - 9}" y="${cy - 7}" width="18" height="14" rx="3" fill="${c}"/>` + (t ? `<text x="${cx}" y="${cy + 24}" text-anchor="middle" font-size="12" class="t-mono">${esc(t)}</text>` : '');
+  if (r.techo && r.techo.nx && (S.montaje === 'techo' || S.en54 && S.montaje === 'techo')) {
+    const { nx, ny, D } = r.techo, rr = Math.min(D / 2 * k, 90);
+    for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) { const cx = x0 + (i + .5) * w / nx, cy = y0 + (j + .5) * h / ny;
+      s += `<circle cx="${cx}" cy="${cy}" r="${rr}" fill="var(--azul)" fill-opacity=".07" stroke="var(--azul)" stroke-opacity=".5" stroke-dasharray="4 4"/><circle cx="${cx}" cy="${cy}" r="6" fill="var(--azul)"/>`; }
+  } else if (r.mains.length) {
+    const n = Math.min(r.mains.length, 12);
+    if (n === 2) { s += caja(x0 + w * .12, y0 + 14, 'var(--azul)', r.mains[0].modelo) + caja(x0 + w * .88, y0 + 14, 'var(--azul)', ''); }
+    else for (let i = 0; i < n; i++) { const along = i % 2 === 0, j = Math.floor(i / 2), y = y0 + (j + .5) * h / Math.ceil(n / 2); s += caja(along ? x0 + 12 : x0 + w - 12, y, 'var(--azul)', ''); }
+  }
+  r.delays.forEach((d) => { const y = y0 + d.y * k; s += `<line x1="${x0}" y1="${y}" x2="${x0 + w}" y2="${y}" stroke="var(--ambar)" stroke-dasharray="6 6" stroke-opacity=".6"/>`;
+    for (let i = 0; i < d.n; i++) s += caja(x0 + (i + .5) * w / d.n, y, 'var(--ambar)', '');
+    s += `<text x="${x0 + w + 6}" y="${y + 5}" font-size="13" class="t-mono">${d.ms} ms</text>`; });
+  if (r.subs.length && !/CMR/.test(r.subs[0].id)) { s += `<rect x="${x0 + w * .12 + 16}" y="${y0 + 6}" width="22" height="16" rx="3" fill="var(--violeta)"/><rect x="${x0 + w * .88 - 38}" y="${y0 + 6}" width="22" height="16" rx="3" fill="var(--violeta)"/>`; }
+  s += `<text x="${x0 + w / 2}" y="${y0 + h + 24}" text-anchor="middle" font-size="14" class="t-mono t-ten">${esc(N(S.ancho, 1) + ' × ' + N(S.fondo, 1) + ' × ' + N(S.alto, 1) + ' m · ' + T(nomUso(r.uso)))}</text>`;
+  return `<svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="${esc(T('Plano de la sala'))}" preserveAspectRatio="xMidYMid meet">${s}</svg>`;
+}
+const GR = ['Altavoces', 'Subgraves', 'Electrónica', 'Micrófonos', 'Control', 'Accesorios'];
+function resultado(r) {
+  let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
+  GR.forEach((g, gi) => { const F = r.L.filter((q) => q.g === g); if (!F.length) return;
+    h += `<div class="equipo${gi < 3 ? ' rec' : ''}"><div class="eq-cab"><b>${esc(T(g))}</b><span class="serie">${esc([...new Set(F.map((q) => q.x.marca))].join(' · '))}</span>${gi === 0 ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece">${F.map((q) =>
+      `<tr><td>${q.n}×</td><td class="ref">${esc(q.x.id)}</td><td class="des">${esc(q.x.descripcion || '')}${q.nota ? ' · ' + esc(q.nota) : ''}${q.x.consultar || q.x.proyecto ? ' · ' + esc(T('consultar')) : ''}</td></tr>`).join('')}</table></div>`; });
+  if (r.av.length) h += `<ul class="avisos">${r.av.map((a) => `<li class="${a[0]}">${esc(a[1])}</li>`).join('')}</ul>`;
+  return h;
+}
+const cifras = (r) => [
+  { t: 'Altavoces', v: String(r.nAlt || 0), s: (r.L.find((q) => q.g === 'Altavoces') || { x: { modelo: '—' } }).x.modelo, ic: 'altavoz', c: 'var(--azul)' },
+  { t: 'Subgraves', v: String(r.nSub || 0), s: r.subs.length ? r.subs[0].modelo : '—', ic: 'onda', c: 'var(--violeta)' },
+  { t: 'Etapas', v: r.elec.length ? r.elec[0].x.modelo : '—', s: r.elec.slice(1).map((q) => q.x.modelo).join(' + '), ic: 'proc', c: 'var(--verde-txt)' },
+  { t: 'Retardos', v: String(r.delays.reduce((s, d) => s + d.n, 0)), s: r.delays.map((d) => d.ms + ' ms').join(' · ') || '—', ic: 'dist', c: 'var(--ambar)' },
+  { t: 'Micrófonos', v: String(r.mic), s: r.mic ? S.mano + ' · ' + S.cuerpo + ' · ' + S.mesa : '—', ic: 'micro', c: 'var(--verde)' },
+  { t: 'Superficie', v: N(r.area, 0), u: 'm²', s: N(S.alto, 1) + ' m', ic: 'regla', c: 'var(--magenta, #e24bf0)' }];
+const sino = (k, lab) => etq(lab) + togs(k, [[false, 'No'], [true, 'Sí']], S[k], 'dos');
+function datos() {
+  return [{ tit: 'Sala', ic: 'regla', ac: 'var(--azul)', html: `<div class="nums">${num('ancho', 'Ancho (m)', S.ancho, 'm', 0.5, 2, 80)}${num('fondo', 'Fondo (m)', S.fondo, 'm', 0.5, 2, 120)}</div><div class="nums">${num('alto', 'Alto (m)', S.alto, 'm', 0.1, 2, 25)}${num('zonas', 'Zonas', S.zonas, '', 1, 1, 54)}</div>` },
+    { tit: 'Uso', ic: 'altavoz', ac: 'var(--verde-txt)', html: togs('uso', USOS.map((u) => [u[0], u[1]]), S.uso, 'dos') + etq('Montaje y acabado') + `<div class="fila envuelve dos">${[['montaje', 'pared', 'Pared'], ['montaje', 'techo', 'Techo'], ['color', 'negro', 'Negro'], ['color', 'blanco', 'Blanco']].map((o) => `<button type="button" class="tog" aria-pressed="${S[o[0]] === o[1]}" data-set="${o[0]}" data-v="${o[1]}"><span>${esc(T(o[2]))}</span></button>`).join('')}</div>` },
+    { tit: 'Micrófonos', ic: 'micro', ac: 'var(--violeta)', html: num('mano', 'De mano', S.mano, '', 1, 0, 16) + num('cuerpo', 'De cuerpo', S.cuerpo, '', 1, 0, 16) + togs('tipoC', [['solapa', 'Solapa'], ['diadema', 'Diadema']], S.tipoC, 'dos') + num('mesa', 'Sobremesa', S.mesa, '', 1, 0, 40) },
+    { tit: 'Proyecto', ic: 'chispa', ac: 'var(--ambar)', html: `<div class="fila envuelve dos">${BOOL.map((b) => `<button type="button" class="tog" aria-pressed="${!!S[b]}" data-set="${b}" data-v="${!S[b]}"><span>${esc(T({ pantalla: 'Pantalla delante', falso: 'Falso techo', dante: 'Red Dante', en54: 'Evacuación EN 54', reverb: 'Reverberante', discreto: 'Que no se vea' }[b]))}</span></button>`).join('')}</div>` + `<div class="pie-b"><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>` }];
+}
+const micTxt = () => { const p = []; if (S.mano) p.push(S.mano + ' ' + T('De mano').toLowerCase()); if (S.cuerpo) p.push(S.cuerpo + ' ' + T(S.tipoC === 'diadema' ? 'Diadema' : 'Solapa').toLowerCase()); if (S.mesa) p.push(S.mesa + ' ' + T('Sobremesa').toLowerCase()); return p.join(' · ') || T('Sin micrófonos'); };
+const filas = () => [['sala', 'regla', 'Sala', N(S.ancho, 1) + ' × ' + N(S.fondo, 1) + ' × ' + N(S.alto, 1) + ' m'], ['uso', 'altavoz', 'Uso', T(nomUso(S.uso))], ['montaje', 'techo', 'Montaje', T(S.montaje === 'techo' ? 'Techo' : 'Pared')], ['mics', 'micro', 'Micrófonos', micTxt()], ['en54', 'escudo', 'Evacuación EN 54', T(S.en54 ? 'Sí' : 'No')]];
+const pasos = () => ['sala', 'uso', 'montaje', 'mics', 'en54'];
+const MICS = { nada: [0, 0, 0], mano1: [1, 0, 0], mano2: [2, 0, 0], mixto: [1, 1, 0], diadema: [0, 1, 0], mesa: [0, 0, 2] };
+function pregunta(k) {
+  switch (k) {
+    case 'sala': return { q: '¿Cuánto mide la sala?', nums: [['ancho', 'Ancho (m)', S.ancho, 2, 80, 'm'], ['fondo', 'Fondo (m)', S.fondo, 2, 120, 'm'], ['alto', 'Alto (m)', S.alto, 2, 25, 'm']], aplica: (o) => { S.ancho = o.ancho; S.fondo = o.fondo; S.alto = o.alto; } };
+    case 'uso': return { q: '¿Para qué es el sonido?', val: S.uso, ops: USOS, aplica: (v) => { S.uso = v; } };
+    case 'montaje': return { q: '¿Dónde van los altavoces?', val: S.montaje, ops: [['pared', 'Pared', 'La pared rinde más', 'pared'], ['techo', 'Techo', 'Cuando la arquitectura no deja', 'techo']], aplica: (v) => { S.montaje = v; } };
+    case 'mics': { const cur = Object.keys(MICS).find((x) => MICS[x].join() === [S.mano, S.cuerpo, S.mesa].join()) || '';
+      return { q: '¿Qué micrófonos?', val: cur, ops: [['nada', 'Sin micrófonos', '', 'nada'], ['mano1', '1 de mano', '', 'micro'], ['mano2', '2 de mano', '', 'micro'], ['mixto', 'Mano + solapa', '', 'persona'], ['diadema', 'Diadema', '', 'persona'], ['mesa', '2 de sobremesa', '', 'mesa']],
+        aplica: (v) => { const m = MICS[v] || MICS.nada; [S.mano, S.cuerpo, S.mesa] = m; if (v === 'diadema') S.tipoC = 'diadema'; else if (v === 'mixto') S.tipoC = 'solapa'; } }; }
+    case 'en54': return { q: '¿Lleva evacuación por voz (EN 54)?', val: S.en54, ops: [[false, 'No', 'Sonido normal', 'altavoz'], [true, 'Sí', 'Sistema certificado completo', 'escudo']], aplica: (v) => { S.en54 = v === true || v === 'true'; } };
+  }
+  return null;
+}
+function pon(k, v) {
+  if (NUMS[k]) { const [a, b, d] = NUMS[k], n = +v; S[k] = Math.max(a, Math.min(b, isFinite(n) ? +n.toFixed(d) : a)); }
+  else if (BOOL.includes(k)) S[k] = v === true || v === 'true';
+  else S[k] = v;
+}
+function pide(t) {
+  const s = t.toLowerCase().replace(/,/g, '.'); let ok = false, m;
+  if ((m = s.match(/(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)(?:\s*[x×]\s*(\d+(?:\.\d+)?))?/))) { const a = +m[1], b = +m[2]; S.ancho = Math.min(a, b); S.fondo = Math.max(a, b); if (m[3]) S.alto = +m[3]; ok = true; }
+  if ((m = s.match(/(\d+)\s*(?:micros?|micrófonos?|microfonos?|mics?|microphones?|micròfons?)/))) { const n = +m[1]; S.mano = n; S.cuerpo = 0; S.mesa = 0; ok = true; }
+  if (/hilo musical|música de fondo|musica de fondo|ambiental|background music|tienda|restaurante/.test(s)) { S.uso = 'musica'; ok = true; }
+  if (/megafon|avisos|paging|colegio|nave/.test(s)) { S.uso = 'avisos'; ok = true; }
+  if (/evento|presentaci|auditorio|conferencia|event/.test(s)) { S.uso = 'evento'; ok = true; }
+  if (/reuni|formaci|aula|meeting|classroom/.test(s)) { S.uso = 'sala'; ok = true; }
+  if (/techo|ceiling|sostre/.test(s)) S.montaje = 'techo'; if (/pared|wall|paret/.test(s)) S.montaje = 'pared';
+  if (/pantalla|led|screen/.test(s)) S.pantalla = true; if (/evacuaci|en ?54|voice alarm/.test(s)) S.en54 = true;
+  if (/dante/.test(s)) S.dante = true; if (/reverber|cristal|eco/.test(s)) S.reverb = true; if (/blanco|white|blanc/.test(s)) S.color = 'blanco';
+  if ((m = s.match(/(\d+)\s*zonas?/))) S.zonas = Math.min(54, +m[1]);
+  return ok || /altavoc|sonoriz|sonido|speaker|so de/.test(s);
+}
+export default {
+  id: 'sonido', nom: 'Sonorización', corto: 'SONIDO', ic: 'altavoz', ejemplo: 'Escríbela: «sala de 10 x 16 m con 2 micros y pantalla»',
+  info: 'El sistema de sonido completo de una sala: altavoces, subgraves, retardos, electrónica, micrófonos y control.',
+  calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
+  reconoce: (t) => /altavoc|sonoriz|megafon|hilo musical|evacuaci|speaker|sound system/i.test(t),
+  esquema: (r, o) => ({ tit: 'Plano de la sala', ic: 'cubo', html: esquema(r, o) }),
+  set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * (k === 'alto' ? 0.1 : ['zonas', 'mano', 'cuerpo', 'mesa'].includes(k) ? 1 : 0.5)),
+  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); }, reset: () => { S = Object.assign({}, DEF); },
+  _S: () => S,
+};
