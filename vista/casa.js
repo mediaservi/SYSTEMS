@@ -39,6 +39,9 @@ textos({
   'Ver en PRO': ['See in PRO', 'Veure a PRO'],
   'PDF': ['PDF', 'PDF'],
   'Ver la ficha': ['See the datasheet', 'Veure la fitxa'],
+  'Ver en grande': ['See it large', 'Veure en gran'], 'Datos del proyecto: nombre, cliente y observaciones': ['Project data: name, client and notes', 'Dades del projecte: nom, client i observacions'],
+  'Datos del proyecto': ['Project data', 'Dades del projecte'], 'Proyecto': ['Project', 'Projecte'], 'Cliente': ['Client', 'Client'], 'Observaciones': ['Notes', 'Observacions'], 'Guardar': ['Save', 'Desar'], 'Borrar': ['Clear', 'Esborrar'],
+  'Datos del proyecto guardados: salen en el PDF.': ['Project data saved: it goes in the PDF.', 'Dades del projecte desades: surten al PDF.'],
   'Acceso interno activo: tócalo para cerrarlo': ['Internal access on: tap to close it', 'Accés intern actiu: toca\'l per tancar-lo'],
   'Restablecer': ['Reset', 'Restablir'],
   'SALTAR': ['SKIP', 'SALTAR'], 'SIGUIENTE': ['NEXT', 'SEGÜENT'], 'LISTO': ['DONE', 'FET'], 'ATRÁS': ['BACK', 'ENRERE'], 'Cerrar': ['Close', 'Tancar'],
@@ -84,7 +87,7 @@ function marco() {
       <nav data-blk="H1C" class="fam" aria-label="AVHUB">${fam}</nav>
       <div data-blk="H1R" class="h1r">${bt('info', 'Qué es esto y cómo se usa', 'data-info')}${bt('pdf', 'Ver o imprimir el PDF del proyecto', 'data-pdf')}${bt('nuevo', 'Nuevo cálculo: lo deja todo como al empezar', 'data-nuevo')}<button type="button" class="ic-bt g" data-idioma data-crudo title="${esc(tIdi)}" aria-label="${esc(tIdi)}" style="position:relative"><span class="ic ic-lang"></span><small class="cod">${l.toUpperCase()}</small></button>${bt('tema', 'Cambiar entre gris oscuro y gris claro', 'data-tema')}</div></header>
     <div class="franja f-hm"><div data-blk="HM1"><div class="fila grupo" style="flex:1 1 auto">${modTog(MODS[0])}${modTog(MODS[1])}</div><div class="fila grupo" style="flex:1 1 auto">${MODS.slice(2).map(modTog).join('')}</div></div>
-      <div data-blk="HM2">${bt('pega', 'Pegar una petición copiada', 'data-pega')}<div class="pide-caja"><input class="pide" id="pide" type="text" autocomplete="off" spellcheck="false" placeholder="" aria-label="" value="${esc(G.texto)}"><button type="button" class="pide-res" id="pide-res" hidden title="${esc(T('Resultado del cálculo. Toca para escribir otra petición'))}"></button></div>${bt('copia', 'Copiar el texto de la casilla (la petición o el resultado)', 'data-copiatxt')}</div>
+      <div data-blk="HM2">${bt('proyecto', 'Datos del proyecto: nombre, cliente y observaciones', 'data-proyecto')}${bt('pega', 'Pegar una petición copiada', 'data-pega')}<div class="pide-caja"><input class="pide" id="pide" type="text" autocomplete="off" spellcheck="false" placeholder="" aria-label="" value="${esc(G.texto)}"><button type="button" class="pide-res" id="pide-res" hidden title="${esc(T('Resultado del cálculo. Toca para escribir otra petición'))}"></button></div>${bt('copia', 'Copiar el texto de la casilla (la petición o el resultado)', 'data-copiatxt')}</div>
       <div data-blk="HM3"><button type="button" class="calcular" id="calcular">${esc(T('CALCULAR'))} →</button></div></div>
     <main id="cuerpo"></main>
     <footer class="franja f-f1"><div data-blk="F1L" id="pie-l"><span class="nota" data-aviso-calc><svg class="av-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6 2.4 20.2h19.2z"/><path d="M12 9.6v5"/><path d="M12 17.6h.01"/></svg><span>${esc(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'))}</span></span></div><div data-blk="F1C" id="pie-c" class="f-cred" data-crudo></div><div data-blk="F1R" class="f1r" id="hueco-comun"></div><a class="admin-esq${esInterno() ? ' on' : ''}" href="${esInterno() ? '#' : urlInterno()}"${esInterno() ? ' data-salir-int' : ''} title="${esc(T(esInterno() ? 'Acceso interno activo: tócalo para cerrarlo' : 'Panel de administración'))}" aria-label="${esc(T(esInterno() ? 'Acceso interno activo: tócalo para cerrarlo' : 'Panel de administración'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a></footer>
@@ -99,7 +102,7 @@ function marco() {
 let HACIENDO = false;
 async function pdfDirecto() {
   if (HACIENDO) return; HACIENDO = true;
-  try { const m = M(), { hacePDF } = await import('./pdfsys.js'); await hacePDF({ m, R, caja: document.querySelector('[data-blk="S1A"] .lienzo-s') || document.querySelector('.ss-lienzo'), esqHtml: (() => { try { return m.esquema(R, {}).html; } catch (e) { return ''; } })(), cifras: m.cifras(R), nombreMod: m.nom, tostada }); }
+  try { const m = M(), { hacePDF } = await import('./pdfsys.js'); await hacePDF({ m, R, caja: document.querySelector('[data-blk="S1A"] .lienzo-s') || document.querySelector('.ss-lienzo'), esqHtml: (() => { try { return m.esquema(R, {}).html; } catch (e) { return ''; } })(), cifras: m.cifras(R), nombreMod: m.nom, proyecto: PROY, tostada }); }
   catch (e) { imprimir(); }
   finally { HACIENDO = false; }
 }
@@ -130,7 +133,7 @@ function pinta() {
     c.innerHTML = `<section class="ss-blk ss-resumen" id="ss-resumen"><h2 class="ss-tit">${ic('lista')}<span class="ss-fit">${esc(T('Lo que pides'))}</span></h2>
         <div class="ss-filas">${filas.map((f) => `<button type="button" class="ss-fila" data-ss-q="${f[0]}" aria-label="${esc(T('Cambiar') + ': ' + T(f[2]))}">${ic(f[1])}<span class="ss-fk ss-fit">${esc(T(f[2]))}</span><b class="ss-fv ss-fit">${esc(f[3])}</b>${ic('lapiz', 'ss-lapiz')}</button>`).join('')}</div>
         <button type="button" class="ss-ancho" data-asis>${ic('varita')}<span class="ss-fit">${esc(T('Pregúntame otra vez'))}</span></button></section>
-      <section class="ss-blk ss-sim" id="ss-sim"><h2 class="ss-tit">${ic(esq.ic || 'sim')}<span class="ss-fit">${esc(T(esq.tit))}</span>${esq.extra || ''}</h2><div class="ss-lienzo">${esq.html}</div></section>
+      <section class="ss-blk ss-sim" id="ss-sim"><h2 class="ss-tit">${ic(esq.ic || 'sim')}<span class="ss-fit">${esc(T(esq.tit))}</span>${esq.extra || ''}${bt('ojo', 'Ver en grande', 'data-grande', 'g ss-ojo')}</h2><div class="ss-lienzo">${esq.html}</div></section>
       <section class="ss-blk ss-res" id="ss-res" aria-live="polite"><div class="ss-res-cab"><h2 class="ss-tit">${ic('res')}<span class="ss-fit">${esc(T('Resultado'))}</span></h2>
         <div class="ss-acc"><button type="button" class="ss-bt2" data-pdf>${ic('pdf')}<span class="ss-fit">PDF</span></button><button type="button" class="ss-bt2 ss-pro" data-ss-sw="pro">${ic('pro')}<span class="ss-fit">${esc(T('Ver en PRO'))}</span></button></div></div>
         <p class="ss-linea"><span class="ss-fit">${R.linea || ''}</span></p>
@@ -141,7 +144,7 @@ function pinta() {
     const D = m.datos(R).slice(0, 4), areas = D.length >= 4 ? ['m1a', 'm1b', 'm2a', 'm2b'] : D.length === 3 ? ['m1a / m1a / m2a / m1a', 'm1b', 'm2b'] : D.length === 2 ? ['m1a / m1a / m2a / m1a', 'm1b / m1b / m2b / m1b'] : ['m1a / m1a / m2a / m1b'];
     const ids = D.length >= 4 ? ['M1A', 'M1B', 'M2A', 'M2B'] : D.length === 3 ? ['M1A', 'M1B', 'M2B'] : ['M1A', 'M1B'];
     let h = D.map((d, i) => blk(areas[i], ids[i], esc(T(d.tit)), d.ac || 'var(--azul)', d.html, d.extra || '', d.cls || '', d.ic)).join('');
-    h += blk('s1a', 'S1A', esc(T(esq.tit)), 'var(--verde-txt)', `<div class="lienzo-s">${esq.html}</div>`, esq.extra || '', 'pant', esq.ic || 'sim');
+    h += blk('s1a', 'S1A', esc(T(esq.tit)), 'var(--verde-txt)', `<div class="lienzo-s">${esq.html}</div>`, (esq.extra || '') + bt('ojo', 'Ver en grande', 'data-grande'), 'pant', esq.ic || 'sim');
     h += blk('s1b', 'S1B', esc(T('Resultado')), 'var(--violeta)', m.resultado(R), '', '', 'res');
     'abcdef'.split('').forEach((x, i) => { const q = cif[i];
       h += q ? blk('m3' + x, 'M3' + x.toUpperCase(), esc(T(q.t)), q.c || COL[i], `<div class="cif-v">${esc(q.v)}${q.u ? `<small>${esc(q.u)}</small>` : ''}</div>${q.s ? `<div class="cif-s">${esc(q.s)}</div>` : ''}`, '', 'res', q.ic)
@@ -154,9 +157,9 @@ function pinta() {
 }
 /* v2.5 · simulación 3D: se monta cuando el dibujo trae su lienzo y se suelta entera al repintar (sin contextos WebGL colgando) */
 let S3 = null, n3 = 0;
-async function monta3D(m, r) {
+async function monta3D(m, r, dentro) {
   if (S3) { try { S3.destruir(); } catch (e) {} S3 = null; }
-  const cv = document.querySelector('canvas[data-sim3d]'), yo = ++n3; if (!cv || !m.escena3d) return;
+  const cv = (dentro || document).querySelector('canvas[data-sim3d]'), yo = ++n3; if (!cv || !m.escena3d) return;
   try { const { Sala3D } = await import('./sim3d.js'); if (yo !== n3 || !cv.isConnected) return; S3 = new Sala3D(cv); m.escena3d(S3, r); S3.encuadra(); }
   catch (e) { if (cv.isConnected) cv.insertAdjacentHTML('afterend', `<p class="sim-err">${esc(T('La simulación 3D no está disponible en este navegador.'))}</p>`); }
 }
@@ -180,6 +183,21 @@ let tT = 0;
 function tostada(t, ms = 3200) { const e = $('#tostada'); if (!e) return; e.textContent = t; e.classList.add('on'); clearTimeout(tT); tT = setTimeout(() => e.classList.remove('on'), ms); }
 function ventana(tit, html) {
   const v = $('#velo'); v.innerHTML = `<div class="vent" role="dialog" aria-modal="true"><div class="vent-cab"><b>${esc(tit)}</b><span class="sep"></span><button type="button" class="ic-bt" data-cierra aria-label="${esc(T('Cerrar'))}">${IC.x}</button></div><div class="vent-cu">${html}</div></div>`; v.classList.add('on');
+}
+/* v2.8 · ver en grande el dibujo (como el ojo de SCREENS): la vista elegida a toda ventana, también la simulación a escala y la 3D */
+let GRANDE = false;
+function verGrande() {
+  const m = M(), esq = m.esquema(R, { vertical: movilV() }); GRANDE = true;
+  ventana(T(esq.tit), `<div class="grande">${esq.html}</div>`); const v = $('#velo .vent'); if (v) v.classList.add('v-grande');
+  if (/data-sim3d/.test(esq.html)) monta3D(m, R, $('#velo'));
+  try { enlaza($('#velo')); } catch (e) {}
+}
+/* v2.8 · datos del proyecto (como en SCREENS): nombre, cliente y observaciones; salen en la cabecera y en la primera hoja del PDF */
+let PROY = Object.assign({ proy: '', cliente: '', obs: '' }, lee('systems_proyecto') || {});
+function ventanaProyecto() {
+  ventana(T('Datos del proyecto'), `<div class="proy-f"><label>${esc(T('Proyecto'))}<input type="text" class="pide" id="pr-proy" maxlength="80" value="${esc(PROY.proy)}"></label><label>${esc(T('Cliente'))}<input type="text" class="pide" id="pr-cli" maxlength="80" value="${esc(PROY.cliente)}"></label><label>${esc(T('Observaciones'))}<textarea class="pide" id="pr-obs" rows="5" maxlength="1200">${esc(PROY.obs)}</textarea></label>
+    <div class="fila"><button type="button" class="calcular" data-proy-guarda>${esc(T('Guardar'))}</button><button type="button" class="tog" data-proy-borra><span>${esc(T('Borrar'))}</span></button></div></div>`);
+  const v = $('#velo .vent'); if (v) v.classList.add('ajustes'); setTimeout(() => { const i = $('#pr-proy'); if (i) i.focus(); }, 30);
 }
 /* v2.6 · ficha de producto (vista/fichaprod.js): en la ventana; v2.8 · también en su propia página, en pestaña nueva */
 function abreFicha(id) { if (!fichaDe(id)) return false; window.open(urlFicha(id), '_blank', 'noopener'); return true; }
@@ -211,7 +229,7 @@ function enlaza(raiz = document.getElementById('app')) {
   });
 }
 const movilV = () => matchMedia('(max-width: 559px) and (orientation: portrait)').matches;   /* v1.8 · móvil vertical */
-const cierra = () => { const ic = $('#info-comun'), hc = $('#hueco-comun'); if (ic && hc) [...ic.children].forEach((x) => hc.insertBefore(x, hc.querySelector('.admin-esq'))); const v = $('#velo'); v.classList.remove('on'); v.innerHTML = ''; };
+const cierra = () => { GRANDE = false; const ic = $('#info-comun'), hc = $('#hueco-comun'); if (ic && hc) [...ic.children].forEach((x) => hc.insertBefore(x, hc.querySelector('.admin-esq'))); const v = $('#velo'); v.classList.remove('on'); v.innerHTML = ''; };
 function info() {
   ventana('SYSTEMS', `<p>${esc(T('Calcula la electrónica, la señal, el audio y la videoconferencia de un proyecto con los equipos de las marcas del catálogo.'))}</p><p>${esc(T('Elige arriba el módulo. En SIMPLE te pregunto lo justo y te doy la solución; en PRO ves y cambias todos los datos, el esquema y el despiece.'))}</p><p>${esc(T('También puedes escribir lo que necesitas en la casilla y pulsar CALCULAR.'))}</p><p class="nota">${esc(T('Solo se calcula y se propone con las marcas y los fabricantes de las listas del panel.'))}</p>` +
     MODS.map((m) => `<p><b>${esc(T(m.nom))}</b> · ${esc(T(m.info))}</p>`).join(''));
@@ -259,7 +277,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && e.target.id === 'pide') { calcular(); return; }
   if (e.key === 'Enter' && e.target.matches && e.target.matches('[data-num]')) { e.target.blur(); return; }
   if (e.key === 'Enter' && e.target.matches && e.target.matches('#ss-asis input')) { const b = document.querySelector('[data-ss-ok]'); if (b) b.click(); return; }
-  if (e.key === 'Escape') { if (ASIS) { ASIS = null; pregunta(); } else cierra(); }
+  if (e.key === 'Escape') { if (ASIS) { ASIS = null; pregunta(); } else { const g = GRANDE; cierra(); if (g) pinta(); } }
 });
 document.addEventListener('click', (e) => {
   const q = (s) => e.target.closest(s); let b;
@@ -273,7 +291,11 @@ document.addEventListener('click', (e) => {
   if (q('[data-pdf]')) { pdfDirecto(); return; }
   if (q('[data-info]')) { info(); if (movilV()) { const cu = document.querySelector('#velo .vent-cu'), hc = $('#hueco-comun'); if (cu && hc) { cu.insertAdjacentHTML('afterbegin', '<div class="fila info-comun" id="info-comun"></div>'); [...hc.children].filter((x) => !x.classList.contains('admin-esq')).forEach((x) => $('#info-comun').appendChild(x)); } } return; }
   if (q('[data-aviso-calc]') && movilV()) { tostada(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'), 6000); return; }
-  if (q('[data-cierra]') || e.target.id === 'velo') { cierra(); return; }
+  if (q('[data-cierra]') || e.target.id === 'velo') { const g = GRANDE; cierra(); if (g) pinta(); return; }
+  if (q('[data-grande]')) { verGrande(); return; }
+  if (q('[data-proyecto]')) { ventanaProyecto(); return; }
+  if (q('[data-proy-guarda]')) { PROY = { proy: ($('#pr-proy') || {}).value || '', cliente: ($('#pr-cli') || {}).value || '', obs: ($('#pr-obs') || {}).value || '' }; guarda('systems_proyecto', PROY); cierra(); tostada(T('Datos del proyecto guardados: salen en el PDF.')); return; }
+  if (q('[data-proy-borra]')) { PROY = { proy: '', cliente: '', obs: '' }; guarda('systems_proyecto', PROY); cierra(); return; }
   if (q('#calcular')) { calcular(); return; }
   if (q('#pide-res')) { EDITA = true; pintaRes(); const i = $('#pide'); i.focus(); i.select(); return; }
   if (q('[data-copiatxt]')) { const r = $('#pide-res'), t = (r && !r.hidden ? r.textContent : $('#pide').value).trim(); if (!t) tostada(T('La casilla está vacía: no hay nada que copiar.')); else (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => tostada(T('Copiado.')), () => tostada(T('Este navegador no deja copiar desde aquí.'))); return; }

@@ -214,3 +214,16 @@ svg a.prod:hover text { fill: var(--azul); }
 .pv-hojas { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; }
 .pv-hoja { width: min(100%, 820px); height: auto; box-shadow: 0 6px 24px rgba(0, 0, 0, .45); background: #fff; }
 @media (max-width: 600px) { .pv-velo .vent.previa { width: 100vw; height: 100dvh; border-radius: 0; } }
+/* v2.8 · ver en grande y datos del proyecto (como en SCREENS) */
+.vent.v-grande .vent-cu { padding: 0; }
+.vent .grande { position: relative; flex: 1; min-height: 0; background: #151518; border-radius: 0 0 calc(var(--u) * 18) calc(var(--u) * 18); overflow: hidden; }
+.vent .grande > svg { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); }
+.vent .grande > .sim-caja, .vent .grande > .sim3d-caja { position: absolute; inset: 0; }
+.ss-tit .ss-ojo { flex: none; width: 34px; height: 34px; margin-left: 6px; }
+.proy-f { display: flex; flex-direction: column; gap: 12px; }
+.proy-f label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--tenue); }
+.proy-f .pide { height: auto; min-height: 42px; padding: 8px 10px; font: 500 15px Inter, system-ui, sans-serif; text-transform: none; letter-spacing: 0; color: var(--txt); }
+.proy-f textarea.pide { resize: vertical; line-height: 1.4; }
+.proy-f .fila { display: flex; gap: 8px; }
+.proy-f .calcular { flex: 1; }
+@media print { [data-grande], [data-proyecto] { display: none !important; } }

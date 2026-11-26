@@ -57,6 +57,8 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - **Ficha de producto en pestaña nueva**: cualquier nombre de producto que aparece (resultado, despiece, cifras y esquemas) es un enlace a su ficha, en una página propia que se puede imprimir o compartir, con la foto oficial del fabricante.
 - **Fotos oficiales** de 460 referencias de las listas, según información de los fabricantes.
 - **PDF en dos hojas, como el de SCREENS**, con vista previa (guardar o imprimir): hoja 1, el resumen, el dibujo de la vista elegida (también la simulación a escala o la 3D) y las cifras con sus avisos; hoja 2, la lista de material y la ficha de cada equipo con su foto oficial. Sin precios ni stock.
+- **Ver en grande** (el ojo, como en SCREENS): el dibujo de la vista elegida a toda ventana, también la simulación a escala y la 3D.
+- **Datos del proyecto** (nombre, cliente y observaciones), junto a la petición: salen en la cabecera y en la primera hoja del PDF.
 - Las descripciones de los equipos salen en inglés y catalán.
 - Icono propio para las cámaras (PTZ), distinto del de simulación.
 - En el móvil vertical, las pestañas de vista van debajo del título para que no se corte.

@@ -6,7 +6,7 @@ import { VERSION } from './version.js';
 
 textos({
   'hoja {a} de {b}': ['page {a} of {b}', 'full {a} de {b}'], 'Lista de material': ['Bill of materials', 'Llista de material'], 'Cant.': ['Qty', 'Quant.'], 'Referencia': ['Reference', 'Referència'], 'Descripción': ['Description', 'Descripció'],
-  'Fichas de los equipos': ['Equipment datasheets', 'Fitxes dels equips'], 'Resumen': ['Summary', 'Resum'], 'Avisos': ['Notes', 'Avisos'],
+  'Fichas de los equipos': ['Equipment datasheets', 'Fitxes dels equips'], 'Observaciones': ['Notes', 'Observacions'], 'Resumen': ['Summary', 'Resum'], 'Avisos': ['Notes', 'Avisos'],
   'Vista previa del PDF': ['PDF preview', 'Vista prèvia del PDF'], 'Guardar PDF': ['Save PDF', 'Desar PDF'], 'Imprimir': ['Print', 'Imprimir'], 'Cerrar': ['Close', 'Tancar'],
   'Equipos según información de los fabricantes. Sin precios: pídelos a tu distribuidor.': ['Equipment according to the manufacturers’ information. No prices: ask your distributor.', 'Equips segons informació dels fabricants. Sense preus: demana\'ls al teu distribuïdor.'],
   'No se ha podido generar el PDF.': ['The PDF could not be generated.', 'No s\'ha pogut generar el PDF.'],
@@ -70,12 +70,12 @@ function material(htmlRes) {
 /* cuál de los equipos del resultado es alternativa (no entra en la lista): los que van detrás del rótulo ALTERNATIVAS */
 function sinAlternativas(html) { const i = html.indexOf('<p class="alt-t"'); return i > 0 ? html.slice(0, i) : html; }
 
-export async function hacePDF({ m, R, caja, esqHtml, cifras, nombreMod, tostada }) {
+export async function hacePDF({ m, R, caja, esqHtml, cifras, nombreMod, proyecto, tostada }) {
   await libPDF();
   const hoja = document.createElement('div');
   try {
-    const l = lang(), ahora = new Date(), linCab = 'systems.mediaservi.com · ' + ahora.toLocaleDateString(l === 'en' ? 'en-GB' : 'es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' · ' + ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-    const cab = (n) => `<div style="display:grid;grid-template-columns:106px minmax(0,1fr) 106px;align-items:center;column-gap:14px;border-bottom:2px solid ${TI};padding-bottom:7px;margin-bottom:9px"><img src="assets/systems-logo-claro.svg" alt="SYSTEMS" style="height:28px;width:auto;justify-self:start"><div style="text-align:center;font:400 9px/1.2 'Share Tech Mono',monospace;color:#444;white-space:nowrap;overflow:hidden">${esc(linCab)} · ${esc(T('hoja {a} de {b}', { a: n, b: 2 }))}</div><img src="assets/avhub-logo-claro.svg" alt="AVHUB" style="height:24px;width:auto;justify-self:end"></div>`;
+    const PR = proyecto || {}, l = lang(), ahora = new Date(), linCab = 'systems.mediaservi.com · ' + ahora.toLocaleDateString(l === 'en' ? 'en-GB' : 'es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' · ' + ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    const cab = (n) => `<div style="display:grid;grid-template-columns:106px minmax(0,1fr) 106px;align-items:center;column-gap:14px;border-bottom:2px solid ${TI};padding-bottom:7px;margin-bottom:9px"><img src="assets/systems-logo-claro.svg" alt="SYSTEMS" style="height:28px;width:auto;justify-self:start"><div style="text-align:center;font:400 9px/1.2 'Share Tech Mono',monospace;color:#444;white-space:nowrap;overflow:hidden">${esc(linCab)} · ${esc(T('hoja {a} de {b}', { a: n, b: 2 }))}</div><img src="assets/avhub-logo-claro.svg" alt="AVHUB" style="height:24px;width:auto;justify-self:end"></div>` + (PR.proy || PR.cliente ? `<div style="margin:-3px 0 7px;font:400 9.5px/1.3 Inter,Arial,sans-serif;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${PR.proy ? '<b style="font-weight:800">' + esc(PR.proy) + '</b>' : ''}${PR.proy && PR.cliente ? ' · ' : ''}${esc(PR.cliente || '')}</div>` : '');
     const rot = (s) => `<div style="font:800 8.5px/1.2 Inter,Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#555;margin:0 0 4px">${esc(s)}</div>`;
     const img = await dibujo(caja, esqHtml);
     const htmlRes = m.resultado(R), d = document.createElement('div'); d.innerHTML = htmlRes;
@@ -86,6 +86,7 @@ export async function hacePDF({ m, R, caja, esqHtml, cifras, nombreMod, tostada 
       `<div style="border:1px solid ${TI};border-radius:6px;padding:7px 10px;margin-bottom:9px"><div style="font:800 9px/1.2 Inter,Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#555">${esc(T(nombreMod))}</div><div style="font:800 13px/1.3 Inter,Arial,sans-serif;margin-top:2px">${esc(tituloRes)}</div>${lineaRes ? `<div style="font:400 10px/1.4 Inter,Arial,sans-serif;margin-top:2px">${esc(lineaRes)}</div>` : ''}</div>` +
       (img ? `<div style="margin-bottom:9px"><img src="${img}" alt="" style="display:block;max-width:100%;max-height:430px;width:auto;height:auto;margin:0 auto;border:1px solid ${G};border-radius:6px"></div>` : '') +
       `<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:9px">${cif}</div>` +
+      (PR.obs && PR.obs.trim() ? `<div style="border:1px solid ${G};border-radius:6px;padding:6px 10px;margin-bottom:8px">${rot(T('Observaciones'))}<div style="font:400 9.5px/1.45 Inter,Arial,sans-serif;white-space:pre-wrap">${esc(PR.obs.trim())}</div></div>` : '') +
       (av.length ? `<div style="border:1px solid ${G};border-radius:6px;padding:6px 10px">${rot(T('Avisos'))}<ul style="margin:0;padding-left:1.2em;font:400 9.5px/1.45 Inter,Arial,sans-serif">${av.map((a) => `<li>${esc(a)}</li>`).join('')}</ul></div>` : '');
     const mat = material(sinAlternativas(htmlRes));
     const fichas = mat.map((x) => fichaDe(x.ref)).filter(Boolean).slice(0, 12);
@@ -99,7 +100,7 @@ export async function hacePDF({ m, R, caja, esqHtml, cifras, nombreMod, tostada 
     document.body.appendChild(hoja);
     await Promise.all([...hoja.querySelectorAll('img')].map((i) => (i.complete ? 0 : new Promise((ok) => { i.onload = i.onerror = ok; setTimeout(ok, 4000); }))));
     const tri = '<svg viewBox="0 0 24 24" style="width:1.05em;height:1.05em;vertical-align:-.18em;margin-right:.35em" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 21h20L12 3z"/><path d="M12 10v5M12 18h.01"/></svg>';
-    const pv = await window.AVPDF.exporta({ previa: true, raiz: hoja, paginas: [['.pdf-p1'], ['.pdf-p2']], margen: 12, nombre: window.AVPDF.sello('SYSTEMS'), titulo: 'SYSTEMS · ' + T(nombreMod),
+    const pv = await window.AVPDF.exporta({ previa: true, raiz: hoja, paginas: [['.pdf-p1'], ['.pdf-p2']], margen: 12, nombre: window.AVPDF.sello('SYSTEMS'), titulo: 'SYSTEMS · ' + (PR.proy || T(nombreMod)),
       pieHtml: tri + esc(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.')) + '\n' + (window.AVCREDITO ? window.AVCREDITO.html('SYSTEMS', VERSION, l, { sinEnlaces: true }) : 'SYSTEMS ' + VERSION + ' · mediaservi.com'),
       respeta: '[data-pdf-respeta]',
       alClonar: (doc, raiz) => { raiz.style.setProperty('position', 'absolute', 'important'); raiz.style.setProperty('left', '0', 'important'); raiz.style.setProperty('top', '0', 'important'); [...doc.body.children].forEach((e) => { if (e !== raiz && !e.contains(raiz)) e.style.setProperty('display', 'none', 'important'); }); } });
