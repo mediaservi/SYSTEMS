@@ -1,7 +1,8 @@
 // SYSTEMS · página de ficha de producto (ficha.html?ref=…&lang=…): la ficha de la consola, sola, para abrirla en pestaña nueva,
 // imprimirla o compartirla. Sin precios ni stock. GPL-3.0 · mediaservi.com
 import { fijarIdioma, idiomaInicial, idioma } from '../textos.js';
-import { T, textos, esc, VERSION } from './util.js';
+import { T, textos, esc } from './util.js';
+import { VERSION } from './version.js';
 import { cargar } from './listas.js';
 import { fichaDe } from './fichaprod.js';
 
