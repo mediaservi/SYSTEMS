@@ -2,7 +2,7 @@
 // la cámara o barra (campo de visión y fondo de sala del fabricante) y la microfonía (cobertura del fabricante).
 // Solo con equipos de las listas del panel (AVER, SENNHEISER, XILICA, NUREVA, displays SAMSUNG, LG y CLEVER). GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
-import { equipos, esInterno } from './listas.js';
+import { equipos, esInterno, P } from './listas.js';
 textos({
   'VIDEOCONF.': ['VIDEO CONF.', 'VIDEOCONF.'], 'Videoconferencia': ['Video conferencing', 'Videoconferència'],
   'Sala de reuniones: tamaño de pantalla, cámara o barra con su campo de visión y micrófonos por cobertura.': ['Meeting room: screen size, camera or video bar with its field of view, and microphones by coverage.', 'Sala de reunions: mida de pantalla, càmera o barra amb el seu camp de visió i micròfons per cobertura.'],
@@ -33,7 +33,7 @@ const MED = [32, 43, 50, 55, 65, 75, 86, 98, 105, 110, 115];
 
 function calcula() {
   const av = [], r = { av };
-  const dLej = Math.max(1, S.fondo - 0.3), k = S.cont === 'detalle' ? 4 : 6, h = dLej / k, diag = h / 0.4903 / 0.0254;
+  const dLej = Math.max(1, S.fondo - P('video.margenPantalla', 0.3)), k = S.cont === 'detalle' ? P('video.factorDocumentos', 4) : P('video.factorVideo', 6),   /* v2.2 · BRIAN */ h = dLej / k, diag = h / 0.4903 / 0.0254;
   r.dLej = dLej; r.h = h; r.diag = diag;
   let D = equipos('display').filter((x) => (S.tipo === 'interactivo' ? x.uso === 'interactivo' : x.uso === 'pared') && x.pulgadas);
   const ok = D.filter((x) => x.pulgadas >= diag - 1).sort((a, b) => a.pulgadas - b.pulgadas || (b.stock ? 1 : 0) - (a.stock ? 1 : 0) || (b.horas === '16/7' ? 0 : 1) - (a.horas === '16/7' ? 0 : 1));

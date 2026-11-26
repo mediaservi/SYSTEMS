@@ -56,6 +56,7 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - **CÁMARAS y CONTROL**, dos módulos nuevos (ver Funciones). Los datos de las cámaras AVER CAM550 y CAM570 (ángulo, zoom óptico y total, lente IA, seguimiento por voz, PoE+) están en la lista de fábrica, según información de los fabricantes.
 - **Stock solo con la llave interna:** «En stock» y «Bajo pedido» ya no salen en público en DISPLAYS, ELECTRÓNICA ni VIDEOCONFERENCIA; con la llave del panel (candado del pie, como en SCREENS) sí, y nunca en el PDF ni en las cifras. El candado se pone verde con la llave activa y, al tocarlo, se cierra.
 - **Ocho módulos en la barra:** en móvil vertical, dos filas de cuatro; en ordenador y TV, la barra gana ancho a la petición escrita.
+- **BRIAN también en VIDEOCONFERENCIA y CÁMARAS:** el margen de la pantalla, los factores de distancia (vídeo y documentos) y el ancho de cada encuadre se leen en vivo del panel, con los de fábrica como respaldo.
 - Caché renovada (`systems-v21`).
 
 ## Cambios de la v2.1
