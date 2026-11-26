@@ -14,7 +14,7 @@ import CAMARAS from './mod-camaras.js';
 import CONTROL from './mod-control.js';
 import { cargar, esInterno, urlInterno, salirInterno } from './listas.js';
 
-export const VERSION = 'v2.3';
+export const VERSION = 'v2.4';
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
 const MODS = [ELEC, DISP, SENAL, AUDIO, SONIDO, VIDEO, CAMARAS, CONTROL];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage · v2.0 · SONORIZACIÓN · v2.2 · CÁMARAS y CONTROL
 fijarIdioma(idiomaInicial());

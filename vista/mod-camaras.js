@@ -37,8 +37,8 @@ textos({
   'Cada cámara va con PoE+ (802.3at): {n} puertos PoE+ en el switch de red.': ['Each camera runs on PoE+ (802.3at): {n} PoE+ ports on the network switch.', 'Cada càmera va amb PoE+ (802.3at): {n} ports PoE+ al switch de xarxa.'],
   'La cámara va con PoE+ (802.3at): un puerto PoE+ en el switch de red.': ['The camera runs on PoE+ (802.3at): one PoE+ port on the network switch.', 'La càmera va amb PoE+ (802.3at): un port PoE+ al switch de xarxa.'],
   'Primer': ['Close-up', 'Primer'], 'Medio': ['Medium', 'Mitjà'], 'Americano': ['Medium-long', 'Americà'], '+ Público': ['+ Audience', '+ Públic'], '+ General': ['+ Wide', '+ General'], 'Por IA': ['By AI', 'Per IA'], 'Fijo': ['Fixed', 'Fix'], 'IP': ['IP', 'IP'], 'solo con zoom digital': ['digital zoom only', 'només amb zoom digital'],
-  'Por HDMI a más de 15 m: extensor HDBaseT o fibra (calcúlalo en ELECTRÓNICA).': ['HDMI over 15 m: HDBaseT extender or fibre (work it out in ELECTRONICS).', 'Per HDMI a més de 15 m: extensor HDBaseT o fibra (calcula-ho a ELECTRÒNICA).'],
-  'Por USB a más de 5 m: mejor por la red (la cámara se ve como cámara en el ordenador) o con un extensor USB.': ['USB over 5 m: better over the network (the computer sees it as a camera) or with a USB extender.', 'Per USB a més de 5 m: millor per la xarxa (l\'ordinador la veu com una càmera) o amb un extensor USB.'],
+  'Por HDMI a más de {m} m: extensor HDBaseT o fibra (calcúlalo en ELECTRÓNICA).': ['HDMI over {m} m: HDBaseT extender or fibre (work it out in ELECTRONICS).', 'Per HDMI a més de {m} m: extensor HDBaseT o fibra (calcula-ho a ELECTRÒNICA).'],
+  'Por USB a más de {m} m: mejor por la red (la cámara se ve como cámara en el ordenador) o con un extensor USB.': ['USB over {m} m: better over the network (the computer sees it as a camera) or with a USB extender.', 'Per USB a més de {m} m: millor per la xarxa (l\'ordinador la veu com una càmera) o amb un extensor USB.'],
   'Montaje a unos {h} m del suelo, sin taparla: no se monta del revés (para techo, su soporte de techo).': ['Mount it about {h} m above the floor, unobstructed: it is not mounted upside down (for ceilings, its ceiling mount).', 'Muntatge a uns {h} m del terra, sense tapar-la: no es munta de cap per avall (per a sostre, el seu suport de sostre).'],
   'A menos de {m} m no enfoca: aleja la cámara del ponente.': ['It cannot focus closer than {m} m: move the camera away from the speaker.', 'A menys de {m} m no enfoca: allunya la càmera del ponent.'],
   'óptico': ['optical', 'òptic'], 'digital': ['digital', 'digital'], 'personas': ['people', 'persones'], 'cámaras': ['cameras', 'càmeres'], 'en zoom': ['at full zoom', 'amb zoom'],
@@ -85,8 +85,8 @@ function calcula() {
   }
   if (r.n > 1) av.push(['info', T('Con {n} cámaras: un mezclador de vídeo o el control de las cámaras por la red para pasar de un plano a otro.', { n: r.n })]);
   if (cam && cam.poe) av.push(['info', r.n > 1 ? T('Cada cámara va con PoE+ (802.3at): {n} puertos PoE+ en el switch de red.', { n: r.n }) : T('La cámara va con PoE+ (802.3at): un puerto PoE+ en el switch de red.')]);
-  if (cam && S.salida === 'hdmi' && S.dist > 15) av.push(['info', T('Por HDMI a más de 15 m: extensor HDBaseT o fibra (calcúlalo en ELECTRÓNICA).')]);
-  if (cam && S.salida === 'usb' && S.dist > 5) av.push(['info', T('Por USB a más de 5 m: mejor por la red (la cámara se ve como cámara en el ordenador) o con un extensor USB.')]);
+  if (cam && S.salida === 'hdmi' && S.dist > P('camaras.hdmiMax', 15)) av.push(['info', T('Por HDMI a más de {m} m: extensor HDBaseT o fibra (calcúlalo en ELECTRÓNICA).', { m: P('camaras.hdmiMax', 15) })]);
+  if (cam && S.salida === 'usb' && S.dist > P('camaras.usbMax', 5)) av.push(['info', T('Por USB a más de {m} m: mejor por la red (la cámara se ve como cámara en el ordenador) o con un extensor USB.', { m: P('camaras.usbMax', 5) })]);
   if (cam && cam.enfoqueMin && S.dist < cam.enfoqueMin) av.push(['', T('A menos de {m} m no enfoca: aleja la cámara del ponente.', { m: N(cam.enfoqueMin, 1) })]);
   if (cam) av.push(['info', T('Montaje a unos {h} m del suelo, sin taparla: no se monta del revés (para techo, su soporte de techo).', { h: N(cam.altura || 1.5, 1) })]);
   r.alt = cam ? C.filter((c) => c !== cam && alc(c, true) >= S.dist) : []; r.altDig = new Set(r.alt.filter((c) => alc(c) < S.dist));
@@ -100,7 +100,7 @@ function calcula() {
 /* v2.3 · vista LATERAL como las de SCREENS: el ponente, la cámara a su altura y distancia, el cono del encuadre y el público */
 let VT = 'planta';
 function lateral(r, o = {}) {
-  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, D = S.dist, hc = /auditorio|directo/.test(S.uso) ? 2.0 : 1.5;
+  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, D = S.dist, hc = /auditorio|directo/.test(S.uso) ? P('camaras.alturaAuditorio', 2.0) : P('camaras.alturaSala', 1.5);
   const cen = { primer: 1.55, medio: 1.35, americano: 1.1 }[S.encuadre] || 1.35, vh = r.wEnc * 9 / 16, y1 = cen - vh / 2, y2 = cen + vh / 2;
   const E = escala(VW, VH, { l: 60, r: 60, t: 56, b: 66 }, -0.6, D + 1.0, 0, Math.max(2.6, hc + 0.6)), { X, Y, k } = E;
   let g = suelo(X, Y, -0.6, D + 1.0) + persona(X, Y, 0, k);

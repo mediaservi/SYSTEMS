@@ -3,7 +3,7 @@
 // Elección: el que cumple y está en stock; a igualdad, el orden de marcas SAMSUNG > LG > CLEVER (o la marca que se elija).
 // Solo con equipos de las listas del panel. GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
-import { equipos, esInterno } from './listas.js';
+import { equipos, esInterno, P as BP } from './listas.js';
 import { COL, escala, cota, persona, suelo, etiqueta, lienzo, pestanas, fmt } from './vt.js';
 textos({
   'DISPLAYS': ['DISPLAYS', 'DISPLAYS'], 'Displays y señalética': ['Displays and signage', 'Displays i senyalització'],
@@ -32,7 +32,7 @@ textos({
   'No hay ningún display de las listas para este sitio con estas condiciones.': ['There is no display in the lists for this place with these conditions.', 'No hi ha cap display de les llistes per a aquest lloc amb aquestes condicions.'],
   'No hay ninguno de {p}″: el más cercano es de {q}″.': ['There is none at {p}″: the closest is {q}″.', 'No n\'hi ha cap de {p}″: el més proper és de {q}″.'],
   'Para 24 h al día no hay ninguno en las listas: se propone uno de 16 h, que no está pensado para no apagarse nunca.': ['For 24 h a day there is none in the lists: a 16 h one is proposed, which is not meant to stay on all the time.', 'Per a 24 h al dia no n\'hi ha cap a les llistes: se\'n proposa un de 16 h, que no està pensat per no apagar-se mai.'],
-  'Detrás de un cristal a la calle hace falta brillo alto (2.500 nits o más) para verse de día: este da {n} nits.': ['Behind street-facing glass high brightness is needed (2,500 nits or more) to be seen in daylight: this one gives {n} nits.', 'Darrere d\'un vidre al carrer cal brillantor alta (2.500 nits o més) per veure\'s de dia: aquest en dona {n}.'],
+  'Detrás de un cristal a la calle hace falta brillo alto ({m} nits o más) para verse de día: este da {n} nits.': ['Behind street-facing glass high brightness is needed ({m} nits or more) to be seen in daylight: this one gives {n} nits.', 'Darrere d\'un vidre al carrer cal brillantor alta ({m} nits o més) per veure\'s de dia: aquest en dona {n}.'],
   'Sin reproductor integrado: lleva uno externo por pantalla ({m}).': ['No built-in player: it needs an external one per screen ({m}).', 'Sense reproductor integrat: en porta un d\'extern per pantalla ({m}).'],
   'Sin reproductor integrado: lleva un reproductor externo por pantalla (no hay ninguno en las listas).': ['No built-in player: it needs an external player per screen (none in the lists).', 'Sense reproductor integrat: porta un reproductor extern per pantalla (no n\'hi ha cap a les llistes).'],
   'En vertical: comprueba en la ficha que el modelo admite el montaje en vertical.': ['In portrait: check on the datasheet that the model allows portrait mounting.', 'En vertical: comprova a la fitxa que el model admet el muntatge en vertical.'],
@@ -70,7 +70,7 @@ function calcula() {
   r.n = nPant();
   if (r.disp) {
     if (r.disp.pulgadas !== S.pulg) av.push(['info', T('No hay ninguno de {p}″: el más cercano es de {q}″.', { p: S.pulg, q: r.disp.pulgadas })]);
-    if ((S.sitio === 'escaparate') && (r.disp.nits || 0) < 2500) av.push(['', T('Detrás de un cristal a la calle hace falta brillo alto (2.500 nits o más) para verse de día: este da {n} nits.', { n: N(r.disp.nits || 0) })]);
+    const NE = BP('display.nitsEscaparate', 2500); if ((S.sitio === 'escaparate') && (r.disp.nits || 0) < NE) av.push(['', T('Detrás de un cristal a la calle hace falta brillo alto ({m} nits o más) para verse de día: este da {n} nits.', { m: N(NE), n: N(r.disp.nits || 0) })]);
     if (!r.disp.soc) { const P = equipos(['display', 'signage']).filter((x) => x.tipo === 'signage' || x.uso === 'player');   /* v1.7 · reproductores de signage (MagicInfo, VXT, webOS): de la misma marca y prioritario si lo hay */
       r.player = P.find((x) => x.marca === r.disp.marca && x.prioritario) || P.find((x) => x.marca === r.disp.marca) || P.find((x) => x.prioritario) || P[0] || null;
       av.push(['info', r.player ? T('Sin reproductor integrado: lleva uno externo por pantalla ({m}).', { m: r.player.marca + ' ' + r.player.modelo }) : T('Sin reproductor integrado: lleva un reproductor externo por pantalla (no hay ninguno en las listas).')]); }
@@ -78,7 +78,7 @@ function calcula() {
     if (S.sitio === 'videowall') { const a = ancho16(r.disp.pulgadas) * S.cols, h = alto16(r.disp.pulgadas) * S.filas; r.vw = { a, h, p: Math.round(Math.hypot(a, h) / 0.0254) };
       av.push(['info', T('Videowall de {c} × {f}: mide {a} × {h} m ({p}″ de diagonal); la señal se reparte con el procesador de videowall o con la entrada y salida en cadena de los displays.', { c: S.cols, f: S.filas, a: N(a, 2), h: N(h, 2), p: r.vw.p })]); }
   }
-  if (S.pulg > 120 || (r.vw && r.vw.p > 300)) av.push(['', T('Más grande de lo que llega un videowall razonable o un monitor: mejor una pantalla LED (calcúlala en SCREENS).')]);
+  if (S.pulg > BP('display.pulgadasMaxMonitor', 120) || (r.vw && r.vw.p > BP('display.pulgadasMaxVideowall', 300))) av.push(['', T('Más grande de lo que llega un videowall razonable o un monitor: mejor una pantalla LED (calcúlala en SCREENS).')]);
   r.sem = !r.disp ? 'R' : av.some((a) => !a[0]) ? 'A' : 'V';
   r.semTxt = r.sem === 'R' ? T('No hay solución') : r.sem === 'A' ? T('Hay solución, con avisos') : T('Hay solución');
   r.lineaTxt = r.disp ? [r.n + ' × ' + r.disp.marca + ' ' + r.disp.modelo, r.disp.pulgadas + '″', r.disp.horas, r.disp.nits ? r.disp.nits + ' nits' : ''].filter(Boolean).join(' · ') : (r.error || '—');
@@ -90,7 +90,7 @@ function calcula() {
 let VT = 'frontal';
 const geo = (r) => { const p = r.disp ? r.disp.pulgadas : S.pulg, vert = S.orient === 'v', w1 = vert ? alto16(p) : ancho16(p), h1 = vert ? ancho16(p) : alto16(p);
   const vw = S.sitio === 'videowall', cols = vw ? S.cols : Math.min(nPant(), 6), fil = vw ? S.filas : 1, gap = vw ? 0.006 : 0.25;
-  const base = S.sitio === 'totem' ? 0.3 : S.sitio === 'tactil' ? 0.9 : vw ? 0.8 : S.sitio === 'escaparate' ? 0.9 : 1.2;
+  const base = S.sitio === 'totem' ? BP('display.base.totem', 0.3) : S.sitio === 'tactil' ? BP('display.base.tactil', 0.9) : vw ? BP('display.base.videowall', 0.8) : S.sitio === 'escaparate' ? BP('display.base.escaparate', 0.9) : BP('display.base.pared', 1.2);
   return { p, w1, h1, vw, cols, fil, gap, base, W: cols * w1 + (cols - 1) * gap, H: fil * h1 + (fil - 1) * gap }; };
 function frontal(r, o) {
   const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, G = geo(r), top = G.base + G.H;
@@ -108,8 +108,8 @@ function frontal(r, o) {
   return lienzo(VW, VH, g, 'La instalación vista de frente');
 }
 function lateral(r, o) {
-  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, G = geo(r), top = G.base + G.H, ojo = 1.6;
-  const d = Math.max(1.2, Math.min(12, (S.sitio === 'tactil' ? 0.6 : S.sitio === 'escaparate' || S.sitio === 'exterior' ? 4 * G.h1 : 3 * G.h1)));
+  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, G = geo(r), top = G.base + G.H, ojo = BP('display.ojosDePie', 1.6);
+  const d = Math.max(1.2, Math.min(12, (S.sitio === 'tactil' ? BP('display.distanciaTactil', 0.6) : (S.sitio === 'escaparate' || S.sitio === 'exterior' ? BP('display.factorDistanciaCalle', 4) : BP('display.factorDistancia', 3)) * G.h1)));
   const xMax = d + 1.0, E = escala(VW, VH, { l: 60, r: 40, t: 44, b: 40 }, -0.4, xMax, 0, Math.max(2.2, top + 0.4)), { X, Y, k } = E;
   let g = suelo(X, Y, -0.4, xMax) + `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(0)}" y2="${Y(Math.max(2.2, top + 0.3))}" stroke="${COL.pared}" stroke-width="4"/>`;
   if (S.sitio === 'totem') g += `<rect x="${X(0.02)}" y="${Y(G.base)}" width="${0.35 * k}" height="${G.base * k}" fill="${COL.equipo}" stroke="${COL.linea}"/>`;

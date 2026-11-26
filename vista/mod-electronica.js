@@ -3,7 +3,7 @@
 // PROYECCIÓN y DISPLAYS: conmutador (selector, distribuidor o matriz), blending, videowall y el cable o extensor de cada tramo.
 // Solo con las marcas de las listas del panel. GPL-3.0 · mediaservi.com
 import { T, TM, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
-import { equipos, esInterno } from './listas.js';
+import { equipos, esInterno, P as BP } from './listas.js';
 import { tramo, conmutador, RES } from './conectividad.js';
 import { TR_ELEC } from './tr-electronica.js';
 textos(TR_ELEC);
@@ -103,10 +103,10 @@ function calcProy() {
     if (!r.blend) r.error = T('Ningún equipo de blending de las listas llega a {n} proyectores {r}.', { n, r: RES[rr].nom });
   } else {
     if (S.modoP === 'espejo' && f > 2 && n > 1) { r.sel = conmutador(f, 1, 'espejo', { gbps: RES[rr].gbps }); r.dist = conmutador(1, n, 'espejo', { gbps: RES[rr].gbps }); }
-    else r.conm = conmutador(f, n, S.modoP, { gbps: RES[rr].gbps, lejos: S.dist > 15 });
+    else r.conm = conmutador(f, n, S.modoP, { gbps: RES[rr].gbps, lejos: S.dist > BP('senal.hdbtLejos', 15) });
     if (S.modoP === 'independiente' && !r.conm && (f > 1 || n > 1)) r.error = T('Ninguna matriz de las listas llega a {a} × {b}: con tantas fuentes y destinos va AV sobre IP.', { a: f, b: n });
   }
-  const sale = r.conm || r.dist || r.blend; const hd = !!(sale && sale.hdbt && S.dist > 15);
+  const sale = r.conm || r.dist || r.blend; const hd = !!(sale && sale.hdbt && S.dist > BP('senal.hdbtLejos', 15));
   for (let i = 0; i < n; i++) r.tramos.push(tramo(S.dist, rr, { hdbtSale: hd }));
   if (S.modoP === 'independiente' && f > 1) av.push(['info', T('Necesita escalador o un procesador de varias capas si las fuentes no tienen la misma resolución.')]);
   r.tramos.filter((t) => t.nota).slice(0, 1).forEach((t) => av.push(['info', T(t.nota)]));
@@ -133,9 +133,9 @@ function calcDisp() {
   if (vw) { r.conm = f > 1 ? conmutador(f, 1, 'espejo', { gbps: RES[rr].gbps }) : null; r.tramos.push(tramo(S.dist, rr, {})); av.push(['', T('Modo videowall del propio monitor: la imagen se reparte por la entrada y la salida en bucle de cada uno. Comprueba en la ficha cuántos admite en cadena a esa resolución.')]); }
   else {
     if (S.modoD === 'espejo' && f > 2 && n > 1) { r.sel = conmutador(f, 1, 'espejo', { gbps: RES[rr].gbps }); r.dist = conmutador(1, n, 'espejo', { gbps: RES[rr].gbps }); }
-    else r.conm = conmutador(f, n, S.modoD, { gbps: RES[rr].gbps, lejos: S.dist > 15 });
+    else r.conm = conmutador(f, n, S.modoD, { gbps: RES[rr].gbps, lejos: S.dist > BP('senal.hdbtLejos', 15) });
     if (S.modoD === 'independiente' && !r.conm && (f > 1 || n > 1)) r.error = T('Ninguna matriz de las listas llega a {a} × {b}: con tantas fuentes y destinos va AV sobre IP.', { a: f, b: n });
-    const sale = r.conm || r.dist, hd = !!(sale && sale.hdbt && S.dist > 15);
+    const sale = r.conm || r.dist, hd = !!(sale && sale.hdbt && S.dist > BP('senal.hdbtLejos', 15));
     for (let i = 0; i < n; i++) r.tramos.push(tramo(S.dist, rr, { hdbtSale: hd }));
   }
   r.rr = rr;

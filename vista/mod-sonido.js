@@ -230,11 +230,11 @@ function lateral(r, o = {}) {
     for (let j = 0; j < ny; j++) { const x = (j + .5) * F / ny; g += haz(x, h, Math.max(0, x - D / 2), Math.min(F, x + D / 2), COL.rangoB) + caja(x, h, COL.rangoB); }
     g += cota(X(F) + 16, Y(0), X(F) + 16, Y(h), fmt(h), 1);
   } else if (r.mains.length) {
-    const h = Math.max(2.2, Math.min(H - 0.3, Math.max(2.5, F / 6))), hasta = filas.length ? filas[0] : F;
+    const h = Math.max(2.2, Math.min(H - 0.3, Math.max(P('sonido.alturaPrincipalMin', 2.5), F / P('sonido.alturaPrincipalFondo', 6)))), hasta = filas.length ? filas[0] : F;
     g += haz(0.15, h, 1.5, Math.min(F, hasta + 1), COL.rangoB) + caja(0.15, h, COL.rangoB) + etiqueta(X(0.15) + 16, Y(h) - 14, r.mains[0].modelo, 'start', 'vt-azu');
     g += cota(X(0) - 16, Y(0), X(0) - 16, Y(h), fmt(h));
   }
-  r.delays.forEach((d, i) => { const h = Math.max(2.2, Math.min(H - 0.3, 3)), hasta = filas[i + 1] || F;
+  r.delays.forEach((d, i) => { const h = Math.max(2.2, Math.min(H - 0.3, P('sonido.alturaRetardos', 3))), hasta = filas[i + 1] || F;
     g += haz(d.y, h, d.y + 0.5, Math.min(F, hasta + 1), COL.retardo) + caja(d.y, h, COL.retardo) + etiqueta(X(d.y), Y(h) - 20, d.ms + ' ms', 'middle', 'vt-amb');
     g += cota(X(0), Y(0) + 22 + i * 26, X(d.y), Y(0) + 22 + i * 26, fmt(d.y) + ' m', 1); });
   for (let x = 2; x < F - 0.4; x += Math.max(2, F / 6)) g += persona(X, Y, x, k, 0.45);
