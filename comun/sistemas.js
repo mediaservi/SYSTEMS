@@ -3043,7 +3043,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "CL-1-PP",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "CL 1 PP",
     "descripcion": "CABLE SENNHEISER SPEECHLINE DW 1 M",
@@ -3052,7 +3052,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "CL-5-PP",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "CL 5 PP",
     "descripcion": "CABLE SENNHEISER SPEECHLINE DW 5 M",
@@ -3061,7 +3061,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "CL-10-PP",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "CL 10 PP",
     "descripcion": "CABLE SENNHEISER SPEECHLINE DW 10 M",
@@ -3070,7 +3070,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "CL-20-PP",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "CL 20 PP",
     "descripcion": "CABLE SENNHEISER SPEECHLINE DW 20 M",
@@ -3639,7 +3639,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "GZL-RG-58-0.25",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "RG 58 0.25 m",
     "descripcion": "CABLE DE ANTENA SENNHEISER RG 58 0,25 M · BNC",
@@ -3648,7 +3648,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "GZL-RG-58-0.5",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "RG 58 0.5 m",
     "descripcion": "CABLE DE ANTENA SENNHEISER RG 58 0,5 M · BNC",
@@ -3657,7 +3657,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "GZL-RG-58-1.0",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "RG 58 1 m",
     "descripcion": "CABLE DE ANTENA SENNHEISER RG 58 1 M · BNC",
@@ -3666,7 +3666,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "GZL-RG-58-5",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "RG 58 5 m",
     "descripcion": "CABLE DE ANTENA SENNHEISER RG 58 5 M · BNC",
@@ -3675,7 +3675,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "GZL-RG-58-10",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "RG 58 10 m",
     "descripcion": "CABLE DE ANTENA SENNHEISER RG 58 10 M · BNC",
@@ -3684,7 +3684,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "GZL-RG-8X-5",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "RG 8X 5 m",
     "descripcion": "CABLE DE ANTENA SENNHEISER RG 8X 5 M · BNC",
@@ -3693,7 +3693,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "GZL-RG-8X-10",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "RG 8X 10 m",
     "descripcion": "CABLE DE ANTENA SENNHEISER RG 8X 10 M · BNC",
@@ -3702,7 +3702,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "GZL-RG-8X-20",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "RG 8X 20 m",
     "descripcion": "CABLE DE ANTENA SENNHEISER RG 8X 20 M · BNC",
@@ -3711,7 +3711,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "CL-2",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "CL 2",
     "descripcion": "CABLE SENNHEISER MINIJACK A XLR HEMBRA",
@@ -3719,7 +3719,7 @@ globalThis.SC_SISTEMAS = {
    },
    {
     "id": "CL-100",
-    "tipo": "cable",
+    "tipo": "accesorio",
     "marca": "SENNHEISER",
     "modelo": "CL 100",
     "descripcion": "CABLE SENNHEISER MINIJACK A XLR MACHO",
