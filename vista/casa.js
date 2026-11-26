@@ -1,6 +1,7 @@
 // SYSTEMS · la casa: la misma consola de SCREENS (cabecera, barra de módulos, petición escrita, CALCULAR, SIMPLE / PRO y pie)
 // para todos los módulos (ELECTRÓNICA, SEÑAL Y CONECTIVIDAD, AUDIO, VIDEOCONFERENCIA y los que vengan). Cada módulo da sus datos,
 // su esquema, su resultado y sus cifras; aquí se pintan siempre en los mismos sitios. Licencia GPL-3.0 · mediaservi.com
+import { normaliza } from './peticion.js';
 import { IDIOMAS, idioma, fijarIdioma, idiomaInicial } from '../textos.js';
 import { T, textos, esc, $, lee, guarda } from './util.js';
 import { IC, ic, icb } from './iconos.js';
@@ -14,7 +15,7 @@ import CAMARAS from './mod-camaras.js';
 import CONTROL from './mod-control.js';
 import { cargar, esInterno, urlInterno, salirInterno, marcas } from './listas.js';
 
-export const VERSION = 'v2.6';
+export const VERSION = 'v2.7';
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
 const MODS = [ELEC, DISP, SENAL, AUDIO, SONIDO, VIDEO, CAMARAS, CONTROL];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage · v2.0 · SONORIZACIÓN · v2.2 · CÁMARAS y CONTROL
 fijarIdioma(idiomaInicial());
@@ -227,7 +228,7 @@ function responde(v) { const m = M(), q = m.pregunta(ASIS.claves[ASIS.i], R); q.
 function cambiaModulo(id) { if (id === G.mod) return; G.mod = id; EDITA = true; const i = $('#pide'); if (i) { i.value = ''; G.texto = ''; } pinta(); if (G.vista === 'simple' && !lee('systems_asis_' + id)) asis(M().pasos(), true); }
 function calcular() {
   const i = $('#pide'), t = (i ? i.value : '').trim(); G.texto = t;
-  if (t) { const ok = M().pide(t); if (!ok) { const otro = MODS.find((m) => m !== M() && m.reconoce && m.reconoce(t)); if (otro) { G.mod = otro.id; otro.pide(t); } else tostada(T('No he entendido la petición: prueba con los botones o escríbela de otra forma.'), 5000); } }
+  if (t) { const n = normaliza(t), cual = (M().reconoce && M().reconoce(n)) ? null : [VIDEO, CAMARAS, CONTROL, DISP, SENAL, ELEC, SONIDO, AUDIO].find((m) => m !== M() && m.reconoce && m.reconoce(n)); if (cual) { G.mod = cual.id; cual.pide(n); } else if (!M().pide(n)) tostada(T('No he entendido la petición: prueba con los botones o escríbela de otra forma.'), 5000); }
   EDITA = false; pinta();
   const b = $('#calcular'); b.classList.remove('pulso'); void b.offsetWidth; b.classList.add('pulso');
 }

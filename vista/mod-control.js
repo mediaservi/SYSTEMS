@@ -148,7 +148,7 @@ export default {
   id: 'control', nom: 'Control', corto: 'CONTROL', ic: 'control', ejemplo: 'Escríbela: «4 salas con mando de pared blanco y Bluetooth»',
   info: 'Control de sala: pantalla táctil o mando de pared para el equipo de audio, con tomas Bluetooth, USB y XLR en la pared.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
-  reconoce: (t) => /control de sala|mando de pared|t[áa]ctil|xtouch|lucia|room control/i.test(t),
+  reconoce: (t) => /control de sala|mando de pared|comandament|t[áàa]ctil|xtouch|lucia|room control|wall panel/i.test(t),
   esquema: (r, o) => ({ tit: 'Esquema de control', ic: 'red', html: esquema(r, o) }),
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d),
   accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); }, reset: () => { S = Object.assign({}, DEF); },

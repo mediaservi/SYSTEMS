@@ -52,7 +52,12 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v2.6)
+## Cambios de la versión actual (v2.7)
+- Petición escrita como la de SCREENS: entiende números con letra («dos micros», «quatre», «twelve»), medidas en cm o mm, «10 metros de ancho por 16 de largo», «6 by 4 m» y «metros» en español, inglés y catalán.
+- Los textos del esquema de CONTROL (y de los calculadores de AUDIO) ya no salen en negro en el modo oscuro: toman el color del tema.
+- La petición va al apartado que la reconoce aunque estés en otro (videoconferencia, cámaras, control, displays, señal, electrónica, sonido y audio, por ese orden), y reconoce también las palabras en catalán e inglés.
+
+## Cambios de la v2.6
 - Ficha de producto como la de SCREENS: al tocar un equipo del resultado se abre su ficha (foto o dibujo, marca, modelo, datos técnicos según información de los fabricantes y enlace a la ficha del fabricante), en español, inglés y catalán.
 
 ## Cambios de la v2.5

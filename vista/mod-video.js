@@ -167,7 +167,7 @@ export default {
   id: 'video', nom: 'Videoconferencia', corto: 'VIDEOCONF.', ic: 'videoconf', ejemplo: 'Escríbela: «sala de 6 x 4 m para 10 personas»',
   info: 'Sala de reuniones: tamaño de pantalla, cámara o barra con su campo de visión y micrófonos por cobertura.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
-  reconoce: (t) => /videoconf|sala de reuni|teams|zoom|meeting room|personas/i.test(t),
+  reconoce: (t) => /videoconf|sala de reuni|sala de reunions|teams|zoom|meeting room|personas|persones|people/i.test(t),
   esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : VT === '3d' ? 'Simulación 3D' : 'Plano de la sala', ic: 'cubo', html: VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : esquema(r, o), extra: pestanas(['planta', 'lateral', '3d'], VT) }),
   escena3d,
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * (k === 'pers' || k === 'np' ? 1 : k === 'fila' ? 0.1 : 0.5)),

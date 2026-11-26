@@ -33,6 +33,7 @@
 svg .t { fill: var(--txt); font-family: Inter, system-ui, sans-serif; }
 svg .t-mono { font-family: 'Share Tech Mono', ui-monospace, monospace; fill: var(--txt); }
 svg .t-ten { fill: var(--tenue); }
+:where(svg text:not([fill]):not([class])) { fill: var(--txt); font-family: Inter, system-ui, sans-serif; }   /* v2.7 · textos del esquema sin color propio: el del tema (no negro en oscuro) */
 svg .t-mar { fill: var(--verde-txt); }
 .vis-txt { position: absolute; inset: 0; overflow: auto; padding: calc(var(--u) * 14); font-size: calc(var(--u) * 14.5); line-height: 1.45; }
 .vis-txt p { margin: 0 0 calc(var(--u) * 8); }

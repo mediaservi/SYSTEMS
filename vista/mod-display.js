@@ -187,7 +187,7 @@ export default {
   id: 'disp', nom: 'Displays y señalética', corto: 'DISPLAYS', ic: 'display', ejemplo: 'Escríbela: «4 pantallas de 55″ en vertical para escaparate»',
   info: 'Señalética y digital signage: el display que cumple con el sitio, el tamaño, las horas al día y el reproductor, de las marcas del catálogo.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
-  reconoce: (t) => /se[ñn]al[eé]tica|signage|cartel|escaparate|t[oó]tem|videowall|video wall/i.test(t),
+  reconoce: (t) => /se[ñn]al[eé]tica|senyal[eè]tica|signage|cartel|escaparate|aparador|shop window|t[oòó]tem|videowall|video wall/i.test(t),
   esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : VT === '3d' ? 'Simulación 3D' : 'Vista frontal', ic: 'display', html: esquema(r, o), extra: pestanas(['frontal', 'lateral', '3d'], VT) }),
   escena3d,
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d),

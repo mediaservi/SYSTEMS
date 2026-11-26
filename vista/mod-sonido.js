@@ -348,7 +348,7 @@ export default {
   id: 'sonido', nom: 'Sonorización', corto: 'SONIDO', ic: 'altavoz', ejemplo: 'Escríbela: «sala de 10 x 16 m con 2 micros y pantalla»',
   info: 'El sistema de sonido completo de una sala: altavoces, subgraves, retardos, electrónica, micrófonos y control.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
-  reconoce: (t) => /altavoc|sonoriz|megafon|hilo musical|evacuaci|speaker|sound system/i.test(t),
+  reconoce: (t) => /altavoc|altaveu|sonoriz|micros?\b|micr[óò]fon|microphone|sonorit|megafon|hilo musical|fil musical|evacuaci|speaker|sound system|loudspeaker/i.test(t),
   esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : VT === '3d' ? 'Simulación 3D' : 'Plano de la sala', ic: 'cubo', html: VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : esquema(r, o), extra: pestanas(['planta', 'lateral', '3d'], VT) }),
   escena3d,
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * (k === 'alto' ? 0.1 : ['zonas', 'mano', 'cuerpo', 'mesa'].includes(k) ? 1 : 0.5)),
