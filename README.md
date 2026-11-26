@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v2.0 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v2.1 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 
 ## Icono
@@ -50,7 +50,10 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v2.0)
+## Cambios de la versión actual (v2.1)
+- **SONORIZACIÓN con BRIAN:** los valores de partida del cálculo (cada cuántos metros va una fila de retardos y desde dónde, el margen de la línea de 100 V, el ángulo y la altura del oído de la malla de techo, la altura para colgar los altavoces, los umbrales de etapas, mezclador, RF, columnas de haz orientable, conferencias y sistemas grandes…) se leen en vivo del cerebro del panel AVHUB ADMIN (`?accion=brian&app=SYSTEMS`), con una copia guardada para funcionar sin conexión y los de fábrica si no hay ninguna. Los avisos dicen los valores que se están usando. Caché renovada (`systems-v20`).
+
+## Cambios de la v2.0
 - **Nuevo módulo SONORIZACIÓN** (botón SONIDO): resuelve la sala entera. Principales en pared (columnas junto a la pantalla, WMR o Compact M por alcance) o en techo (malla por altura y cobertura), retardos cada 4 m a partir de los 6 m con su tiempo en el plano, subgraves que combinan con cada caja, etapas KPS con cada altavoz en su canal (versión D con red Dante), DMA para hilo musical, AM o ZM 2000 para megafonía por zonas, cadena EN 54 para evacuación y columnas VSA de haz orientable en salas grandes y reverberantes. Micrófonos SENNHEISER según el uso (SpeechLine en reuniones y aulas; EW-D o EW-DX en eventos; flexo con su base), con cargadores y antenas cuando hacen falta.
 - **Avisos de diseño:** soportes de los Compact M 05 a 12, phantom de los micros de condensador con KPS (mezclador PR 4093), TILE-BRIDGE en falso techo modular, base de los flexos, nada de MR con micrófonos, cadena EN 54 completa, sala reverberante (tratamiento acústico antes que equipo), potencia de 100 V con un 20 % de margen y «valida el diseño».
 - **Listas de audio completas** según información de los fabricantes: RCF (175 referencias de instalación), SENNHEISER (119), NUREVA (20, con HDX como «consultar») y la marca nueva XILICA (16, cotización por proyecto). EZ ACOUSTICS y FOHHN, con lista propia, solo como consulta.

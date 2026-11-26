@@ -24,15 +24,28 @@ export function equipos(tipos, marca) {
   return out;
 }
 export const tieneMarca = (k) => !!marcas()[k];
+/* v2.1 · BRIAN: los parámetros del cálculo los decide el panel (?accion=brian&app=SYSTEMS); copia guardada para funcionar sin conexión */
+let BRIAN = null;
+try { const b = JSON.parse(localStorage.getItem('sc_brian1') || 'null'); if (b && b.params) BRIAN = b; } catch (e) {}
+export function P(clave, def) { const v = BRIAN && BRIAN.params ? BRIAN.params[clave] : undefined; const n = typeof v === 'number' ? v : parseFloat(String(v == null ? '' : v).replace(',', '.')); return isFinite(n) ? n : def; }
 /* se piden las del panel al arrancar; si llegan, se aplican al motor del LED y se repinta */
 export async function cargar(alLlegar) {
   const el = globalThis.SC_ELEC;
   if (PANEL && el && el.aplicaListas) el.aplicaListas(PANEL);
+  const brian = (async () => {
+    try {
+      const r = await fetch(ADMIN_URL + '?accion=brian&app=SYSTEMS', { cache: 'no-store' }); if (!r.ok) return;
+      const j = await r.json(); if (!j || !j.params) return;
+      BRIAN = j; try { localStorage.setItem('sc_brian1', JSON.stringify(j)); } catch (e) {}
+      if (alLlegar) alLlegar();
+    } catch (e) { /* sin conexión: los de la copia o los de fábrica */ }
+  })();
   try {
-    const r = await fetch(ADMIN_URL + '?accion=equipos', { cache: 'no-store' }); if (!r.ok) return;
-    const j = await r.json(); if (!j || !j.marcas) return;
+    const r = await fetch(ADMIN_URL + '?accion=equipos', { cache: 'no-store' }); if (!r.ok) return brian;
+    const j = await r.json(); if (!j || !j.marcas) return brian;
     PANEL = j; try { localStorage.setItem('sc_eq1', JSON.stringify(j)); } catch (e) {}
     if (el && el.aplicaListas) el.aplicaListas(j);
     if (alLlegar) alLlegar();
   } catch (e) { /* sin conexión: listas de fábrica o las últimas guardadas */ }
+  return brian;
 }
