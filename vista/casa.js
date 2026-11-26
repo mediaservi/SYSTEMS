@@ -14,7 +14,7 @@ import CAMARAS from './mod-camaras.js';
 import CONTROL from './mod-control.js';
 import { cargar, esInterno, urlInterno, salirInterno } from './listas.js';
 
-export const VERSION = 'v2.2';
+export const VERSION = 'v2.3';
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
 const MODS = [ELEC, DISP, SENAL, AUDIO, SONIDO, VIDEO, CAMARAS, CONTROL];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage · v2.0 · SONORIZACIÓN · v2.2 · CÁMARAS y CONTROL
 fijarIdioma(idiomaInicial());
@@ -118,7 +118,7 @@ function pinta() {
     c.innerHTML = `<section class="ss-blk ss-resumen" id="ss-resumen"><h2 class="ss-tit">${ic('lista')}<span class="ss-fit">${esc(T('Lo que pides'))}</span></h2>
         <div class="ss-filas">${filas.map((f) => `<button type="button" class="ss-fila" data-ss-q="${f[0]}" aria-label="${esc(T('Cambiar') + ': ' + T(f[2]))}">${ic(f[1])}<span class="ss-fk ss-fit">${esc(T(f[2]))}</span><b class="ss-fv ss-fit">${esc(f[3])}</b>${ic('lapiz', 'ss-lapiz')}</button>`).join('')}</div>
         <button type="button" class="ss-ancho" data-asis>${ic('varita')}<span class="ss-fit">${esc(T('Pregúntame otra vez'))}</span></button></section>
-      <section class="ss-blk ss-sim" id="ss-sim"><h2 class="ss-tit">${ic(esq.ic || 'sim')}<span class="ss-fit">${esc(T(esq.tit))}</span></h2><div class="ss-lienzo">${esq.html}</div></section>
+      <section class="ss-blk ss-sim" id="ss-sim"><h2 class="ss-tit">${ic(esq.ic || 'sim')}<span class="ss-fit">${esc(T(esq.tit))}</span>${esq.extra || ''}</h2><div class="ss-lienzo">${esq.html}</div></section>
       <section class="ss-blk ss-res" id="ss-res" aria-live="polite"><div class="ss-res-cab"><h2 class="ss-tit">${ic('res')}<span class="ss-fit">${esc(T('Resultado'))}</span></h2>
         <div class="ss-acc"><button type="button" class="ss-bt2" data-pdf>${ic('pdf')}<span class="ss-fit">PDF</span></button><button type="button" class="ss-bt2 ss-pro" data-ss-sw="pro">${ic('pro')}<span class="ss-fit">${esc(T('Ver en PRO'))}</span></button></div></div>
         <p class="ss-linea"><span class="ss-fit">${R.linea || ''}</span></p>

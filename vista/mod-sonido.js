@@ -4,7 +4,9 @@
 // Solo con equipos de las listas del panel. Orientativo: hay que validar el diseño. GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos, P } from './listas.js';
+import { COL, escala, cota, persona, suelo, techo, etiqueta, lienzo, pestanas, fmt } from './vt.js';
 textos({
+  'Vista lateral': ['Side view', 'Vista lateral'], 'La sala vista de lado': ['The room seen from the side', 'La sala vista de costat'], 'oído': ['ear', 'oïda'], 'ojos': ['eyes', 'ulls'],
   'Sonorización': ['Sound system', 'Sonorització'], 'SONIDO': ['SOUND', 'SO'],
   'El sistema de sonido completo de una sala: altavoces, subgraves, retardos, electrónica, micrófonos y control.': ['The complete sound system for a room: loudspeakers, subwoofers, delays, electronics, microphones and control.', 'El sistema de so complet d\'una sala: altaveus, subgreus, retards, electrònica, micròfons i control.'],
   'Escríbela: «sala de 10 x 16 m con 2 micros y pantalla»': ['Type it: “10 x 16 m room with 2 mics and a screen”', 'Escriu-la: «sala de 10 x 16 m amb 2 micros i pantalla»'],
@@ -212,6 +214,33 @@ function calcula() {
   guarda('systems_sonido', S); return r;
 }
 
+
+/* v2.3 · vista LATERAL como las de SCREENS: altura de los altavoces, el plano del oído, la cobertura hasta el público y los retardos con su tiempo */
+let VT = 'planta';
+function lateral(r, o = {}) {
+  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, F = S.fondo, H = S.alto, OIDO = P('sonido.oido', 1.2), HCOL = P('sonido.alturaColgante', 6);
+  const E = escala(VW, VH, { l: 62, r: 70, t: 70, b: 46 + 26 * r.delays.length }, -0.5, F + 0.3, 0, H + 0.3), { X, Y, k } = E;
+  let g = suelo(X, Y, -0.5, F + 0.3) + techo(X, Y, 0, F, H) + `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(0)}" y2="${Y(H)}" stroke="${COL.pared}" stroke-width="4"/><line x1="${X(F)}" y1="${Y(0)}" x2="${X(F)}" y2="${Y(H)}" stroke="${COL.linea}" stroke-width="2"/>`;
+  g += `<line x1="${X(0)}" y1="${Y(OIDO)}" x2="${X(F)}" y2="${Y(OIDO)}" stroke="${COL.lente}" stroke-opacity=".45" stroke-dasharray="3 6"/>` + etiqueta(X(0) + 10, Y(OIDO) + 22, T('oído') + ' ' + fmt(OIDO), 'start', 'vt-ver');
+  const caja = (x, y, c) => `<rect x="${X(x) - 9}" y="${Y(y) - 12}" width="18" height="24" rx="3" fill="${COL.equipo}" stroke="${c}" stroke-width="2"/>`;
+  const haz = (x, y, x1, x2, c) => `<path d="M${X(x)} ${Y(y)} L${X(x2)} ${Y(OIDO)} L${X(x1)} ${Y(OIDO)} Z" fill="${c}" fill-opacity=".14" stroke="${c}" stroke-opacity=".5"/>`;
+  const filas = r.delays.map((d) => d.y);
+  if (r.techo && r.techo.nx && S.montaje === 'techo') {
+    const h = Math.min(H, HCOL), ny = r.techo.ny, D = r.techo.D;
+    for (let j = 0; j < ny; j++) { const x = (j + .5) * F / ny; g += haz(x, h, Math.max(0, x - D / 2), Math.min(F, x + D / 2), COL.rangoB) + caja(x, h, COL.rangoB); }
+    g += cota(X(F) + 16, Y(0), X(F) + 16, Y(h), fmt(h), 1);
+  } else if (r.mains.length) {
+    const h = Math.max(2.2, Math.min(H - 0.3, Math.max(2.5, F / 6))), hasta = filas.length ? filas[0] : F;
+    g += haz(0.15, h, 1.5, Math.min(F, hasta + 1), COL.rangoB) + caja(0.15, h, COL.rangoB) + etiqueta(X(0.15) + 16, Y(h) - 14, r.mains[0].modelo, 'start', 'vt-azu');
+    g += cota(X(0) - 16, Y(0), X(0) - 16, Y(h), fmt(h));
+  }
+  r.delays.forEach((d, i) => { const h = Math.max(2.2, Math.min(H - 0.3, 3)), hasta = filas[i + 1] || F;
+    g += haz(d.y, h, d.y + 0.5, Math.min(F, hasta + 1), COL.retardo) + caja(d.y, h, COL.retardo) + etiqueta(X(d.y), Y(h) - 20, d.ms + ' ms', 'middle', 'vt-amb');
+    g += cota(X(0), Y(0) + 22 + i * 26, X(d.y), Y(0) + 22 + i * 26, fmt(d.y) + ' m', 1); });
+  for (let x = 2; x < F - 0.4; x += Math.max(2, F / 6)) g += persona(X, Y, x, k, 0.45);
+  g += cota(X(0), Y(H) - 46, X(F), Y(H) - 46, fmt(F) + ' m') + cota(X(F) + 44, Y(0), X(F) + 44, Y(H), fmt(H), 1);
+  return lienzo(VW, VH, g, 'La sala vista de lado');
+}
 /* plano de la sala: principales, retardos con su tiempo, subgraves y malla de techo */
 function esquema(r, o = {}) {
   const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, pad = 46;
@@ -298,8 +327,8 @@ export default {
   info: 'El sistema de sonido completo de una sala: altavoces, subgraves, retardos, electrónica, micrófonos y control.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
   reconoce: (t) => /altavoc|sonoriz|megafon|hilo musical|evacuaci|speaker|sound system/i.test(t),
-  esquema: (r, o) => ({ tit: 'Plano de la sala', ic: 'cubo', html: esquema(r, o) }),
+  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : 'Plano de la sala', ic: 'cubo', html: VT === 'lateral' ? lateral(r, o) : esquema(r, o), extra: pestanas(['planta', 'lateral'], VT) }),
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * (k === 'alto' ? 0.1 : ['zonas', 'mano', 'cuerpo', 'mesa'].includes(k) ? 1 : 0.5)),
-  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); }, reset: () => { S = Object.assign({}, DEF); },
+  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
   _S: () => S,
 };

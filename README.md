@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v2.2 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v2.3 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 
 ## Icono
@@ -52,7 +52,15 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v2.2)
+## Cambios de la versión actual (v2.3)
+- **Vistas técnicas como las de SCREENS** (`vista/vt.js`, las mismas piezas que `screens/vistas.js`): fondo oscuro, cotas con topes, escala en metros y la silueta oficial de 1,75 m. Botones de vista en la cabecera del dibujo, en SIMPLE y en PRO:
+  - DISPLAYS: FRONTAL (ancho, alto y altura del borde inferior) y LATERAL (distancia de quien mira, altura de los ojos y ángulos hacia arriba y hacia abajo).
+  - SONIDO: PLANTA y LATERAL (altura de los altavoces, plano del oído, cobertura hasta el público y retardos con su tiempo y distancia).
+  - VIDEOCONFERENCIA: PLANTA y LATERAL (pantalla a su altura, cámara encima, mesa y mirada del espectador más lejano).
+  - CÁMARAS: PLANTA y LATERAL (ponente, cámara a su altura y distancia, cono del encuadre, inclinación y público).
+- Caché renovada (`systems-v22`).
+
+## Cambios de la v2.2
 - **CÁMARAS y CONTROL**, dos módulos nuevos (ver Funciones). Los datos de las cámaras AVER CAM550 y CAM570 (ángulo, zoom óptico y total, lente IA, seguimiento por voz, PoE+) están en la lista de fábrica, según información de los fabricantes.
 - **Stock solo con la llave interna:** «En stock» y «Bajo pedido» ya no salen en público en DISPLAYS, ELECTRÓNICA ni VIDEOCONFERENCIA; con la llave del panel (candado del pie, como en SCREENS) sí, y nunca en el PDF ni en las cifras. El candado se pone verde con la llave activa y, al tocarlo, se cierra.
 - **Ocho módulos en la barra:** en móvil vertical, dos filas de cuatro; en ordenador y TV, la barra gana ancho a la petición escrita.

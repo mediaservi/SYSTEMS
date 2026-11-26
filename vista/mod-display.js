@@ -4,7 +4,7 @@
 // Solo con equipos de las listas del panel. GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos, esInterno } from './listas.js';
-import { figuraSVG } from './figura.js';
+import { COL, escala, cota, persona, suelo, etiqueta, lienzo, pestanas, fmt } from './vt.js';
 textos({
   'DISPLAYS': ['DISPLAYS', 'DISPLAYS'], 'Displays y señalética': ['Displays and signage', 'Displays i senyalització'],
   'Señalética y digital signage: el display que cumple con el sitio, el tamaño, las horas al día y el reproductor, de las marcas del catálogo.': ['Signage and digital signage: the display that meets the place, size, hours a day and player, from the catalogue brands.', 'Senyalització i digital signage: el display que compleix amb el lloc, la mida, les hores al dia i el reproductor, de les marques del catàleg.'],
@@ -38,7 +38,7 @@ textos({
   'En vertical: comprueba en la ficha que el modelo admite el montaje en vertical.': ['In portrait: check on the datasheet that the model allows portrait mounting.', 'En vertical: comprova a la fitxa que el model admet el muntatge en vertical.'],
   'Videowall de {c} × {f}: mide {a} × {h} m ({p}″ de diagonal); la señal se reparte con el procesador de videowall o con la entrada y salida en cadena de los displays.': ['{c} × {f} video wall: {a} × {h} m ({p}″ diagonal); the signal is split with a video wall processor or by daisy-chaining the displays.', 'Videowall de {c} × {f}: fa {a} × {h} m ({p}″ de diagonal); el senyal es reparteix amb el processador de videowall o amb l\'entrada i sortida en cadena dels displays.'],
   'Más grande de lo que llega un videowall razonable o un monitor: mejor una pantalla LED (calcúlala en SCREENS).': ['Larger than a reasonable video wall or monitor reaches: an LED screen is better (work it out in SCREENS).', 'Més gran del que arriba un videowall raonable o un monitor: millor una pantalla LED (calcula-la a SCREENS).'],
-  'Pulgadas pedidas': ['Inches asked for', 'Polzades demanades'], 'Recomendado': ['Recommended', 'Recomanat'], 'Alternativas': ['Alternatives', 'Alternatives'], 'personas': ['people', 'persones'],
+  'Pulgadas pedidas': ['Inches asked for', 'Polzades demanades'], 'Recomendado': ['Recommended', 'Recomanat'], 'Alternativas': ['Alternatives', 'Alternatives'], 'personas': ['people', 'persones'], 'Vista lateral': ['Side view', 'Vista lateral'], 'La instalación vista de lado': ['The installation seen from the side', 'La instal·lació vista de costat'],
 });
 const SITIOS = [['interior', 'Interior', 'En una pared o un mostrador', 'pared'], ['escaparate', 'Escaparate', 'Detrás del cristal, mirando a la calle', 'escaparate'], ['exterior', 'Exterior', 'A la intemperie', 'calle'],
   ['totem', 'Tótem', 'De pie, en el suelo', 'persona'], ['videowall', 'Videowall', 'Varias pantallas sin marco que forman una', 'led'], ['tactil', 'Táctil', 'Quiosco o punto de información', 'mano'],
@@ -85,29 +85,45 @@ function calcula() {
   r.linea = r.disp ? `<b>${esc(r.n + ' × ' + r.disp.modelo)}</b> · ${esc(r.disp.pulgadas + '″ · ' + r.disp.horas + (r.disp.nits ? ' · ' + r.disp.nits + ' nits' : ''))}` : esc(r.error || '—');
   guarda('systems_display', S); return r;
 }
-/* vista frontal a escala, con una persona de 1,75 m al lado */
-function esquema(r, o = {}) {
-  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, pad = 40;
-  const p = r.disp ? r.disp.pulgadas : S.pulg, vert = S.orient === 'v', w1 = vert ? alto16(p) : ancho16(p), h1 = vert ? ancho16(p) : alto16(p);
-  const vw = S.sitio === 'videowall', cols = vw ? S.cols : Math.min(r.n, mov ? 3 : 6), fil = vw ? S.filas : Math.ceil(Math.min(r.n, 12) / cols), gap = vw ? 0.006 : 0.25;
-  const totW = cols * w1 + (cols - 1) * gap + 1.2, base = S.sitio === 'totem' ? 0.3 : vw ? 0.8 : 1.2, totH = Math.max(2, base + fil * h1 + (fil - 1) * gap + 0.3);
-  const k = Math.min((VW - 2 * pad) / totW, (VH - 2 * pad - 30) / totH), suelo = VH - pad - 20, x0 = pad + 1.0 * k;
-  let s = `<line x1="0" y1="${suelo}" x2="${VW}" y2="${suelo}" stroke="var(--linea)" stroke-width="3"/>`;
-  /* persona */
-  const ph = 1.75 * k, px = pad + 0.35 * k;
-  s += figuraSVG(px, suelo, k, 'fill="#8d8d96" fill-opacity=".8" stroke="none"');   /* v2.2 · la silueta oficial de SCREENS, a escala */
-  let n = 0;
-  for (let f = 0; f < fil; f++) for (let c = 0; c < cols; c++) { if (!vw && n >= Math.min(r.n, 12)) break; n++;
-    const x = x0 + c * (w1 + gap) * k, y = suelo - (base + (fil - f) * h1 + (fil - 1 - f) * gap) * k;
-    if (S.sitio === 'totem') s += `<rect x="${x + w1 * k * .35}" y="${y + h1 * k}" width="${w1 * k * .3}" height="${suelo - y - h1 * k}" fill="var(--linea)"/>`;
-    s += `<rect x="${x}" y="${y}" width="${w1 * k}" height="${h1 * k}" rx="${vw ? 1 : 4}" fill="var(--blk2)" stroke="var(--verde-txt)" stroke-width="${vw ? 1.5 : 3}"/>`;
-    if (S.sitio === 'transparente') s += `<rect x="${x + 4}" y="${y + 4}" width="${w1 * k - 8}" height="${h1 * k - 8}" fill="var(--azul)" fill-opacity=".12"/>`; }
-  const tw = vw ? cols * w1 : w1, cx = x0 + (vw ? tw * k / 2 : w1 * k / 2), ty = suelo - (base + fil * h1 + (fil - 1) * gap) * k - 10;
-  s += `<text x="${cx}" y="${Math.max(18, ty)}" text-anchor="middle" font-size="14" class="t-mono">${esc((r.disp ? r.disp.modelo + ' · ' : '') + p + '″' + (vw ? ' · ' + S.cols + ' × ' + S.filas : r.n > 1 ? ' · ' + r.n + ' ×' : ''))}</text>`;
-  if (!vw && r.n > 12) s += `<text x="${VW - pad}" y="${suelo - 8}" text-anchor="end" font-size="13" class="t-mono t-ten">+${r.n - 12}</text>`;
-  s += `<text x="${px}" y="${suelo + 18}" text-anchor="middle" font-size="12" class="t-mono t-ten">1,75 m</text>`;
-  return `<svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="${esc(T('La instalación vista de frente'))}" preserveAspectRatio="xMidYMid meet">${s}</svg>`;
+/* v2.3 · vistas técnicas como en SCREENS: FRONTAL (a escala, con la silueta de 1,75 m y cotas) y LATERAL (altura de montaje,
+   distancia de quien mira y ángulo vertical). Mismas piezas que screens/vistas.js (vista/vt.js). */
+let VT = 'frontal';
+const geo = (r) => { const p = r.disp ? r.disp.pulgadas : S.pulg, vert = S.orient === 'v', w1 = vert ? alto16(p) : ancho16(p), h1 = vert ? ancho16(p) : alto16(p);
+  const vw = S.sitio === 'videowall', cols = vw ? S.cols : Math.min(nPant(), 6), fil = vw ? S.filas : 1, gap = vw ? 0.006 : 0.25;
+  const base = S.sitio === 'totem' ? 0.3 : S.sitio === 'tactil' ? 0.9 : vw ? 0.8 : S.sitio === 'escaparate' ? 0.9 : 1.2;
+  return { p, w1, h1, vw, cols, fil, gap, base, W: cols * w1 + (cols - 1) * gap, H: fil * h1 + (fil - 1) * gap }; };
+function frontal(r, o) {
+  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, G = geo(r), top = G.base + G.H;
+  const xMin = -1.0, xMax = G.W + 0.4, E = escala(VW, VH, { l: 56, r: 56, t: 44, b: 40 }, xMin, xMax, 0, Math.max(2.0, top + 0.35)), { X, Y, k } = E;
+  let g = suelo(X, Y, xMin, xMax) + persona(X, Y, -0.55, k);
+  for (let f = 0; f < G.fil; f++) for (let c = 0; c < G.cols; c++) { const x = c * (G.w1 + G.gap), y = G.base + f * (G.h1 + G.gap);
+    if (S.sitio === 'totem') g += `<rect x="${X(x + G.w1 * .35)}" y="${Y(G.base)}" width="${G.w1 * .3 * k}" height="${G.base * k}" fill="${COL.equipo}" stroke="${COL.linea}"/>`;
+    g += `<rect x="${X(x)}" y="${Y(y + G.h1)}" width="${G.w1 * k}" height="${G.h1 * k}" rx="${G.vw ? 1 : 3}" fill="${COL.imagen}" stroke="${COL.imagenB}" stroke-width="${G.vw ? 1.2 : 2}"/>`; }
+  if (!G.vw && nPant() > 6) g += etiqueta(X(G.W) + 8, Y(G.base + G.h1 / 2), '+' + (nPant() - 6), 'start', 'vt-ten');
+  g += etiqueta(X(G.W / 2), Y(top) - 38, (r.disp ? r.disp.modelo + ' · ' : '') + G.p + '″' + (G.vw ? ' · ' + S.cols + ' × ' + S.filas : nPant() > 1 ? ' · ' + nPant() + ' ×' : ''));
+  g += cota(X(0), Y(G.base) + 16, X(G.vw ? G.W : G.w1), Y(G.base) + 16, fmt(G.vw ? G.W : G.w1) + ' m', 1);
+  g += cota(X(xMax) - 8, Y(G.base), X(xMax) - 8, Y(top), fmt(G.H), 1);
+  g += cota(X(G.vw ? G.W : G.w1) + 14, Y(0), X(G.vw ? G.W : G.w1) + 14, Y(G.base), fmt(G.base), 1);
+  g += etiqueta(X(-0.55), Y(0) + 22, '1,75 m', 'middle', 'vt-ten');
+  return lienzo(VW, VH, g, 'La instalación vista de frente');
 }
+function lateral(r, o) {
+  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, G = geo(r), top = G.base + G.H, ojo = 1.6;
+  const d = Math.max(1.2, Math.min(12, (S.sitio === 'tactil' ? 0.6 : S.sitio === 'escaparate' || S.sitio === 'exterior' ? 4 * G.h1 : 3 * G.h1)));
+  const xMax = d + 1.0, E = escala(VW, VH, { l: 60, r: 40, t: 44, b: 40 }, -0.4, xMax, 0, Math.max(2.2, top + 0.4)), { X, Y, k } = E;
+  let g = suelo(X, Y, -0.4, xMax) + `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(0)}" y2="${Y(Math.max(2.2, top + 0.3))}" stroke="${COL.pared}" stroke-width="4"/>`;
+  if (S.sitio === 'totem') g += `<rect x="${X(0.02)}" y="${Y(G.base)}" width="${0.35 * k}" height="${G.base * k}" fill="${COL.equipo}" stroke="${COL.linea}"/>`;
+  g += `<rect x="${X(0.02)}" y="${Y(top)}" width="${Math.max(4, 0.07 * k)}" height="${G.H * k}" fill="${COL.imagenB}"/>`;
+  g += `<path d="M${X(d)} ${Y(ojo)} L${X(0.09)} ${Y(top)} L${X(0.09)} ${Y(G.base)} Z" fill="${COL.haz}" stroke="rgba(255,214,0,.5)" stroke-width="1"/>`;
+  g += persona(X, Y, d, k) + `<circle cx="${X(d)}" cy="${Y(ojo)}" r="4" fill="${COL.lente}"/>`;
+  const aSup = Math.atan2(top - ojo, d) * 180 / Math.PI, aInf = Math.atan2(ojo - G.base, d) * 180 / Math.PI;
+  g += etiqueta(X(d), Y(1.75) - 14, '↑ ' + fmt(aSup, 0) + '° · ↓ ' + fmt(aInf, 0) + '°', 'middle', 'vt-ama');
+  g += cota(X(0), Y(0) + 24, X(d), Y(0) + 24, fmt(d) + ' m', 1);
+  g += cota(X(0) - 14, Y(0), X(0) - 14, Y(G.base), fmt(G.base)) + cota(X(0) - 14, Y(G.base), X(0) - 14, Y(top), fmt(G.H));
+  g += cota(X(xMax) - 10, Y(0), X(xMax) - 10, Y(ojo), fmt(ojo), 1);
+  return lienzo(VW, VH, g, 'La instalación vista de lado');
+}
+const esquema = (r, o = {}) => (VT === 'lateral' ? lateral(r, o) : frontal(r, o));
 const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${x.prioritario ? '⭐ ' : ''}${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}</td></tr></table></div>` : '';
 function resultado(r) {
   let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : r.sem === 'R' ? 'mal' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
@@ -161,7 +177,7 @@ export default {
   info: 'Señalética y digital signage: el display que cumple con el sitio, el tamaño, las horas al día y el reproductor, de las marcas del catálogo.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
   reconoce: (t) => /se[ñn]al[eé]tica|signage|cartel|escaparate|t[oó]tem|videowall|video wall/i.test(t),
-  esquema: (r, o) => ({ tit: 'Vista frontal', ic: 'display', html: esquema(r, o) }),
+  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : 'Vista frontal', ic: 'display', html: esquema(r, o), extra: pestanas(['frontal', 'lateral'], VT) }),
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d),
-  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); }, reset: () => { S = Object.assign({}, DEF); },
+  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
 };

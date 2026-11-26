@@ -4,7 +4,9 @@
 // Solo con cámaras de las listas del panel. Según información de los fabricantes. GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos, esInterno, P } from './listas.js';
+import { COL as VC, escala, cota, persona, suelo, etiqueta, lienzo, pestanas, fmt } from './vt.js';
 textos({
+  'Vista lateral': ['Side view', 'Vista lateral'], 'La sala vista de lado': ['The room seen from the side', 'La sala vista de costat'], 'oído': ['ear', 'oïda'], 'ojos': ['eyes', 'ulls'],
   'CÁMARAS': ['CAMERAS', 'CÀMERES'], 'Cámaras': ['Cameras', 'Càmeres'],
   'Cámaras PTZ: el zoom que pide la distancia al ponente, cuántas hacen falta por planos, seguimiento, salida y alimentación.': ['PTZ cameras: the zoom the distance to the speaker needs, how many for the shots, tracking, output and power.', 'Càmeres PTZ: el zoom que demana la distància al ponent, quantes en calen pels plans, seguiment, sortida i alimentació.'],
   'Escríbela: «auditorio, cámara a 12 m del escenario de 8 m»': ['Type it: “auditorium, camera 12 m from an 8 m stage”', 'Escriu-la: «auditori, càmera a 12 m de l\'escenari de 8 m»'],
@@ -94,6 +96,23 @@ function calcula() {
   r.linea = cam ? `<b>${r.n} × ${esc(cam.modelo)}</b> · ${esc(T('Zoom necesario'))} ${esc(r.zTxt)}×` : `<b>—</b> · ${esc(T('Zoom necesario'))} ${esc(r.zTxt)}×`;
   guarda('systems_camaras', S); return r;
 }
+
+/* v2.3 · vista LATERAL como las de SCREENS: el ponente, la cámara a su altura y distancia, el cono del encuadre y el público */
+let VT = 'planta';
+function lateral(r, o = {}) {
+  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, D = S.dist, hc = /auditorio|directo/.test(S.uso) ? 2.0 : 1.5;
+  const cen = { primer: 1.55, medio: 1.35, americano: 1.1 }[S.encuadre] || 1.35, vh = r.wEnc * 9 / 16, y1 = cen - vh / 2, y2 = cen + vh / 2;
+  const E = escala(VW, VH, { l: 60, r: 60, t: 56, b: 66 }, -0.6, D + 1.0, 0, Math.max(2.6, hc + 0.6)), { X, Y, k } = E;
+  let g = suelo(X, Y, -0.6, D + 1.0) + persona(X, Y, 0, k);
+  for (let x = Math.max(1, S.cerca); x < D - 0.6; x += Math.max(1.2, (D - S.cerca) / 6)) g += persona(X, Y, x, k, 0.35);
+  g += `<path d="M${X(D)} ${Y(hc)} L${X(0.15)} ${Y(y2)} L${X(0.15)} ${Y(y1)} Z" fill="${VC.rango}" stroke="${VC.rangoB}" stroke-dasharray="5 4"/>`;
+  g += `<rect x="${X(0.15) - 3}" y="${Y(y2)}" width="6" height="${vh * k}" fill="${VC.imagenB}"/>`;
+  g += `<rect x="${X(D) - 12}" y="${Y(hc) - 9}" width="24" height="18" rx="4" fill="${VC.equipo}" stroke="${VC.rangoB}" stroke-width="2"/><line x1="${X(D)}" y1="${Y(hc) + 9}" x2="${X(D)}" y2="${Y(0)}" stroke="${VC.linea}" stroke-width="2"/>`;
+  const tilt = Math.atan2(hc - cen, D) * 180 / Math.PI;
+  g += etiqueta(X(D), Y(hc) - 18, (r.cam ? r.cam.modelo + ' · ' : '') + (tilt >= 0 ? '↓ ' : '↑ ') + fmt(Math.abs(tilt), 0) + '°', 'middle', 'vt-azu');
+  g += cota(X(0), Y(0) + 26, X(D), Y(0) + 26, fmt(D) + ' m', 1) + cota(X(D) + 22, Y(0), X(D) + 22, Y(hc), fmt(hc), 1) + cota(X(0) - 22, Y(y1), X(0) - 22, Y(y2), fmt(vh));
+  return lienzo(VW, VH, g, 'La sala vista de lado');
+}
 function esquema(r, o = {}) {
   const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, pad = 44;
   const L = Math.max(S.dist, S.cerca) + 1, Wm = Math.max(S.ancho, 2);
@@ -163,7 +182,7 @@ export default {
   info: 'Cámaras PTZ: el zoom que pide la distancia al ponente, cuántas hacen falta por planos, seguimiento, salida y alimentación.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
   reconoce: (t) => /c[áa]mara|camera|càmera|ptz|streaming|retransm/i.test(t),
-  esquema: (r, o) => ({ tit: 'Plano de cámaras', ic: 'camara', html: esquema(r, o) }),
+  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : 'Plano de cámaras', ic: 'camara', html: VT === 'lateral' ? lateral(r, o) : esquema(r, o), extra: pestanas(['planta', 'lateral'], VT) }),
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * 0.5),
-  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); }, reset: () => { S = Object.assign({}, DEF); },
+  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
 };
