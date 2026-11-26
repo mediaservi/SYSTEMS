@@ -2,6 +2,18 @@
 // (comun/equipos.js para el LED y comun/sistemas.js para el resto). NORMA: solo se calcula y se propone con las marcas de estas listas.
 // GPL-3.0 · mediaservi.com
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
+/* v2.2 · STOCK INTERNO (regla 10): «En stock» solo lo ve Josep con la llave que da el panel (candado del pie, ?accion=llave),
+   igual que en SCREENS. La llave vuelve en #llave=… y se guarda aquí; caducada (st.<caducidad>.<firma>), se borra sola. */
+const LLAVE_K = 'sc_llave_stock';
+try {
+  const m = /[#&]llave=([\w.-]+)/.exec(location.hash);
+  if (m) { localStorage.setItem(LLAVE_K, m[1]); history.replaceState(null, '', location.href.split('#')[0]); }
+  const k = localStorage.getItem(LLAVE_K) || '', c = /^st\.(\d+)\./.exec(k);
+  if (c && +c[1] < Date.now() / (c[1].length > 11 ? 1 : 1000)) localStorage.removeItem(LLAVE_K);
+} catch (e) {}
+export const esInterno = () => { try { return !!localStorage.getItem(LLAVE_K); } catch (e) { return false; } };
+export const urlInterno = () => ADMIN_URL + '?accion=llave&vuelta=' + encodeURIComponent(location.href.split('#')[0]);
+export const salirInterno = () => { try { localStorage.removeItem(LLAVE_K); } catch (e) {} location.reload(); };
 let PANEL = null;
 try { const c = JSON.parse(localStorage.getItem('sc_eq1') || 'null'); if (c && c.marcas) PANEL = c; } catch (e) {}
 const FAB = () => Object.assign({}, (globalThis.SC_EQUIPOS || {}).marcas || {}, (globalThis.SC_SISTEMAS || {}).marcas || {});

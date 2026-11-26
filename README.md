@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v2.1 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v2.3 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
 
 
 ## Icono
@@ -26,6 +26,8 @@ Reúne en una sola consola los cálculos que se hacen al diseñar y montar un si
 - **SEÑAL Y CONECTIVIDAD:** fuentes → selector, distribuidor o matriz (PURELINK) → destinos, con el cable o extensor de cada tramo según la distancia y la resolución (1080p, 4K60 a 18 Gbps u 8K a 48 Gbps), USB/KVM y AV sobre IP a partir de 8 fuentes o destinos.
 - **AUDIO:** los 26 calculadores de audio y escenario (acústica, arrays, electrónica de audio, cableado, iluminación y vídeo, electricidad, música y grabación, medidas y referencia), con sus gráficas, tablas, resumen y notas.
 - **SONORIZACIÓN** (nuevo en la v2.0): el sistema de sonido completo de una sala, no un altavoz suelto. Con las medidas, el uso (música de fondo, megafonía, sala con micros o eventos), pared o techo y los micrófonos propone altavoces, subgraves, retardos con su tiempo, etapas, micrófonos, control y accesorios, con avisos de diseño. RCF, SENNHEISER y XILICA; EZ ACOUSTICS (tratamiento acústico) y FOHHN (altavoces a medida, PoE y Dante) solo como consulta.
+- **CÁMARAS** (nuevo en la v2.2): cámaras PTZ para reuniones, aulas, auditorios y retransmisiones. Con la distancia al ponente, el encuadre (primer plano, medio o americano) y el ancho a cubrir calcula el ángulo y el zoom que hacen falta, elige la cámara AVER que llega con zoom óptico, cuántas por planos (ponente, público y general con la segunda lente), el seguimiento (por voz, por IA o posiciones fijas), la salida (USB, HDMI o IP) y los puertos PoE+.
+- **CONTROL** (nuevo en la v2.2): el control de la sala para el usuario. Según el equipo (etapas RCF KPS o DMA, megafonía RCF ZM o procesador XILICA), los puntos de control y la interfaz (pantalla táctil o mando de pared) propone los mandos, los teclados de zonas, las tomas de pared Bluetooth, USB y XLR y los puertos PoE, y avisa de lo que va por proyecto.
 - **VIDEOCONFERENCIA:** con las medidas de la sala y la gente, el tamaño de pantalla (espectador más lejano a 6 veces la altura de imagen, o 4 para documentos), la barra o cámara AVER por fondo de sala y campo de visión, y los micrófonos de techo SENNHEISER por cobertura, con el kit completo con XILICA cuando la sala lo pide.
 
 En SIMPLE, un asistente pregunta lo justo la primera vez y cada línea de «Lo que pides» se cambia tocándola. En PRO se ven y cambian todos los datos, el esquema y el despiece. También se puede escribir la petición («pantalla LED de 8960 x 1536 con 3 salidas DP por fibra», «4 portátiles a 2 pantallas, distintas, 4K, a 30 m», «sala de 6 x 4 m para 10 personas») y pulsar CALCULAR.
@@ -50,7 +52,23 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v2.1)
+## Cambios de la versión actual (v2.3)
+- **Vistas técnicas como las de SCREENS** (`vista/vt.js`, las mismas piezas que `screens/vistas.js`): fondo oscuro, cotas con topes, escala en metros y la silueta oficial de 1,75 m. Botones de vista en la cabecera del dibujo, en SIMPLE y en PRO:
+  - DISPLAYS: FRONTAL (ancho, alto y altura del borde inferior) y LATERAL (distancia de quien mira, altura de los ojos y ángulos hacia arriba y hacia abajo).
+  - SONIDO: PLANTA y LATERAL (altura de los altavoces, plano del oído, cobertura hasta el público y retardos con su tiempo y distancia).
+  - VIDEOCONFERENCIA: PLANTA y LATERAL (pantalla a su altura, cámara encima, mesa y mirada del espectador más lejano).
+  - CÁMARAS: PLANTA y LATERAL (ponente, cámara a su altura y distancia, cono del encuadre, inclinación y público).
+- Caché renovada (`systems-v22`).
+
+## Cambios de la v2.2
+- **CÁMARAS y CONTROL**, dos módulos nuevos (ver Funciones). Los datos de las cámaras AVER CAM550 y CAM570 (ángulo, zoom óptico y total, lente IA, seguimiento por voz, PoE+) están en la lista de fábrica, según información de los fabricantes.
+- **Stock solo con la llave interna:** «En stock» y «Bajo pedido» ya no salen en público en DISPLAYS, ELECTRÓNICA ni VIDEOCONFERENCIA; con la llave del panel (candado del pie, como en SCREENS) sí, y nunca en el PDF ni en las cifras. El candado se pone verde con la llave activa y, al tocarlo, se cierra.
+- **Ocho módulos en la barra:** en móvil vertical, dos filas de cuatro; en ordenador y TV, la barra gana ancho a la petición escrita.
+- **BRIAN también en VIDEOCONFERENCIA y CÁMARAS:** el margen de la pantalla, los factores de distancia (vídeo y documentos) y el ancho de cada encuadre se leen en vivo del panel, con los de fábrica como respaldo.
+- **Figura humana oficial de SCREENS** (silueta de 1,75 m a escala) en la vista frontal de DISPLAYS, en lugar del monigote.
+- Caché renovada (`systems-v21`).
+
+## Cambios de la v2.1
 - **SONORIZACIÓN con BRIAN:** los valores de partida del cálculo (cada cuántos metros va una fila de retardos y desde dónde, el margen de la línea de 100 V, el ángulo y la altura del oído de la malla de techo, la altura para colgar los altavoces, los umbrales de etapas, mezclador, RF, columnas de haz orientable, conferencias y sistemas grandes…) se leen en vivo del cerebro del panel AVHUB ADMIN (`?accion=brian&app=SYSTEMS`), con una copia guardada para funcionar sin conexión y los de fábrica si no hay ninguna. Los avisos dicen los valores que se están usando. Caché renovada (`systems-v20`).
 
 ## Cambios de la v2.0

@@ -2,8 +2,10 @@
 // la cámara o barra (campo de visión y fondo de sala del fabricante) y la microfonía (cobertura del fabricante).
 // Solo con equipos de las listas del panel (AVER, SENNHEISER, XILICA, NUREVA, displays SAMSUNG, LG y CLEVER). GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
-import { equipos } from './listas.js';
+import { equipos, esInterno, P } from './listas.js';
+import { COL, escala, cota, persona, suelo, etiqueta, lienzo, pestanas, fmt } from './vt.js';
 textos({
+  'Vista lateral': ['Side view', 'Vista lateral'], 'La sala vista de lado': ['The room seen from the side', 'La sala vista de costat'], 'oído': ['ear', 'oïda'], 'ojos': ['eyes', 'ulls'],
   'VIDEOCONF.': ['VIDEO CONF.', 'VIDEOCONF.'], 'Videoconferencia': ['Video conferencing', 'Videoconferència'],
   'Sala de reuniones: tamaño de pantalla, cámara o barra con su campo de visión y micrófonos por cobertura.': ['Meeting room: screen size, camera or video bar with its field of view, and microphones by coverage.', 'Sala de reunions: mida de pantalla, càmera o barra amb el seu camp de visió i micròfons per cobertura.'],
   'Escríbela: «sala de 6 x 4 m para 10 personas»': ['Type it: “6 x 4 m room for 10 people”', 'Escriu-la: «sala de 6 x 4 m per a 10 persones»'],
@@ -33,7 +35,7 @@ const MED = [32, 43, 50, 55, 65, 75, 86, 98, 105, 110, 115];
 
 function calcula() {
   const av = [], r = { av };
-  const dLej = Math.max(1, S.fondo - 0.3), k = S.cont === 'detalle' ? 4 : 6, h = dLej / k, diag = h / 0.4903 / 0.0254;
+  const dLej = Math.max(1, S.fondo - P('video.margenPantalla', 0.3)), k = S.cont === 'detalle' ? P('video.factorDocumentos', 4) : P('video.factorVideo', 6),   /* v2.2 · BRIAN */ h = dLej / k, diag = h / 0.4903 / 0.0254;
   r.dLej = dLej; r.h = h; r.diag = diag;
   let D = equipos('display').filter((x) => (S.tipo === 'interactivo' ? x.uso === 'interactivo' : x.uso === 'pared') && x.pulgadas);
   const ok = D.filter((x) => x.pulgadas >= diag - 1).sort((a, b) => a.pulgadas - b.pulgadas || (b.stock ? 1 : 0) - (a.stock ? 1 : 0) || (b.horas === '16/7' ? 0 : 1) - (a.horas === '16/7' ? 0 : 1));
@@ -69,6 +71,28 @@ function calcula() {
   r.linea = `<b>${esc(r.disp ? r.disp.modelo + ' ' + r.disp.pulgadas + '″' : r.pulg + '″')}</b> · ${esc(r.cam ? r.cam.modelo : '—')} · ${esc(r.mic ? r.nmic + ' × ' + r.mic.modelo : T('Los de la barra'))}`;
   guarda('systems_video', S); return r;
 }
+
+/* v2.3 · vista LATERAL como las de SCREENS: la pantalla a su altura, la cámara encima, la mesa y la mirada del espectador más lejano */
+let VT = 'planta';
+function lateral(r, o = {}) {
+  const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, F = S.fondo, AL = 2.8, OJO = 1.2;
+  const p = r.disp ? r.disp.pulgadas : r.pulg, h = p * 0.0254 * 0.4903, bajo = Math.max(0.75, 1.3 - h / 2), arriba = bajo + h;
+  const E = escala(VW, VH, { l: 64, r: 64, t: 56, b: 70 }, -0.4, F + 0.3, 0, Math.max(AL, arriba + 0.5)), { X, Y, k } = E;
+  let g = suelo(X, Y, -0.4, F + 0.3) + `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(0)}" y2="${Y(Math.max(AL, arriba + 0.4))}" stroke="${COL.pared}" stroke-width="4"/><line x1="${X(F)}" y1="${Y(0)}" x2="${X(F)}" y2="${Y(AL)}" stroke="${COL.linea}" stroke-width="2"/>`;
+  g += `<rect x="${X(0.02)}" y="${Y(arriba)}" width="${Math.max(4, 0.07 * k)}" height="${h * k}" fill="${COL.imagenB}"/>`;
+  const hc = arriba + 0.1; g += `<rect x="${X(0.02)}" y="${Y(hc) - 7}" width="${Math.max(10, 0.12 * k)}" height="14" rx="3" fill="${COL.equipo}" stroke="${COL.rangoB}" stroke-width="2"/>`;
+  const x1 = Math.min(S.fila, F - 0.6), x2 = Math.max(x1 + 0.6, F - 0.6);
+  g += `<rect x="${X(x1)}" y="${Y(0.75)}" width="${(x2 - x1) * k}" height="${Math.max(4, 0.05 * k)}" fill="${COL.linea}"/><line x1="${X((x1 + x2) / 2)}" y1="${Y(0.72)}" x2="${X((x1 + x2) / 2)}" y2="${Y(0)}" stroke="${COL.linea}" stroke-width="3"/>`;
+  const dL = r.dLej; g += `<path d="M${X(dL)} ${Y(OJO)} L${X(0.09)} ${Y(arriba)} L${X(0.09)} ${Y(bajo)} Z" fill="${COL.haz}" stroke="rgba(255,214,0,.5)"/>`;
+  [x1, dL].forEach((x) => { g += `<circle cx="${X(x)}" cy="${Y(OJO)}" r="5" fill="${COL.lente}"/>`; });
+  g += `<line x1="${X(0.1)}" y1="${Y(hc)}" x2="${X(dL)}" y2="${Y(OJO)}" stroke="${COL.rangoB}" stroke-dasharray="5 5"/>`;
+  g += persona(X, Y, F - 0.35, k, 0.45) + etiqueta(X(dL) - 10, Y(OJO) + 26, T('ojos') + ' ' + fmt(OJO), 'end', 'vt-ver');
+  g += cota(X(0), Y(0) + 24, X(dL), Y(0) + 24, fmt(dL) + ' m', 1) + cota(X(0), Y(0) + 50, X(F), Y(0) + 50, fmt(F) + ' m', 1);
+  g += cota(X(0) - 16, Y(0), X(0) - 16, Y(bajo), fmt(bajo)) + cota(X(0) - 16, Y(bajo), X(0) - 16, Y(arriba), fmt(h));
+  if (r.cam) g += etiqueta(X(0.02) + 20, Y(hc) - 12, r.cam.modelo, 'start', 'vt-azu');
+  if (r.disp || r.pulg) g += etiqueta(X(0.02) + 20, Y((bajo + arriba) / 2) + 6, (r.disp ? r.disp.modelo + ' · ' : '') + p + '″', 'start', 'vt-ama');
+  return lienzo(VW, VH, g, 'La sala vista de lado');
+}
 function esquema(r, o = {}) {
   const mov = !!o.vertical, VW = mov ? 480 : 960, VH = mov ? 520 : 520, pad = 40;
   const k = Math.min((VW - 2 * pad) / S.ancho, (VH - 2 * pad - 20) / S.fondo), w = S.ancho * k, h = S.fondo * k, x0 = (VW - w) / 2, y0 = pad;
@@ -88,7 +112,7 @@ function esquema(r, o = {}) {
   s += `<text x="${x0 + w / 2}" y="${y0 + h + 22}" text-anchor="middle" font-size="14" class="t-mono t-ten">${esc(N(S.ancho, 1) + ' × ' + N(S.fondo, 1) + ' m · ' + S.pers + ' ' + T('personas'))}</text>`;
   return `<svg viewBox="0 0 ${VW} ${VH}" role="img" aria-label="${esc(T('Plano de la sala'))}" preserveAspectRatio="xMidYMid meet">${s}</svg>`;
 }
-const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}${x.stock ? ' · ' + esc(T('En stock')) : ''}</td></tr></table></div>` : '';
+const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}${x.stock && esInterno() ? '<span class="st-int"> · ' + esc(T('En stock')) + '</span>' : ''}</td></tr></table></div>` : '';
 function resultado(r) {
   let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
   h += eq(r.disp, S.np, 'Pantalla', true) + eq(r.cam, 1, r.ptz ? 'Cámara' : 'Barra de vídeo', true, r.cam && r.cam.fondoMax ? ' · ' + T('hasta {f} m de fondo', { f: r.cam.fondoMax }) : '') + (r.kit ? eq(r.kit, 1, 'Micrófonos', true) : eq(r.mic, r.nmic, 'Micrófonos', true));
@@ -131,7 +155,7 @@ export default {
   info: 'Sala de reuniones: tamaño de pantalla, cámara o barra con su campo de visión y micrófonos por cobertura.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
   reconoce: (t) => /videoconf|sala de reuni|teams|zoom|meeting room|personas/i.test(t),
-  esquema: (r, o) => ({ tit: 'Plano de la sala', ic: 'cubo', html: esquema(r, o) }),
+  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : 'Plano de la sala', ic: 'cubo', html: VT === 'lateral' ? lateral(r, o) : esquema(r, o), extra: pestanas(['planta', 'lateral'], VT) }),
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * (k === 'pers' || k === 'np' ? 1 : k === 'fila' ? 0.1 : 0.5)),
-  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); }, reset: () => { S = Object.assign({}, DEF); },
+  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
 };
