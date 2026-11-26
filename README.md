@@ -57,6 +57,7 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - **Stock solo con la llave interna:** «En stock» y «Bajo pedido» ya no salen en público en DISPLAYS, ELECTRÓNICA ni VIDEOCONFERENCIA; con la llave del panel (candado del pie, como en SCREENS) sí, y nunca en el PDF ni en las cifras. El candado se pone verde con la llave activa y, al tocarlo, se cierra.
 - **Ocho módulos en la barra:** en móvil vertical, dos filas de cuatro; en ordenador y TV, la barra gana ancho a la petición escrita.
 - **BRIAN también en VIDEOCONFERENCIA y CÁMARAS:** el margen de la pantalla, los factores de distancia (vídeo y documentos) y el ancho de cada encuadre se leen en vivo del panel, con los de fábrica como respaldo.
+- **Figura humana oficial de SCREENS** (silueta de 1,75 m a escala) en la vista frontal de DISPLAYS, en lugar del monigote.
 - Caché renovada (`systems-v21`).
 
 ## Cambios de la v2.1

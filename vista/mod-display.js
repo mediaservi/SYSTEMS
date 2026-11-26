@@ -4,6 +4,7 @@
 // Solo con equipos de las listas del panel. GPL-3.0 · mediaservi.com
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos, esInterno } from './listas.js';
+import { figuraSVG } from './figura.js';
 textos({
   'DISPLAYS': ['DISPLAYS', 'DISPLAYS'], 'Displays y señalética': ['Displays and signage', 'Displays i senyalització'],
   'Señalética y digital signage: el display que cumple con el sitio, el tamaño, las horas al día y el reproductor, de las marcas del catálogo.': ['Signage and digital signage: the display that meets the place, size, hours a day and player, from the catalogue brands.', 'Senyalització i digital signage: el display que compleix amb el lloc, la mida, les hores al dia i el reproductor, de les marques del catàleg.'],
@@ -94,7 +95,7 @@ function esquema(r, o = {}) {
   let s = `<line x1="0" y1="${suelo}" x2="${VW}" y2="${suelo}" stroke="var(--linea)" stroke-width="3"/>`;
   /* persona */
   const ph = 1.75 * k, px = pad + 0.35 * k;
-  s += `<circle cx="${px}" cy="${suelo - ph + 0.11 * k}" r="${0.11 * k}" fill="var(--tenue)"/><rect x="${px - 0.2 * k}" y="${suelo - ph + 0.24 * k}" width="${0.4 * k}" height="${ph - 0.24 * k}" rx="${0.08 * k}" fill="var(--tenue)" fill-opacity=".8"/>`;
+  s += figuraSVG(px, suelo, k, 'fill="#8d8d96" fill-opacity=".8" stroke="none"');   /* v2.2 · la silueta oficial de SCREENS, a escala */
   let n = 0;
   for (let f = 0; f < fil; f++) for (let c = 0; c < cols; c++) { if (!vw && n >= Math.min(r.n, 12)) break; n++;
     const x = x0 + c * (w1 + gap) * k, y = suelo - (base + (fil - f) * h1 + (fil - 1 - f) * gap) * k;
