@@ -360,7 +360,7 @@ function pide(t) {
   /* v3.1 · alto con palabras («alçada 2,80 m»), pareja de altavoces y presupuesto ajustado → ECONÓMICO (sin micrófonos si no se piden, sin Dante si no se dice) */
   if ((m = s.match(/(?:alto|altura|alçada|alcada|height)[^0-9.]{0,12}(\d+(?:\.\d+)?)\s*m\b/))) { const a = +m[1]; if (a >= 2 && a <= 25) S.alto = a; }
   const nAlt = (s.match(/(\d+)\s*(?:altavoces|altaveus|speakers|loudspeakers)/) || [])[1];
-  const eco = /ajustad|ajustat|econ[oòó]mic|low budget|tight budget|poco uso|poc ús|inversi[oó]n? (?:contenida|continguda|m[ií]nima)|2 o 3 reuni/.test(s) || nAlt === '2';
+  const eco = /ajustad|ajustat|econ[oòó]mic|low budget|tight budget|poco uso|poc ús|inversi[oó]n? (?:contenida|continguda|m[ií]nima)|uso ocasional|pocas reuni|poques reuni|\d+ (?:o|or) \d+ (?:reuni|meetings)/.test(s) || nAlt === '2';
   if (eco) { S.eco = true; if (!/micro|micr[oóò]fon|mics?\b/.test(s)) { S.mano = 0; S.cuerpo = 0; S.mesa = 0; } if (!/dante/.test(s)) S.dante = false; ok = true; }
   return ok || /altavoc|sonoriz|sonido|speaker|so de/.test(s);
 }

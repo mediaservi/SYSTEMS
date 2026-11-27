@@ -44,7 +44,13 @@ textos({
   'Para que la interactiva sirva a toda la sala haría falta una de {p}″ ({m}); la de {q}″ sirve para trabajar de cerca, delante de la pantalla.': ['For the interactive display to serve the whole room it would need to be {p}″ ({m}); the {q}″ one is for working up close, in front of the screen.', 'Perquè la interactiva serveixi a tota la sala caldria una de {p}″ ({m}); la de {q}″ serveix per treballar de prop, davant de la pantalla.'],
   'Ningún interactivo de las listas llega a esa distancia: la de {q}″ sirve para trabajar de cerca, delante de la pantalla, no para toda la sala.': ['No interactive display in the lists reaches that distance: the {q}″ one is for working up close, in front of the screen, not for the whole room.', 'Cap interactiu de les llistes arriba a aquesta distància: la de {q}″ serveix per treballar de prop, davant de la pantalla, no per a tota la sala.'],
   'No hay ninguna pantalla interactiva de {p}″ en las listas.': ['There is no {p}″ interactive display in the lists.', 'No hi ha cap pantalla interactiva de {p}″ a les llistes.'],
-  'alternativa': ['alternative', 'alternativa'], 'Pulgadas': ['Inches', 'Polzades'], 'Automático': ['Automatic', 'Automàtic'],
+  'alternativa': ['alternative', 'alternativa'], 'Montaje': ['Mounting', 'Muntatge'], 'Alto mínimo de imagen': ['Minimum image height', 'Alçada mínima d\'imatge'], 'Pantalla: el espectador más lejano a {d} m necesita una imagen de al menos {h} m de alto ({k} veces su altura).': ['Screen: the farthest viewer at {d} m needs an image at least {h} m high ({k} times its height).', 'Pantalla: l\'espectador més llunyà a {d} m necessita una imatge d\'almenys {h} m d\'alt ({k} vegades la seva alçada).'], 'Eléctrica': ['Motorised', 'Elèctrica'], 'Falso techo': ['In-ceiling', 'Fals sostre'], 'Marco fijo': ['Fixed frame', 'Marc fix'],
+  'imagen {w} × {h} m, borde de abajo a {b} m': ['image {w} × {h} m, bottom edge at {b} m', 'imatge {w} × {h} m, vora inferior a {b} m'],
+  'Pantalla de proyección 16:9 de {w} × {h} m ({p}″), borde de abajo a {b} m': ['16:9 projection screen, {w} × {h} m ({p}″), bottom edge at {b} m', 'Pantalla de projecció 16:9 de {w} × {h} m ({p}″), vora inferior a {b} m'],
+  'Ninguna pantalla de este montaje en las listas llega a {h} m de imagen: la más grande, {m}, se ve bien hasta {d} m.': ['No screen with this mounting in the lists reaches a {h} m image: the largest, {m}, reads well up to {d} m.', 'Cap pantalla d\'aquest muntatge de les llistes arriba a {h} m d\'imatge: la més gran, {m}, es veu bé fins a {d} m.'],
+  'La pantalla más pequeña de este montaje, {m}, no cabe bajo el techo con el borde de abajo a {b} m.': ['The smallest screen with this mounting, {m}, does not fit under the ceiling with its bottom edge at {b} m.', 'La pantalla més petita d\'aquest muntatge, {m}, no cap sota el sostre amb la vora inferior a {b} m.'],
+  'Proyección: {m}, imagen {f} de {w} × {h} m ({p}″), con el borde de abajo a {b} m del suelo. El proyector, su óptica y su luminosidad se calculan en SCREENS.': ['Projection: {m}, {f} image of {w} × {h} m ({p}″), with its bottom edge {b} m above the floor. The projector, its lens and its brightness are worked out in SCREENS.', 'Projecció: {m}, imatge {f} de {w} × {h} m ({p}″), amb la vora inferior a {b} m del terra. El projector, la seva òptica i la seva lluminositat es calculen a SCREENS.'],
+  'No hay pantallas de proyección de este montaje en las listas: medida de la imagen {w} × {h} m ({p}″).': ['There are no projection screens with this mounting in the lists: image size {w} × {h} m ({p}″).', 'No hi ha pantalles de projecció d\'aquest muntatge a les llistes: mida de la imatge {w} × {h} m ({p}″).'], 'Pulgadas': ['Inches', 'Polzades'], 'Automático': ['Automatic', 'Automàtic'],
   'La pantalla de {p}″ pedida se queda pequeña: se ve bien hasta {d} m y el espectador más lejano está a {D} m.': ['The requested {p}″ screen is too small: it reads well up to {d} m and the farthest viewer is at {D} m.', 'La pantalla de {p}″ demanada es queda petita: es veu bé fins a {d} m i l\'espectador més llunyà és a {D} m.'],
   'No hay ninguna pantalla de {p}″ de este tipo en las listas: se propone la que pide la sala.': ['There is no {p}″ screen of this type in the lists: the one the room needs is proposed.', 'No hi ha cap pantalla de {p}″ d\'aquest tipus a les llistes: es proposa la que demana la sala.'], 'se ve bien hasta {d} m': ['reads well up to {d} m', 'es veu bé fins a {d} m'], 'hasta {d} m': ['up to {d} m', 'fins a {d} m'],
   'Espectador más lejano': ['Farthest viewer', 'Espectador més llunyà'], 'Dato de la petición': ['From the request', 'Dada de la petició'], 'Por el fondo de la sala': ['From the room depth', 'Pel fons de la sala'],
@@ -53,7 +59,7 @@ textos({
 });
 /* v3.1 · alto de la sala, distancia del espectador más lejano (0 = la del fondo de la sala), proyección como tercer tipo de pantalla,
    videoconferencia que se puede quitar (sala solo de presentaciones) y una pantalla interactiva como alternativa para comparar */
-const DEF = { ancho: 4, fondo: 6, alto: 2.8, dist: 0, pers: 8, fila: 1.5, cont: 'video', tipo: 'monitor', np: 1, vc: true, alt: 0, pulg: 0 };
+const DEF = { ancho: 4, fondo: 6, alto: 2.8, dist: 0, pers: 8, fila: 1.5, cont: 'video', tipo: 'monitor', np: 1, vc: true, alt: 0, pulg: 0, pmont: 'electrica' };
 let S = Object.assign({}, DEF, lee('systems_video') || {});
 const NUMS = { ancho: [1.5, 30, 1], fondo: [1.5, 40, 1], alto: [2, 10, 2], dist: [0, 40, 1], pers: [1, 200, 0], fila: [0.5, 6, 1], np: [1, 2, 0], alt: [0, 98, 0], pulg: [0, 120, 0] };
 const MED = [32, 43, 50, 55, 65, 75, 86, 98, 105, 110, 115];
@@ -77,16 +83,31 @@ function calcula() {
   const dLej = dLejos(), k = S.cont === 'detalle' ? P('video.factorDocumentos', 4) : P('video.factorVideo', 6),   /* v2.2 · BRIAN */ h = dLej / k, diag = h / H169 / 0.0254;
   r.dLej = dLej; r.h = h; r.diag = diag; r.k = k; r.hTope = hTope();
   r.pulg = Math.ceil(diag);
-  av.push(['info', T('Pantalla: el espectador más lejano a {d} m necesita una imagen de al menos {h} m de alto ({k} veces su altura): {p}″ o más.', { d: N(dLej, 1), h: N(h, 2), k, p: r.pulg })]);
+  av.push(['info', PROY() ? T('Pantalla: el espectador más lejano a {d} m necesita una imagen de al menos {h} m de alto ({k} veces su altura).', { d: N(dLej, 1), h: N(h, 2), k }) : T('Pantalla: el espectador más lejano a {d} m necesita una imagen de al menos {h} m de alto ({k} veces su altura): {p}″ o más.', { d: N(dLej, 1), h: N(h, 2), k, p: r.pulg })]);
   /* el techo manda: una imagen más alta que lo que cabe entre el borde de abajo y el techo no se puede poner */
   if (h > r.hTope + 0.005) { const p = Math.floor(r.hTope / H169 / 0.0254);
     av.push(['', T('Con {a} m de techo, la imagen no puede pasar de {h} m de alto ({p}″): se ve bien hasta {d} m. Para los de más atrás, letra y gráficos más grandes o una segunda pantalla de repetición.', { a: N(S.alto, 2), h: N(r.hTope, 2), p, d: N(r.hTope * k, 1) })]); }
   if (PROY()) {
     /* v3.1 · proyección: la pantalla blanca 16:9 que pide el espectador más lejano, limitada por el techo; el proyector se calcula en SCREENS */
-    const hp = Math.min(h, r.hTope), dp = h > r.hTope ? Math.floor(hp / H169 / 0.0254) : Math.ceil(hp / H169 / 0.0254 - 0.01);
-    r.proy = { h: dp * 0.0254 * H169, w: dp * 0.0254 * W169, diag: dp, bajo: bajoDe(dp * 0.0254 * H169) };
-    r.pulg = dp; r.disp = null; r.altsD = [];
-    av.push(['info', T('Proyección: pantalla blanca 16:9 de {w} × {h} m ({p}″), con el borde de abajo a {b} m del suelo. El proyector, su óptica y su luminosidad se calculan en SCREENS.', { w: N(r.proy.w, 2), h: N(r.proy.h, 2), p: dp, b: N(r.proy.bajo, 2) })]);
+    /* v3.3 · siempre un modelo real de las pantallas de proyección de las listas (comun/pantallas.js): la más pequeña cuya imagen llega al alto
+       que pide el espectador más lejano sin pasar del techo; si ninguna llega, la más grande que cabe */
+    const PP = equipos('pantalla-proy').filter((x) => x.anchoImg && x.altoImg && x.montaje === S.pmont), ORD = { ORAY: 0, DALITE: 1, STUMPFL: 2 };
+    const orden = (a, b) => a.altoImg - b.altoImg || a.anchoImg - b.anchoImg || (ORD[a.marca] ?? 9) - (ORD[b.marca] ?? 9);
+    const cabe = PP.filter((x) => x.altoImg <= r.hTope + 0.005), llega = cabe.filter((x) => x.altoImg >= h - 0.005).sort(orden);
+    const sel = llega[0] || cabe.sort((a, b) => b.altoImg - a.altoImg || orden(a, b))[0] || PP.sort(orden)[0] || null;
+    r.disp = null; r.altsD = [];
+    if (sel) {
+      r.proy = { x: sel, h: sel.altoImg, w: sel.anchoImg, fmt: sel.fmt, diag: Math.round(Math.hypot(sel.anchoImg, sel.altoImg) / 0.0254), bajo: bajoDe(sel.altoImg) };
+      r.proyAlts = PP.filter((x) => x !== sel && Math.abs(x.altoImg - sel.altoImg) <= 0.03 && Math.abs(x.anchoImg - sel.anchoImg) <= 0.06).sort(orden).slice(0, 3);
+      if (sel.altoImg + 0.005 < h && h <= r.hTope + 0.005) av.push(['', T('Ninguna pantalla de este montaje en las listas llega a {h} m de imagen: la más grande, {m}, se ve bien hasta {d} m.', { h: N(h, 2), m: sel.marca + ' ' + sel.modelo, d: N(sel.altoImg * k, 1) })]);
+      if (sel.altoImg > r.hTope + 0.005) av.push(['', T('La pantalla más pequeña de este montaje, {m}, no cabe bajo el techo con el borde de abajo a {b} m.', { m: sel.marca + ' ' + sel.modelo, b: N(BORDE(), 2) })]);
+      av.push(['info', T('Proyección: {m}, imagen {f} de {w} × {h} m ({p}″), con el borde de abajo a {b} m del suelo. El proyector, su óptica y su luminosidad se calculan en SCREENS.', { m: sel.marca + ' ' + sel.modelo, f: sel.fmt, w: N(r.proy.w, 2), h: N(r.proy.h, 2), p: r.proy.diag, b: N(r.proy.bajo, 2) })]);
+    } else {
+      const hp = Math.min(h, r.hTope), dp = Math.ceil(hp / H169 / 0.0254 - 0.01);
+      r.proy = { x: null, h: dp * 0.0254 * H169, w: dp * 0.0254 * W169, fmt: '16:9', diag: dp, bajo: bajoDe(dp * 0.0254 * H169) }; r.proyAlts = [];
+      av.push(['', T('No hay pantallas de proyección de este montaje en las listas: medida de la imagen {w} × {h} m ({p}″).', { w: N(r.proy.w, 2), h: N(r.proy.h, 2), p: dp })]);
+    }
+    r.pulg = r.proy.diag;
   } else {
     const D = equipos('display').filter((x) => (S.tipo === 'interactivo' ? x.uso === 'interactivo' : x.uso === 'pared') && x.pulgadas);
     let ok = D.filter((x) => x.pulgadas >= diag - 1).sort(porDetras);
@@ -122,8 +143,8 @@ function calcula() {
   if (S.vc) camYmic(r, av);
   r.sem = av.some((a) => !a[0]) ? 'A' : 'V';
   r.semTxt = r.sem === 'A' ? T('Hay solución, con avisos') : T('Hay solución');
-  const pant = r.proy ? T('Proyección') + ' ' + r.proy.diag + '″' : r.disp ? r.disp.marca + ' ' + r.disp.modelo + ' ' + r.disp.pulgadas + '″' : r.pulg + '″';
-  const pantC = r.proy ? T('Proyección') + ' ' + r.proy.diag + '″' : r.disp ? r.disp.modelo + ' ' + r.disp.pulgadas + '″' : r.pulg + '″';
+  const pant = r.proy ? T('Proyección') + ' ' + r.proy.diag + '″' + (r.proy.x ? ' · ' + r.proy.x.marca + ' ' + r.proy.x.modelo : '') : r.disp ? r.disp.marca + ' ' + r.disp.modelo + ' ' + r.disp.pulgadas + '″' : r.pulg + '″';
+  const pantC = r.proy ? (r.proy.x ? r.proy.x.modelo : T('Proyección')) + ' ' + r.proy.diag + '″' : r.disp ? r.disp.modelo + ' ' + r.disp.pulgadas + '″' : r.pulg + '″';
   const resto = S.vc ? [r.cam ? r.cam.modelo : '', r.mic ? r.nmic + ' × ' + r.mic.modelo : T('Los de la barra')] : [];
   const altT = r.altI ? T('alternativa') + ' ' + r.altI.modelo + ' ' + S.alt + '″' : '';
   r.lineaTxt = [pant, ...resto, altT].filter(Boolean).join(' · ');
@@ -159,9 +180,9 @@ function camYmic(r, av) {
 
 /* v2.5 · simulación 3D: pantalla a su altura, cámara o barra con su campo de visión, mesa, público y micrófonos de techo */
 function escena3d(V, r) {
-  const A = S.ancho, F = S.fondo, H = S.alto, p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : p * 0.0254 * W169, h = cu ? cu.H : p * 0.0254 * H169, bajo = bajoDe(h);
+  const A = S.ancho, F = S.fondo, H = S.alto, p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : r.proy ? r.proy.w : p * 0.0254 * W169, h = cu ? cu.H : r.proy ? r.proy.h : p * 0.0254 * H169, bajo = bajoDe(h);
   V.sala(A, F, H);
-  for (let i = 0; i < S.np; i++) V.pantalla(w, h, (i - (S.np - 1) / 2) * (w + 0.2), bajo, 0, i === 0 ? (r.disp ? r.disp.modelo + ' · ' : r.proy ? T('Proyección') + ' · ' : '') + p + '″' : '', { tex: tex3D(), cuerpo: cu });
+  for (let i = 0; i < S.np; i++) V.pantalla(w, h, (i - (S.np - 1) / 2) * (w + 0.2), bajo, 0, i === 0 ? (r.disp ? r.disp.modelo + ' · ' : r.proy ? (r.proy.x ? r.proy.x.modelo : T('Proyección')) + ' · ' : '') + p + '″' : '', { tex: tex3D(), cuerpo: cu });
   const hc = bajo + h + 0.1, fh = r.cam ? (r.cam.fovH || (r.cam.fovD ? r.cam.fovD * 0.87 : 80)) : 80;
   if (r.cam) { V.caja(r.ptz ? 0.18 : 0.6, 0.1, 0.1, 0, hc, 0.08, 0x1b1b1e, { metal: 0.6 }); V.cono([0, hc, 0.15], [0, 1.1, F - 0.3], fh, 0x00b4ff, 0.08); V.etiqueta(r.cam.modelo, 0, hc + 0.8, 0.2, 0.36); }
   const x1 = Math.min(S.fila, F - 0.6), x2 = Math.max(x1 + 0.6, F - 0.6), tw = Math.min(A * 0.4, 1.4);
@@ -172,18 +193,18 @@ function escena3d(V, r) {
 /* v2.8 · simulación a escala (la de SCREENS): la pared frontal con la pantalla a su tamaño y altura, con contenido, la barra o la cámara encima,
    la persona de 1,75 m y la foto oficial de cada equipo, que abre su ficha */
 function aEscala(r, o) {
-  const p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : p * 0.0254 * W169, h = cu ? cu.H : p * 0.0254 * H169, bajo = bajoDe(h), gap = 0.2;
+  const p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : r.proy ? r.proy.w : p * 0.0254 * W169, h = cu ? cu.H : r.proy ? r.proy.h : p * 0.0254 * H169, bajo = bajoDe(h), gap = 0.2;
   const paneles = []; for (let i = 0; i < S.np; i++) paneles.push({ x: i * (w + gap), y: bajo, w, h, cu });
   const W = S.np * w + (S.np - 1) * gap, extras = [];
   if (r.cam) { const cw = r.ptz ? 0.17 : Math.min(0.9, W * 0.6), ch = r.ptz ? 0.17 : 0.075; extras.push({ x: W / 2 - cw / 2, y: bajo + h + 0.05, w: cw, h: ch, txt: r.cam.modelo }); }
-  const ft = [r.disp && { url: fotoDe(r.disp), href: urlFicha(r.disp.id), nombre: r.disp.marca + ' ' + r.disp.modelo }, r.cam && { url: fotoDe(r.cam), href: urlFicha(r.cam.id), nombre: r.cam.marca + ' ' + r.cam.modelo }];
-  return simEscala({ paneles, marco: 0.012, W, H: h + (r.cam ? 0.3 : 0), base: bajo, vw: false, extras, etiqueta: (r.disp ? r.disp.marca + ' ' + r.disp.modelo + ' · ' : r.proy ? T('Proyección') + ' · ' : '') + p + '″' + (r.cam ? ' · ' + r.cam.modelo : '') }, ft, o);
+  const ft = [r.disp && { id: r.disp.id, url: fotoDe(r.disp), href: urlFicha(r.disp.id), nombre: r.disp.marca + ' ' + r.disp.modelo }, r.cam && { url: fotoDe(r.cam), href: urlFicha(r.cam.id), nombre: r.cam.marca + ' ' + r.cam.modelo }];
+  return simEscala({ paneles, marco: 0.012, W, H: h + (r.cam ? 0.3 : 0), base: bajo, vw: false, extras, disp: r.disp, n: S.np, cols: S.np, filas: 1, etiqueta: (r.disp ? r.disp.marca + ' ' + r.disp.modelo + ' · ' : r.proy ? (r.proy.x ? r.proy.x.modelo : T('Proyección')) + ' · ' : '') + p + '″' + (r.cam ? ' · ' + r.cam.modelo : '') }, ft, o);
 }
 /* v2.3 · vista LATERAL como las de SCREENS: la pantalla a su altura, la cámara encima, la mesa y la mirada del espectador más lejano */
 let VT = 'planta';
 function lateral(r, o = {}) {
   const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, F = S.fondo, AL = S.alto, OJO = 1.2;
-  const p = r.disp ? r.disp.pulgadas : r.pulg, h = p * 0.0254 * H169, bajo = bajoDe(h), arriba = bajo + h;
+  const p = r.disp ? r.disp.pulgadas : r.pulg, h = r.proy ? r.proy.h : p * 0.0254 * H169, bajo = bajoDe(h), arriba = bajo + h;
   const E = escala(VW, VH, { l: 64, r: 64, t: 56, b: 70 }, -0.4, F + 0.3, 0, Math.max(AL, arriba + 0.5)), { X, Y, k } = E;
   let g = suelo(X, Y, -0.4, F + 0.3) + `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(0)}" y2="${Y(Math.max(AL, arriba + 0.4))}" stroke="${COL.pared}" stroke-width="4"/><line x1="${X(F)}" y1="${Y(0)}" x2="${X(F)}" y2="${Y(AL)}" stroke="${COL.linea}" stroke-width="2"/>`;
   g += `<rect x="${X(0.02)}" y="${Y(arriba)}" width="${Math.max(4, 0.07 * k)}" height="${h * k}" fill="${COL.imagenB}"/>`;
@@ -197,15 +218,15 @@ function lateral(r, o = {}) {
   g += cota(X(0), Y(0) + 24, X(dL), Y(0) + 24, fmt(dL) + ' m', 1) + cota(X(0), Y(0) + 50, X(F), Y(0) + 50, fmt(F) + ' m', 1);
   g += cota(X(0) - 16, Y(0), X(0) - 16, Y(bajo), fmt(bajo)) + cota(X(0) - 16, Y(bajo), X(0) - 16, Y(arriba), fmt(h));
   if (r.cam) g += etiqueta(X(0.02) + 20, Y(hc) - 12, r.cam.modelo, 'start', 'vt-azu');
-  if (r.disp || r.pulg) g += etiqueta(X(0.02) + 20, Y((bajo + arriba) / 2) + 6, (r.disp ? r.disp.modelo + ' · ' : r.proy ? T('Proyección') + ' · ' : '') + p + '″', 'start', 'vt-ama');
+  if (r.disp || r.pulg) g += etiqueta(X(0.02) + 20, Y((bajo + arriba) / 2) + 6, (r.disp ? r.disp.modelo + ' · ' : r.proy ? (r.proy.x ? r.proy.x.modelo : T('Proyección')) + ' · ' : '') + p + '″', 'start', 'vt-ama');
   return lienzo(VW, VH, g, 'La sala vista de lado');
 }
 function esquema(r, o = {}) {
   const mov = !!o.vertical, VW = mov ? 480 : 960, VH = mov ? 520 : 520, pad = 40;
   const k = Math.min((VW - 2 * pad) / S.ancho, (VH - 2 * pad - 20) / S.fondo), w = S.ancho * k, h = S.fondo * k, x0 = (VW - w) / 2, y0 = pad;
   let s = `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="none" stroke="var(--linea)" stroke-width="3"/>`;
-  const pw = Math.min(w * .8, (r.disp ? r.disp.pulgadas : r.pulg) * 0.0254 * 0.8716 * k * S.np + (S.np - 1) * 10);
-  s += `<rect x="${x0 + (w - pw) / 2}" y="${y0 - 8}" width="${pw}" height="10" rx="2" fill="var(--verde-txt)"/><text x="${x0 + w / 2}" y="${y0 - 14}" text-anchor="middle" font-size="14" class="t-mono">${esc((r.disp ? r.disp.modelo + ' · ' : r.proy ? T('Proyección') + ' · ' : '') + (r.disp ? r.disp.pulgadas : r.pulg) + '″')}</text>`;
+  const pw = Math.min(w * .8, (r.proy ? r.proy.w : (r.disp ? r.disp.pulgadas : r.pulg) * 0.0254 * 0.8716) * k * S.np + (S.np - 1) * 10);
+  s += `<rect x="${x0 + (w - pw) / 2}" y="${y0 - 8}" width="${pw}" height="10" rx="2" fill="var(--verde-txt)"/><text x="${x0 + w / 2}" y="${y0 - 14}" text-anchor="middle" font-size="14" class="t-mono">${esc((r.disp ? r.disp.modelo + ' · ' : r.proy ? (r.proy.x ? r.proy.x.modelo : T('Proyección')) + ' · ' : '') + (r.disp ? r.disp.pulgadas : r.pulg) + '″')}</text>`;
   const cx = x0 + w / 2, cy = y0 + 8, a = r.fov / 2 * Math.PI / 180, L = Math.min(h - 10, S.fondo * k);
   const fh = r.cam ? (r.cam.fovH || (r.cam.fovD ? r.cam.fovD * .87 : 0)) : 0;
   if (fh) { const b = fh / 2 * Math.PI / 180; s += `<path d="M${cx} ${cy} L ${cx - Math.tan(b) * L} ${cy + L} L ${cx + Math.tan(b) * L} ${cy + L} Z" fill="var(--azul)" fill-opacity=".12" stroke="var(--azul)" stroke-dasharray="6 5"/>`; }
@@ -226,22 +247,24 @@ const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec'
    a la distancia del espectador más lejano (el mismo «#c=» que usa COMPARTIR en SCREENS) */
 function enlaceScreens(r) {
   if (!r.proy) return '';
-  const o = { cantidad: 'una', tecnologia: 'proy', esp: { tipo: 'sueltas', sueltas: { n: 1, ancho: +r.proy.w.toFixed(3), alto: +r.proy.h.toFixed(3), elev: +r.proy.bajo.toFixed(2), dist: +r.dLej.toFixed(1), techo: +S.alto.toFixed(2), formato: '16:9', medPor: 'diag', medVal: r.proy.diag } }, proy: { tipo: 'pared', luzUso: 'reunion' } };
+  const o = { cantidad: 'una', tecnologia: 'proy', esp: { tipo: 'sueltas', sueltas: { n: 1, ancho: +r.proy.w.toFixed(3), alto: +r.proy.h.toFixed(3), elev: +r.proy.bajo.toFixed(2), dist: +r.dLej.toFixed(1), techo: +S.alto.toFixed(2), formato: r.proy.fmt || '16:9', medPor: 'diag', medVal: r.proy.diag } }, proy: { tipo: 'pared', luzUso: 'reunion' } };
   try { const b = btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     return 'https://screens.mediaservi.com/vista/consola.html?modo=una-proy&lang=' + lang() + '#c=' + b; } catch (e) { return ''; }
 }
-const proyHtml = (r) => r.proy ? `<div class="equipo rec sin-ficha"><div class="eq-cab"><b>${esc(T('Pantalla de proyección'))} ${r.proy.diag}″</b><span class="serie">16:9 · ${esc(T('Blanca'))}</span><span class="etq">${T('Recomendado').toUpperCase()}</span></div><table class="despiece"><tr><td>1×</td><td class="ref">—</td><td class="des">${esc(T('Pantalla de proyección blanca 16:9 de {w} × {h} m ({p}″), borde de abajo a {b} m', { w: N(r.proy.w, 2), h: N(r.proy.h, 2), p: r.proy.diag, b: N(r.proy.bajo, 2) }))}</td></tr></table>${enlaceScreens(r) ? `<a class="ir-scr" href="${esc(enlaceScreens(r))}" target="_blank" rel="noopener">${esc(T('Calcular el proyector en SCREENS'))} →</a>` : ''}</div>` : '';
+const linkScr = (r) => enlaceScreens(r) ? `<a class="ir-scr" href="${esc(enlaceScreens(r))}" target="_blank" rel="noopener">${esc(T('Calcular el proyector en SCREENS'))} →</a>` : '';
+const proyHtml = (r) => !r.proy ? '' : r.proy.x ? eq(r.proy.x, S.np, 'Pantalla de proyección', true, ' · ' + T('imagen {w} × {h} m, borde de abajo a {b} m', { w: N(r.proy.w, 2), h: N(r.proy.h, 2), b: N(r.proy.bajo, 2) })).replace(/<\/div>$/, linkScr(r) + '</div>')
+  : `<div class="equipo rec sin-ficha"><div class="eq-cab"><b>${esc(T('Pantalla de proyección'))} ${r.proy.diag}″</b><span class="serie">16:9</span><span class="etq">${T('Recomendado').toUpperCase()}</span></div><table class="despiece"><tr><td>1×</td><td class="ref">—</td><td class="des">${esc(T('Pantalla de proyección 16:9 de {w} × {h} m ({p}″), borde de abajo a {b} m', { w: N(r.proy.w, 2), h: N(r.proy.h, 2), p: r.proy.diag, b: N(r.proy.bajo, 2) }))}</td></tr></table>${linkScr(r)}</div>`;
 function resultado(r) {
   let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
   h += conSem(proyHtml(r), r.semP) + conSem(eq(r.disp, S.np, 'Pantalla', true), r.semP);
   if (S.vc) h += eq(r.cam, 1, r.ptz ? 'Cámara' : 'Barra de vídeo', true, r.cam && r.cam.fondoMax ? ' · ' + T('hasta {f} m de fondo', { f: r.cam.fondoMax }) : '') + (r.kit ? eq(r.kit, 1, 'Micrófonos', true) : eq(r.mic, r.nmic, 'Micrófonos', true));
   if (r.av.length) h += `<ul class="avisos">${r.av.map((a) => `<li class="${a[0]}">${esc(a[1])}</li>`).join('')}</ul>`;
-  if (r.altI || r.altsD.length || r.nureva) h += `<p class="alt-t">${T('Alternativas')}</p>` + (r.altI ? conSem(eq(r.altI, S.np, 'Alternativa interactiva', false, ' · ' + T('se ve bien hasta {d} m', { d: N(r.altDok, 1) })), r.semA, ' alt-pres') + r.altIs.map((x) => conSem(eq(x, S.np, 'Alternativa interactiva', false), r.semA)).join('') : '') + r.altsD.map((x) => conSem(eq(x, S.np, '', false), r.semP)).join('') + eq(r.nureva, 1, 'Micrófonos', false, r.nureva ? ' · ' + r.nureva.salaAncho + ' × ' + r.nureva.salaFondo + ' m' : '');
+  if (r.altI || r.altsD.length || r.nureva || (r.proyAlts && r.proyAlts.length)) h += `<p class="alt-t">${T('Alternativas')}</p>` + (r.proyAlts || []).map((x) => conSem(eq(x, S.np, 'Pantalla de proyección', false), r.semP)).join('') + (r.altI ? conSem(eq(r.altI, S.np, 'Alternativa interactiva', false, ' · ' + T('se ve bien hasta {d} m', { d: N(r.altDok, 1) })), r.semA, ' alt-pres') + r.altIs.map((x) => conSem(eq(x, S.np, 'Alternativa interactiva', false), r.semA)).join('') : '') + r.altsD.map((x) => conSem(eq(x, S.np, '', false), r.semP)).join('') + eq(r.nureva, 1, 'Micrófonos', false, r.nureva ? ' · ' + r.nureva.salaAncho + ' × ' + r.nureva.salaFondo + ' m' : '');
   return h;
 }
 const cifras = (r) => {
-  const pant = { t: 'Pantalla', ref: r.disp ? r.disp.id : '', v: r.proy ? T('Proyección') : r.disp ? r.disp.modelo : '—', s: r.proy ? N(r.proy.w, 2) + ' × ' + N(r.proy.h, 2) + ' m' : r.disp ? r.disp.marca + ' · ' + r.disp.pulgadas + '″' : '', ic: 'tele', c: 'var(--azul)' };
-  const base = [{ t: 'Diagonal mínima', v: String(r.pulg), u: '″', s: N(r.h, 2) + ' m · ' + N(r.dLej, 1) + ' m', ic: 'tele', c: 'var(--verde-txt)' }, pant];
+  const pant = { t: 'Pantalla', ref: r.disp ? r.disp.id : r.proy && r.proy.x ? r.proy.x.id : '', v: r.proy ? (r.proy.x ? r.proy.x.modelo : T('Proyección')) : r.disp ? r.disp.modelo : '—', s: r.proy ? (r.proy.x ? r.proy.x.marca + ' · ' : '') + N(r.proy.w, 2) + ' × ' + N(r.proy.h, 2) + ' m' : r.disp ? r.disp.marca + ' · ' + r.disp.pulgadas + '″' : '', ic: 'tele', c: 'var(--azul)' };
+  const base = [r.proy ? { t: 'Alto mínimo de imagen', v: N(r.h, 2), u: 'm', s: T('Espectador más lejano') + ' ' + N(r.dLej, 1) + ' m', ic: 'tele', c: 'var(--verde-txt)' } : { t: 'Diagonal mínima', v: String(r.pulg), u: '″', s: N(r.h, 2) + ' m · ' + N(r.dLej, 1) + ' m', ic: 'tele', c: 'var(--verde-txt)' }, pant];
   const sup = { t: 'Superficie', v: N(r.area, 1), u: 'm²', s: S.pers + ' ' + T('personas'), ic: 'regla', c: 'var(--magenta, #e24bf0)' };
   if (S.vc) return base.concat([
     { t: 'Cámara', v: r.cam ? r.cam.modelo : '—', s: r.cam ? r.cam.marca : '', ic: 'camara', c: 'var(--violeta)' },
@@ -253,10 +276,11 @@ const cifras = (r) => {
     { t: 'Alto máximo de imagen', v: N(r.hTope, 2), u: 'm', s: T('Techo') + ' ' + N(S.alto, 2) + ' m', ic: 'regla', c: 'var(--violeta)' },
     { t: 'Alternativa', ref: r.altI ? r.altI.id : '', v: r.altI ? r.altI.modelo : '—', s: r.altI ? S.alt + '″ · ' + T('hasta {d} m', { d: N(r.altDok, 1) }) : T('Sin alternativa'), ic: 'mano', c: r.altI ? ({ v: 'var(--verde)', a: 'var(--ambar)', r: 'var(--rojo)' })[r.semA] : 'var(--tenue)' }, sup]);
 };
+const PMONT = [['electrica', 'Eléctrica'], ['techo', 'Falso techo'], ['marco', 'Marco fijo']];
 const TIPOS = [['monitor', 'Monitor'], ['interactivo', 'Interactivo'], ['proyeccion', 'Proyección']];
 function datos() {
   return [{ tit: 'Sala', ic: 'regla', ac: 'var(--azul)', html: `<div class="nums">${num('ancho', 'Ancho (m)', S.ancho, 'm', 0.5, 1.5, 30)}${num('fondo', 'Fondo (m)', S.fondo, 'm', 0.5, 1.5, 40)}</div><div class="nums">${num('alto', 'Alto (m)', S.alto, 'm', 0.1, 2, 10)}${num('pers', 'Personas', S.pers, '', 1, 1, 200)}</div>` + num('dist', 'Espectador más lejano a (m)', S.dist > 0 ? S.dist : +dLejos().toFixed(1), 'm', 0.5, 0, 40) + (S.vc ? num('fila', 'Primera fila a (m)', S.fila, 'm', 0.1, 0.5, 6) : '') },
-    { tit: 'Pantalla', ic: 'tele', ac: 'var(--verde-txt)', html: etq('Contenido') + togs('cont', [['video', 'Vídeo y presentaciones'], ['detalle', 'Documentos y hojas de cálculo']], S.cont, 'uno') + etq('Pantalla') + togs('tipo', TIPOS, S.tipo, 'tres') + (PROY() ? etq('Cuántas pantallas') + togs('np', [[1, '1'], [2, '2']], S.np, 'dos') : `<div class="par2"><div>${etq('Pulgadas')}${`<select class="sel" data-sel="pulg" aria-label="${esc(T('Pulgadas'))}">${[0, ...new Set(equipos('display').filter((x) => (S.tipo === 'interactivo' ? x.uso === 'interactivo' : x.uso === 'pared') && x.pulgadas).map((x) => x.pulgadas))].sort((a, b) => a - b).map((p) => `<option value="${p}"${p === S.pulg ? ' selected' : ''}>${p ? p + '″' : esc(T('Automático'))}</option>`).join('')}</select>`}</div><div>${etq('Cuántas pantallas')}${togs('np', [[1, '1'], [2, '2']], S.np, 'dos')}</div></div>`) + etq('Videoconferencia') + togs('vc', [[true, 'Sí'], [false, 'No']], S.vc, 'dos') + (S.tipo !== 'interactivo' ? etq('Alternativa interactiva') + togs('alt', ALTS.map((p) => [p, p ? p + '″' : 'No']), S.alt, 'tres cinco') : '') + `<div class="pie-b"><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>` }];
+    { tit: 'Pantalla', ic: 'tele', ac: 'var(--verde-txt)', html: etq('Contenido') + togs('cont', [['video', 'Vídeo y presentaciones'], ['detalle', 'Documentos y hojas de cálculo']], S.cont, 'uno') + etq('Pantalla') + togs('tipo', TIPOS, S.tipo, 'tres') + (PROY() ? `<div class="par2"><div>${etq('Montaje')}<select class="sel" data-sel="pmont" aria-label="${esc(T('Montaje'))}">${PMONT.map(([v, t]) => `<option value="${v}"${v === S.pmont ? ' selected' : ''}>${esc(T(t))}</option>`).join('')}</select></div><div>${etq('Cuántas pantallas')}${togs('np', [[1, '1'], [2, '2']], S.np, 'dos')}</div></div>` : `<div class="par2"><div>${etq('Pulgadas')}${`<select class="sel" data-sel="pulg" aria-label="${esc(T('Pulgadas'))}">${[0, ...new Set(equipos('display').filter((x) => (S.tipo === 'interactivo' ? x.uso === 'interactivo' : x.uso === 'pared') && x.pulgadas).map((x) => x.pulgadas))].sort((a, b) => a - b).map((p) => `<option value="${p}"${p === S.pulg ? ' selected' : ''}>${p ? p + '″' : esc(T('Automático'))}</option>`).join('')}</select>`}</div><div>${etq('Cuántas pantallas')}${togs('np', [[1, '1'], [2, '2']], S.np, 'dos')}</div></div>`) + etq('Videoconferencia') + togs('vc', [[true, 'Sí'], [false, 'No']], S.vc, 'dos') + (S.tipo !== 'interactivo' ? etq('Alternativa interactiva') + togs('alt', ALTS.map((p) => [p, p ? p + '″' : 'No']), S.alt, 'tres cinco') : '') + `<div class="pie-b"><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>` }];
 }
 const nomTipo = () => T((TIPOS.find((x) => x[0] === S.tipo) || TIPOS[0])[1]);
 const filas = () => [['sala', 'regla', 'Sala', N(S.ancho, 1) + ' × ' + N(S.fondo, 1) + ' × ' + N(S.alto, 2) + ' m'], ['pers', 'persona', 'Personas', String(S.pers)], ['cont', 'tele', 'Contenido', T(S.cont === 'detalle' ? 'Documentos y hojas de cálculo' : 'Vídeo y presentaciones')], ['tipo', 'mano', 'Pantalla', nomTipo()], ['vc', 'camara', 'Videoconferencia', T(S.vc ? 'Sí' : 'No')]];
@@ -290,7 +314,7 @@ function pide(t) {
   const proy = /proyector|projector|proyecci|projecci|projection/.test(s);
   const mi = s.match(/(?:interactiv|táctil|tactil|tàctil|touch)[^.]{0,30}?(\d{2,3})\s*(?:"|″|pulgadas|polzades|inch|inches|pulg|''|”)/) || s.match(/(\d{2,3})\s*(?:"|″|pulgadas|polzades|inch|inches|pulg|''|”)[^.]{0,20}?(?:interactiv|táctil|tactil|tàctil|touch)/);
   const comoAlt = /alternativ|comparar|compare/.test(s);
-  if (proy) { S.tipo = 'proyeccion'; ok = true; }
+  if (proy) { S.tipo = 'proyeccion'; ok = true; S.pmont = /marco fijo|marc fix|fixed frame/.test(s) ? 'marco' : /(?:pantalla|screen)[^.]{0,30}(?:falso techo|fals sostre|in-ceiling|empotrad)/.test(s) ? 'techo' : 'electrica'; }
   if (mi || /interactiv|táctil|tactil|tàctil|touch/.test(s)) {
     if (proy || comoAlt) { const p = mi ? +mi[1] : 65; S.alt = ALTS.includes(p) ? p : ALTS.reduce((a, b) => Math.abs(b - p) < Math.abs(a - p) ? b : a, 55); if (!proy && S.tipo === 'interactivo') S.tipo = 'monitor'; }
     else { S.tipo = 'interactivo'; S.alt = 0; S.pulg = mi ? +mi[1] : 0; }

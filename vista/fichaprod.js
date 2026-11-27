@@ -12,13 +12,13 @@ textos({
   'Cámara': ['Camera', 'Càmera'], 'Barra de vídeo': ['Video bar', 'Barra de vídeo'], 'Display': ['Display', 'Display'], 'Kit de audio': ['Audio kit', 'Kit d\'àudio'], 'Audio para videoconferencia': ['Video conferencing audio', 'Àudio per a videoconferència'], 'Etapa': ['Amplifier', 'Etapa'],
   'Procesador de audio': ['Audio processor', 'Processador d\'àudio'], 'Conmutador': ['Switcher', 'Commutador'], 'Extensor': ['Extender', 'Extensor'], 'Cable': ['Cable', 'Cable'], 'AV sobre IP': ['AV over IP', 'AV sobre IP'], 'Accesorio': ['Accessory', 'Accessori'], 'Soporte': ['Bracket', 'Suport'],
   'Antena': ['Antenna', 'Antena'], 'Cargador': ['Charger', 'Carregador'], 'Interfaz de audio': ['Audio interface', 'Interfície d\'àudio'], 'Tarjeta de audio': ['Audio card', 'Targeta d\'àudio'], 'Conferencia': ['Conference', 'Conferència'], 'Tratamiento acústico': ['Acoustic treatment', 'Tractament acústic'],
-  'Servicio': ['Service', 'Servei'], 'Reproductor': ['Player', 'Reproductor'], 'Equipo de sala': ['Room system', 'Equip de sala'], 'Ficha del fabricante': ['Manufacturer datasheet', 'Fitxa del fabricant'], 'Página del producto': ['Product page', 'Pàgina del producte'], 'Web del fabricante': ['Manufacturer website', 'Web del fabricant'], 'Ficha técnica (PDF)': ['Datasheet (PDF)', 'Fitxa tècnica (PDF)'], 'Sí': ['Yes', 'Sí'],
+  'Servicio': ['Service', 'Servei'], 'Reproductor': ['Player', 'Reproductor'], 'Equipo de sala': ['Room system', 'Equip de sala'], 'Ficha del fabricante': ['Manufacturer datasheet', 'Fitxa del fabricant'], 'Página del producto': ['Product page', 'Pàgina del producte'], 'Web del fabricante': ['Manufacturer website', 'Web del fabricant'], 'Ficha técnica (PDF)': ['Datasheet (PDF)', 'Fitxa tècnica (PDF)'], 'Pantalla de proyección': ['Projection screen', 'Pantalla de projecció'], 'Imagen (an × al)': ['Image (w × h)', 'Imatge (am × al)'], 'Diagonal': ['Diagonal', 'Diagonal'], 'Formato': ['Format', 'Format'], 'Montaje': ['Mounting', 'Muntatge'], 'Eléctrica': ['Motorised', 'Elèctrica'], 'Eléctrica de falso techo': ['Motorised, in-ceiling', 'Elèctrica de fals sostre'], 'Marco fijo': ['Fixed frame', 'Marc fix'], 'Sí': ['Yes', 'Sí'],
 });
 
-const TIPO = { altavoz: 'Altavoz', subgrave: 'Subgrave', microfono: 'Micrófono', capsula: 'Cápsula', transmisor: 'Transmisor', receptor: 'Receptor', camara: 'Cámara', 'barra-vc': 'Barra de vídeo', display: 'Display', control: 'Control',
+const TIPO = { 'pantalla-proy': 'Pantalla de proyección', altavoz: 'Altavoz', subgrave: 'Subgrave', microfono: 'Micrófono', capsula: 'Cápsula', transmisor: 'Transmisor', receptor: 'Receptor', camara: 'Cámara', 'barra-vc': 'Barra de vídeo', display: 'Display', control: 'Control',
   'kit-audio': 'Kit de audio', 'audio-vc': 'Audio para videoconferencia', etapa: 'Etapa', 'procesador-audio': 'Procesador de audio', conmutador: 'Conmutador', extensor: 'Extensor', cable: 'Cable', avoip: 'AV sobre IP', accesorio: 'Accesorio', soporte: 'Soporte',
   antena: 'Antena', cargador: 'Cargador', 'interfaz-audio': 'Interfaz de audio', 'tarjeta-audio': 'Tarjeta de audio', conferencia: 'Conferencia', tratamiento: 'Tratamiento acústico', servicio: 'Servicio', signage: 'Reproductor', 'pc-vc': 'Equipo de sala' };
-const ICONO = { altavoz: 'altavoz', subgrave: 'altavoz', microfono: 'micro', capsula: 'micro', transmisor: 'micro', receptor: 'micro', camara: 'camara', 'barra-vc': 'camara', display: 'display', control: 'control', 'kit-audio': 'altavoz', 'audio-vc': 'micro', proyector: 'proy' };
+const ICONO = { 'pantalla-proy': 'proy', altavoz: 'altavoz', subgrave: 'altavoz', microfono: 'micro', capsula: 'micro', transmisor: 'micro', receptor: 'micro', camara: 'camara', 'barra-vc': 'camara', display: 'display', control: 'control', 'kit-audio': 'altavoz', 'audio-vc': 'micro', proyector: 'proy' };
 const SPEC = [['pulgadas', 'Tamaño', '″'], ['res', 'Resolución', ''], ['nits', 'Brillo', ' nits'], ['horas', 'Horas al día', ''], ['canales', 'Canales', ''], ['w', 'Potencia', ' W'], ['inp', 'Entradas', ''], ['out', 'Salidas', ''], ['gbps', 'Ancho de banda', ' Gbps'],
   ['hfov', 'Ángulo horizontal', '°'], ['zoom', 'Zoom óptico', '×'], ['zoomTotal', 'Zoom total', '×'], ['hfovIA', 'Lente panorámica', '°'], ['fovH', 'Campo de visión', '°'], ['fondoMax', 'Fondo de sala', ' m'], ['m2', 'Cobertura', ' m²'], ['zonas', 'Zonas', ''], ['personas', 'Personas', ''], ['poe', 'PoE', ''], ['u', 'Alto de rack', ' U']];
 
@@ -26,7 +26,7 @@ const SPEC = [['pulgadas', 'Tamaño', '″'], ['res', 'Resolución', ''], ['nits
 export const fotoDe = (x) => (x && (x.urlFoto || x.foto || (globalThis.SC_FOTOS || {})[x.id])) || '';
 /* v3.2 · página del producto y PDF de su ficha (comun/web.js: charmex.net por referencia; si no está, la web del fabricante) */
 export const webDe = (x) => { if (!x) return null; const u = [x.url, x.web, x.fuente].find((v) => /^https?:\/\//.test(String(v || ''))); const w = globalThis.SC_WEB ? globalThis.SC_WEB(x.id, x.marca || x.fab) : null;
-  return u ? { web: u, pdf: (w && w.pdf) || '', charmex: false, propia: true } : w; };
+  return u ? { web: u, pdf: x.pdf || (w && w.pdf) || '', charmex: /charmex\.net/.test(u), propia: true } : w; };
 export const urlFicha = (id) => 'ficha.html?ref=' + encodeURIComponent(id) + '&lang=' + lang();
 /* la referencia y su marca, por id (o por modelo) */
 export function busca(ref) {
@@ -39,6 +39,9 @@ export function busca(ref) {
 export function fichaDe(id) {
   const b = busca(id); if (!b || !globalThis.SC_FICHA) return null; const { x, mk } = b;
   const specs = SPEC.filter((s) => x[s[0]] != null && x[s[0]] !== '' && x[s[0]] !== false && typeof x[s[0]] !== 'object').map((s) => [T(s[1]), (x[s[0]] === true ? T('Sí') : x[s[0]]) + s[2]]);
+  /* v3.3 · pantallas de proyección: imagen, diagonal, formato y montaje */
+  if (x.tipo === 'pantalla-proy' && x.anchoImg) { const nf2 = (v) => (+v).toLocaleString(lang() === 'en' ? 'en-GB' : 'es-ES', { maximumFractionDigits: 2 });
+    specs.push([T('Imagen (an × al)'), nf2(x.anchoImg) + ' × ' + nf2(x.altoImg) + ' m'], [T('Diagonal'), Math.round(Math.hypot(x.anchoImg, x.altoImg) / 0.0254) + '″'], [T('Formato'), x.fmt], [T('Montaje'), T({ electrica: 'Eléctrica', techo: 'Eléctrica de falso techo', marco: 'Marco fijo' }[x.montaje] || x.montaje)]); }
   /* v2.9 · medidas reales del cuerpo (comun/medidas.js) */
   const Md = (globalThis.SC_MEDIDAS || {})[x.id], nf = (v) => (+v).toLocaleString(lang() === 'en' ? 'en-GB' : 'es-ES', { maximumFractionDigits: 1 });
   if (Md) specs.push([T('Medidas (an × al × fo)'), nf(Md[0]) + ' × ' + nf(Md[1]) + ' × ' + nf(Md[2]) + ' mm']);

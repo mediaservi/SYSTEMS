@@ -12,7 +12,7 @@ textos({
   'Fuentes multimedia de prueba': ['Test media sources', 'Fonts multimèdia de prova'], 'Carta de ajuste': ['Test card', 'Carta d\'ajust'],
   'O usa tu propio contenido': ['Or use your own content', 'O fes servir el teu contingut'], 'Pega un enlace de YouTube, Vimeo, imagen o vídeo': ['Paste a YouTube, Vimeo, image or video link', 'Enganxa un enllaç de YouTube, Vimeo, imatge o vídeo'],
   'Subir imagen / vídeo': ['Upload image / video', 'Pujar imatge / vídeo'], 'Aplicar': ['Apply', 'Aplicar'], 'Reiniciar': ['Reset', 'Reiniciar'], 'Cerrar': ['Close', 'Tancar'],
-  'Contenido de prueba': ['Test content', 'Contingut de prova'], 'Foto del fabricante': ['Manufacturer photo', 'Foto del fabricant'], 'Ver la ficha': ['See the datasheet', 'Veure la fitxa'],
+  'Contenido de prueba': ['Test content', 'Contingut de prova'], 'PANTALLA': ['SCREEN', 'PANTALLA'], 'PANTALLAS': ['SCREENS', 'PANTALLES'], 'Distancia visionado': ['Viewing distance', 'Distància de visió'], 'Mínima': ['Min.', 'Mínima'], 'Óptima': ['Optimal', 'Òptima'], 'Resolución en la ficha': ['Resolution: see datasheet', 'Resolució a la fitxa'], 'Foto del fabricante': ['Manufacturer photo', 'Foto del fabricant'], 'Ver la ficha': ['See the datasheet', 'Veure la fitxa'],
   'La foto propia se queda solo en este navegador.': ['Your own file stays only in this browser.', 'El fitxer propi es queda només en aquest navegador.'],
   'Simulación de las pantallas a escala con una persona de 1,75 m': ['Simulation of the screens to scale with a 1.75 m person', 'Simulació de les pantalles a escala amb una persona d\'1,75 m']
 });
@@ -40,7 +40,8 @@ window.addEventListener('message', (e) => {
 });
 document.addEventListener('load', (e) => { const f = e.target; if (f && f.tagName === 'IFRAME' && f.hasAttribute('data-ms-bucle')) { try { f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'ms' }), '*'); } catch (er) {} } }, true);
 const E = Object.assign({ fondo: 'hormigon' }, lee('systems_sim') || {});
-let CONT = null, FSEL = -1, URLP = '';   /* CONT: { url, tipo: 'img' | 'video' | 'marco' }; null = carta de ajuste */
+let CONT = null, FSEL = -1, URLP = '';   /* CONT: { url, tipo: 'img' | 'video' | 'marco' | 'carta' }; null = la foto del fabricante (v3.3) o, sin foto, la carta de ajuste */
+let FC = null;   /* v3.3 · la foto oficial del display que se simula: { url, rec } (rec de comun/fotorec.js: la pantalla dentro de la foto) */
 
 function deEnlace(u) {
   u = String(u || '').trim(); if (!u) return null; if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
@@ -60,6 +61,12 @@ export const tex3D = () => (CONT && CONT.tipo === 'img' ? CONT.url : CARTA);
 
 /* contenido dentro de un rectángulo (px): imagen, vídeo o reproductor incrustado, recortado al rectángulo */
 function pinta(x, y, w, h, id) {
+  /* v3.3 · por defecto, lo que el fabricante enseña en la pantalla de su foto oficial: el recorte de la imagen activa si la foto es frontal,
+     y si no, la foto entera; cambia sola al cambiar de modelo */
+  if (!CONT && FC && FC.url) { const r = FC.rec;
+    if (r) return `<svg x="${x}" y="${y}" width="${w}" height="${h}" viewBox="${(r[2] * r[0]).toFixed(1)} ${(r[3] * r[1]).toFixed(1)} ${(r[4] * r[0]).toFixed(1)} ${(r[5] * r[1]).toFixed(1)}" preserveAspectRatio="xMidYMid slice"><image href="${esc(FC.url)}" width="${r[0]}" height="${r[1]}"/></svg>`;
+    return `<image href="${esc(FC.url)}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/>`; }
+  if (CONT && CONT.tipo === 'carta') return `<image href="${CARTA}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/>`;
   if (CONT && CONT.tipo === 'marco') { const e = Math.max(w / 16, h / 9), iw = 16 * e, ih = 9 * e;
     return `<foreignObject x="${x}" y="${y}" width="${w}" height="${h}"><div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;overflow:hidden;position:relative;background:#000"><iframe src="${esc(CONT.url)}"${CONT.bucle ? ' data-ms-bucle' : ''} title="${esc(T('Contenido'))}" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;left:${(w - iw) / 2}px;top:${(h - ih) / 2}px;width:${iw}px;height:${ih}px;border:0;pointer-events:none"></iframe></div></foreignObject>`; }
   if (CONT && CONT.tipo === 'video') return `<foreignObject x="${x}" y="${y}" width="${w}" height="${h}"><video xmlns="http://www.w3.org/1999/xhtml" src="${esc(CONT.url)}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;background:#000"></video></foreignObject>`;
@@ -68,12 +75,38 @@ function pinta(x, y, w, h, id) {
 
 /* la simulación: G = { paneles: [{ x, y, w, h }] en metros (x desde la izquierda, y = borde de abajo), marco (m), W, H, base,
    totem, vw (videowall: un solo contenido para todo el muro), etiqueta }; foto = { url, href, nombre } */
+/* v3.3 · los cuadros de datos de SCREENS a la izquierda, dentro del dibujo: resolución, resumen (pantallas, pulgadas, ancho y alto)
+   y distancia de visionado (mínima = 1 m por mm de píxel; óptima, el triple, como en SCREENS) */
+const RES = { UHD: [3840, 2160, '4K', 'ULTRA HD'], FHD: [1920, 1080, 'FHD', 'FULL HD'], '5K': [5120, 2160, '5K', '5K2K'] };
+function cajas(G, sk) {
+  const d = G.disp; if (!d) return '';
+  const LIMA = '#d4ff00', mono = 'font-family="Share Tech Mono, monospace"', X = 16, AN = 218, caja = (y, al) => `<rect x="${X}" y="${y}" width="${AN}" height="${al}" rx="9" fill="#17181c" fill-opacity=".93" stroke="#000" stroke-width="1.5"/>`;
+  const nf = (v) => Math.round(v).toLocaleString(lang() === 'en' ? 'en-GB' : 'es-ES');
+  const rs = RES[String(d.res || '').toUpperCase()], vert = G.vertical, rw = rs ? (vert ? rs[1] : rs[0]) : 0, rh = rs ? (vert ? rs[0] : rs[1]) : 0;
+  const cu = G.paneles[0] && G.paneles[0].cu, aw = cu ? cu.scr.w : G.paneles[0] ? G.paneles[0].w : 0, pitch = rw && aw ? aw / rw * 1000 : 0;
+  let y = 12, g = `<g transform="scale(${sk})">`;
+  g += caja(y, 156) + `<rect x="${X + 34}" y="${y + 12}" width="${AN - 68}" height="80" rx="7" fill="#050506" stroke="${LIMA}" stroke-opacity=".7" stroke-width="1.5"/>`
+    + (rs ? `<text x="${X + AN / 2}" y="${y + 50}" text-anchor="middle" font-size="34" fill="${LIMA}" ${mono}>${rs[2]}</text><text x="${X + AN / 2}" y="${y + 80}" text-anchor="middle" font-size="20" fill="#fff" ${mono}>${rs[3]}</text><text x="${X + AN / 2}" y="${y + 118}" text-anchor="middle" font-size="22" fill="#fff" ${mono}>${rw}x${rh}</text><text x="${X + AN / 2}" y="${y + 143}" text-anchor="middle" font-size="19" fill="#fff" ${mono}>px</text>`
+      : `<text x="${X + AN / 2}" y="${y + 62}" text-anchor="middle" font-size="34" fill="${LIMA}" ${mono}>${d.pulgadas || ''}″</text><text x="${X + AN / 2}" y="${y + 128}" text-anchor="middle" font-size="17" fill="#fff" ${mono}>${esc(T('Resolución en la ficha'))}</text>`);
+  y += 168; const fila = (n, ic, t) => `<g transform="translate(${X + 18},${y + 16 + n * 30})" fill="none" stroke="${LIMA}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</g><text x="${X + 50}" y="${y + 33 + n * 30}" font-size="21" fill="#fff" ${mono}>${esc(t)}</text>`;
+  const n = G.n || G.paneles.length;
+  g += caja(y, 140) + fila(0, '<rect x="1" y="1" width="7" height="7" rx="1"/><rect x="12" y="1" width="7" height="7" rx="1"/><rect x="1" y="12" width="7" height="7" rx="1"/><rect x="12" y="12" width="7" height="7" rx="1"/>', (G.cols || n) + 'x' + (G.filas || 1))
+    + fila(1, `<circle cx="10" cy="10" r="6" fill="${LIMA}"/>`, (d.pulgadas || '') + '″') + fila(2, '<path d="M1 10h18M5 6l-4 4 4 4M15 6l4 4-4 4"/>', nf((G.vw ? G.W : G.paneles[0].w) * 100) + 'cm') + fila(3, '<path d="M10 1v18M6 5l4-4 4 4M6 15l4 4 4-4"/>', nf((G.vw ? G.H : G.paneles[0].h) * 100) + 'cm')
+    + `<text x="${X + AN - 46}" y="${y + 74}" text-anchor="middle" font-size="44" fill="${LIMA}" ${mono}>${n}</text><text x="${X + AN - 46}" y="${y + 98}" text-anchor="middle" font-size="12.5" font-weight="800" fill="#b9bbc4" font-family="Inter, sans-serif" letter-spacing=".5">${esc(T(n === 1 ? 'PANTALLA' : 'PANTALLAS'))}</text>`;
+  if (pitch) { y += 152; const cm = (v) => (v < 1 ? nf(v * 100) + 'cm' : (Math.round(v * 10) / 10).toLocaleString(lang() === 'en' ? 'en-GB' : 'es-ES') + 'm'), mn = pitch, op = pitch * 3, lin = T('Mínima') + ' ' + cm(mn) + ' ' + T('Óptima') + ' ' + cm(op);
+    g += caja(y, 62) + `<g transform="translate(${X + 14},${y + 9}) scale(.8)" fill="none" stroke="${LIMA}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></g><text x="${X + 40}" y="${y + 24}" font-size="15.5" fill="#fff" ${mono}>${esc(T('Distancia visionado'))}</text><text x="${X + 14}" y="${y + 49}" font-size="${Math.min(15.5, (AN - 26) / (lin.length * .56)).toFixed(1)}" fill="#fff" ${mono}>${esc(lin)}</text>`; }
+  return g + '</g>';
+}
 export function simEscala(G, foto, o = {}) {
+  /* v3.3 · la foto oficial del display (la primera con id) es el contenido por defecto; ya no hay tarjeta de foto (el nombre del modelo, abajo, enlaza a la ficha) */
+  const fd = [].concat(foto || []).find((f) => f && f.url && f.id); FC = fd ? { url: fd.url, rec: (globalThis.SC_FOTO_REC || {})[fd.id] || null } : null;
   const VW = o.vertical ? 600 : 1000, VH = o.vertical ? 760 : 560, sueloY = VH - 54, arriba = 70;
+  /* v3.3 · con los cuadros de datos, la escena se corre a la derecha para dejarles su sitio */
+  const SK = G.disp ? (o.vertical ? 0.8 : 1.1) : 0, CW = SK ? Math.ceil(246 * SK) : 0;
   const xMin = -1.15, xMax = Math.max(G.W + 0.5, 1.6), alto = Math.max(2.05, G.base + G.H + 0.25);
-  const k = Math.min((VW - 60) / (xMax - xMin), (sueloY - arriba) / alto), ox = (VW - (xMax - xMin) * k) / 2 - xMin * k;
+  const k = Math.min((VW - 60 - CW) / (xMax - xMin), (sueloY - arriba) / alto), ox = CW + (VW - CW - (xMax - xMin) * k) / 2 - xMin * k;
   const X = (x) => ox + x * k, Y = (y) => sueloY - y * k;
-  let g = `<svg class="sim-esc" viewBox="0 0 ${VW} ${VH}" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(T('Simulación de las pantallas a escala con una persona de 1,75 m'))}">`;
+  let g = `<svg class="sim-esc" viewBox="0 0 ${VW} ${VH}" preserveAspectRatio="${SK ? 'xMinYMax' : 'xMidYMax'} meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(T('Simulación de las pantallas a escala con una persona de 1,75 m'))}">`;
   const t = PARED[E.fondo];
   if (t) { const tw = t[0] * k, th = t[1] * k, u = `assets/sim/${E.fondo}.jpg`, im = (tr) => `<image href="${u}" width="${tw + 0.6}" height="${th + 0.6}" preserveAspectRatio="none"${tr ? ` transform="${tr}"` : ''}/>`;
     g += `<defs><pattern id="sim-pared" patternUnits="userSpaceOnUse" x="${X(0)}" y="${sueloY - th * (t[2] ? 2 : 1)}" width="${tw * (t[2] ? 2 : 1)}" height="${th * (t[2] ? 2 : 1)}">${t[2] ? im() + im(`translate(${2 * tw},0) scale(-1,1)`) + im(`translate(0,${2 * th}) scale(1,-1)`) + im(`translate(${2 * tw},${2 * th}) scale(-1,-1)`) : im()}</pattern></defs>`;
@@ -108,9 +141,10 @@ export function simEscala(G, foto, o = {}) {
   g += cota(X(G.W) + 24, top, X(G.W) + 24, Y(G.base), cm(G.H), true);
   if (G.base > 0.05) g += cota(X(G.W) + 52, Y(G.base), X(G.W) + 52, sueloY, cm(G.base), true);
   if (G.etiqueta) g += `<text x="${X(G.W / 2)}" y="${sueloY + 34}" text-anchor="middle" font-size="15" font-weight="800" fill="#1c1d22" font-family="Inter, sans-serif">${esc(G.etiqueta)}</text>`;
+  if (SK) g += cajas(G, SK);
   g += '</svg>';
   /* la foto oficial del modelo (abre su ficha) y los mandos de pared y contenido, encima del dibujo */
-  const fts = [].concat(foto || []).filter((f) => f && f.url);
+  const fts = [].concat(foto || []).filter((f) => f && f.url && !f.id && !G.disp);
   const ft = fts.length ? `<div class="sim-fotos">${fts.map((f) => `<a class="sim-foto" href="${esc(f.href)}" target="_blank" rel="noopener" title="${esc(T('Ver la ficha'))}"><img src="${esc(f.url)}" alt="${esc(f.nombre || '')}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.sim-foto').remove()"><span>${esc(f.nombre || '')}</span><small>${esc(T('Foto del fabricante'))}</small></a>`).join('')}</div>` : '';
   const mandos = `<div class="sim-mandos"><label class="sim-sel"><span>${esc(T('Pared'))}</span><select data-sim-fondo aria-label="${esc(T('Pared'))}">${FONDOS.map((f) => `<option value="${f[0]}"${f[0] === E.fondo ? ' selected' : ''}>${esc(T(f[1]))}</option>`).join('')}</select></label><button type="button" class="tog sim-cont" data-acc="sim:contenido"><span>${esc(T('Contenido'))}</span></button></div>`;
   return `<div class="sim-caja">${g}${ft}${mandos}</div>`;
@@ -120,7 +154,7 @@ export function simEscala(G, foto, o = {}) {
 function ventana() {
   cierra();
   const v = document.createElement('div'); v.className = 'sim-velo'; v.id = 'sim-velo';
-  const L = [['carta', T('Carta de ajuste'), ''], ['ms', 'mediaservi', 'YouTube · ' + MS_VID]];
+  const L = [['foto', T('Foto del fabricante'), ''], ['carta', T('Carta de ajuste'), ''], ['ms', 'mediaservi', 'YouTube · ' + MS_VID]];
   v.innerHTML = `<div class="vent ajustes" role="dialog" aria-modal="true" aria-label="${esc(T('Contenido de la pantalla'))}"><div class="vent-cab">${esc(T('Contenido de la pantalla'))}<span class="sep"></span><button type="button" class="tog" data-sim-x>${esc(T('Cerrar'))}</button></div><div class="vent-cu sim-vcu">
     <p class="sub-t">${esc(T('Contenido de prueba'))}</p>
     <div class="fila envuelve sim-fuentes">${L.map((f, i) => `<button type="button" class="tog" aria-pressed="${(i === 0 && !CONT) || FSEL === i}" data-sim-fu="${i}" title="${esc(f[2])}"><span>${esc(f[1])}</span></button>`).join('')}</div>
@@ -136,7 +170,7 @@ const repinta = () => { const b = document.querySelector('#sim-velo [data-acc="s
 document.addEventListener('click', (e) => {
   const q = (s) => e.target.closest && e.target.closest(s); let b;
   if (q('[data-sim-x]') || (e.target.id === 'sim-velo')) { cierra(); return; }
-  if ((b = q('[data-sim-fu]'))) { const i = +b.dataset.simFu; suelta(); URLP = ''; FSEL = i; CONT = i === 0 ? null : { url: MS_URL(), tipo: 'marco', bucle: true }; repinta(); return; }
+  if ((b = q('[data-sim-fu]'))) { const i = +b.dataset.simFu; suelta(); URLP = ''; FSEL = i; CONT = i === 0 ? null : i === 1 ? { tipo: 'carta' } : { url: MS_URL(), tipo: 'marco', bucle: true }; repinta(); return; }
   if (q('[data-sim-sube]')) { const f = document.getElementById('sim-file'); if (f) f.click(); return; }
   if (q('[data-sim-aplica]')) { const i = document.getElementById('sim-url'); URLP = i ? i.value.trim() : ''; if (URLP) { suelta(); CONT = deEnlace(URLP); FSEL = -1; } repinta(); return; }
   if (q('[data-sim-reinicia]')) { suelta(); CONT = null; FSEL = -1; URLP = ''; repinta(); return; }

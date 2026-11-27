@@ -52,7 +52,12 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.2)
+## Cambios de la versión actual (v3.3)
+- **Pantalla de proyección real, siempre**: VIDEOCONF. propone un modelo real de pantalla de proyección (`comun/pantallas.js`: 72 modelos de imagen 16:9 o 16:10 de ORAY, Da-Lite y Stumpfl, según información de los fabricantes), el más pequeño cuya imagen llega al espectador más lejano sin pasar del techo, con su foto, ficha, PDF y página. Montaje a elegir: eléctrica, de falso techo o marco fijo. Las de la misma medida salen en ALTERNATIVAS. SCREENS se abre con el formato de esa pantalla.
+- **Simulación a escala**: el contenido por defecto es la imagen que el fabricante enseña en la pantalla de su foto oficial (en las fotos frontales, recortada a la imagen activa; en las demás, la foto entera) y cambia sola al cambiar de modelo. La carta de ajuste y el vídeo de mediaservi siguen en CONTENIDO.
+- En lugar de la tarjeta de foto, **los cuadros de datos de SCREENS**: resolución (4K · ULTRA HD · 3840×2160 px), resumen (pantallas, pulgadas, ancho y alto) y distancia de visionado (mínima y óptima).
+
+## Cambios de la v3.2
 - **El producto en las cifras de abajo**: si hay sitio, cada cifra que nombra un equipo muestra su foto oficial (con el ojo para verla en grande) y los enlaces a su **ficha**, al **PDF** de la ficha técnica y a su **página en charmex.net** (o la web del fabricante si no está). Si no cabe, primero se quita la foto y después todo: nunca se corta nada.
 - **Página del producto y PDF** de 477 referencias de las listas (`comun/web.js`, comprobado en charmex.net por referencia exacta), también en la ficha de producto.
 

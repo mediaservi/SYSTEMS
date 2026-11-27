@@ -146,8 +146,8 @@ function aEscala(r, o) {
   const G = geo(r), paneles = [];
   for (let f = 0; f < G.fil; f++) for (let c = 0; c < G.cols; c++) paneles.push({ x: c * (G.w1 + G.gap), y: G.base + f * (G.h1 + G.gap), w: G.w1, h: G.h1, cu: G.cu });
   const d = r.disp, et = (d ? d.marca + ' ' + d.modelo + ' · ' : '') + G.p + '″' + (G.vw ? ' · ' + S.cols + ' × ' + S.filas : nPant() > 6 ? ' · ' + T('se dibujan 6 de {n}', { n: nPant() }) : nPant() > 1 ? ' · ' + nPant() + ' ×' : '');
-  return simEscala({ paneles, marco: G.vw ? 0.0018 : 0.012, W: G.W, H: G.H, base: G.base, vw: G.vw, totem: S.sitio === 'totem' && !(G.cu && G.cu.totem), etiqueta: et },
-    d ? { url: fotoDe(d), href: urlFicha(d.id), nombre: d.marca + ' ' + d.modelo } : null, o);
+  return simEscala({ paneles, marco: G.vw ? 0.0018 : 0.012, W: G.W, H: G.H, base: G.base, vw: G.vw, totem: S.sitio === 'totem' && !(G.cu && G.cu.totem), etiqueta: et, disp: d, n: nPant(), cols: G.vw ? S.cols : nPant(), filas: G.vw ? S.filas : 1, vertical: S.orient === 'v' },
+    d ? { id: d.id, url: fotoDe(d), href: urlFicha(d.id), nombre: d.marca + ' ' + d.modelo } : null, o);
 }
 const esquema = (r, o = {}) => (VT === 'escala' ? aEscala(r, o) : VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : frontal(r, o));
 const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${x.prioritario ? '⭐ ' : ''}${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}</td></tr></table></div>` : '';
