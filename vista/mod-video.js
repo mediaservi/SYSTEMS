@@ -6,6 +6,7 @@ import { equipos, esInterno, P } from './listas.js';
 import { COL, escala, cota, persona, suelo, etiqueta, lienzo, lienzo3D, pestanas, fmt } from './vt.js';
 import { simEscala, accionSim, tex3D } from './simdisp.js';
 import { fotoDe, urlFicha } from './fichaprod.js';
+import { cuerpo } from './cuerpos.js';
 textos({
   'Vista lateral': ['Side view', 'Vista lateral'], 'La sala vista de lado': ['The room seen from the side', 'La sala vista de costat'], 'oído': ['ear', 'oïda'], 'ojos': ['eyes', 'ulls'],
   'VIDEOCONF.': ['VIDEO CONF.', 'VIDEOCONF.'], 'Videoconferencia': ['Video conferencing', 'Videoconferència'],
@@ -77,9 +78,9 @@ function calcula() {
 
 /* v2.5 · simulación 3D: pantalla a su altura, cámara o barra con su campo de visión, mesa, público y micrófonos de techo */
 function escena3d(V, r) {
-  const A = S.ancho, F = S.fondo, H = 2.8, p = r.disp ? r.disp.pulgadas : r.pulg, w = p * 0.0254 * 0.8716, h = p * 0.0254 * 0.4903, bajo = Math.max(0.75, 1.3 - h / 2);
+  const A = S.ancho, F = S.fondo, H = 2.8, p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : p * 0.0254 * 0.8716, h = cu ? cu.H : p * 0.0254 * 0.4903, bajo = Math.max(0.75, 1.3 - h / 2);
   V.sala(A, F, H);
-  for (let i = 0; i < S.np; i++) V.pantalla(w, h, (i - (S.np - 1) / 2) * (w + 0.2), bajo, 0, i === 0 ? (r.disp ? r.disp.modelo + ' · ' : '') + p + '″' : '', { tex: tex3D() });
+  for (let i = 0; i < S.np; i++) V.pantalla(w, h, (i - (S.np - 1) / 2) * (w + 0.2), bajo, 0, i === 0 ? (r.disp ? r.disp.modelo + ' · ' : '') + p + '″' : '', { tex: tex3D(), cuerpo: cu });
   const hc = bajo + h + 0.1, fh = r.cam ? (r.cam.fovH || (r.cam.fovD ? r.cam.fovD * 0.87 : 80)) : 80;
   if (r.cam) { V.caja(r.ptz ? 0.18 : 0.6, 0.1, 0.1, 0, hc, 0.08, 0x1b1b1e, { metal: 0.6 }); V.cono([0, hc, 0.15], [0, 1.1, F - 0.3], fh, 0x00b4ff, 0.08); V.etiqueta(r.cam.modelo, 0, hc + 0.8, 0.2, 0.36); }
   const x1 = Math.min(S.fila, F - 0.6), x2 = Math.max(x1 + 0.6, F - 0.6), tw = Math.min(A * 0.4, 1.4);
@@ -90,8 +91,8 @@ function escena3d(V, r) {
 /* v2.8 · simulación a escala (la de SCREENS): la pared frontal con la pantalla a su tamaño y altura, con contenido, la barra o la cámara encima,
    la persona de 1,75 m y la foto oficial de cada equipo, que abre su ficha */
 function aEscala(r, o) {
-  const p = r.disp ? r.disp.pulgadas : r.pulg, w = p * 0.0254 * 0.8716, h = p * 0.0254 * 0.4903, bajo = Math.max(0.75, 1.3 - h / 2), gap = 0.2;
-  const paneles = []; for (let i = 0; i < S.np; i++) paneles.push({ x: i * (w + gap), y: bajo, w, h });
+  const p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : p * 0.0254 * 0.8716, h = cu ? cu.H : p * 0.0254 * 0.4903, bajo = Math.max(0.75, 1.3 - h / 2), gap = 0.2;
+  const paneles = []; for (let i = 0; i < S.np; i++) paneles.push({ x: i * (w + gap), y: bajo, w, h, cu });
   const W = S.np * w + (S.np - 1) * gap, extras = [];
   if (r.cam) { const cw = r.ptz ? 0.17 : Math.min(0.9, W * 0.6), ch = r.ptz ? 0.17 : 0.075; extras.push({ x: W / 2 - cw / 2, y: bajo + h + 0.05, w: cw, h: ch, txt: r.cam.modelo }); }
   const ft = [r.disp && { url: fotoDe(r.disp), href: urlFicha(r.disp.id), nombre: r.disp.marca + ' ' + r.disp.modelo }, r.cam && { url: fotoDe(r.cam), href: urlFicha(r.cam.id), nombre: r.cam.marca + ' ' + r.cam.modelo }];

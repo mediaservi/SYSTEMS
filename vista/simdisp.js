@@ -3,6 +3,7 @@
 // YouTube, Vimeo, una imagen o un vídeo, o un archivo tuyo) y la foto oficial del modelo, que abre su ficha. GPL-3.0 · mediaservi.com
 import { T, esc, textos, lee, guarda, lang } from './util.js';
 import { figuraSVG } from './figura.js';
+import { frenteSVG } from './cuerpos.js';
 
 textos({
   'A escala': ['To scale', 'A escala'], 'Simulación a escala': ['Simulation to scale', 'Simulació a escala'],
@@ -73,13 +74,15 @@ export function simEscala(G, foto, o = {}) {
   if (G.totem) { const tw = Math.min(G.W * 0.5, 0.36), tx = G.W / 2 - tw / 2; g += `<rect x="${X(tx)}" y="${Y(G.base)}" width="${tw * k}" height="${G.base * k}" fill="#1b1c20" stroke="#000"/><rect x="${X(G.W / 2 - 0.3)}" y="${Y(0.03)}" width="${0.6 * k}" height="${0.03 * k}" fill="#111215"/>`; }
   /* el contenido: en un videowall, uno solo para todo el muro, visto a través de los marcos */
   const id = 'sim-cp' + Math.random().toString(36).slice(2, 7), mk = Math.max(G.marco * k, 1.2);
-  let cp = ''; G.paneles.forEach((p) => { cp += `<rect x="${X(p.x + G.marco)}" y="${Y(p.y + p.h - G.marco)}" width="${Math.max(1, (p.w - 2 * G.marco) * k)}" height="${Math.max(1, (p.h - 2 * G.marco) * k)}"/>`; });
+  /* v2.9 · la ventana de imagen de cada panel: con cuerpo a medida real (vista/cuerpos.js), la de su ficha; si no, el marco común */
+  const vent = (p) => (p.cu ? { x: p.x + p.cu.scr.x, y: p.y + p.cu.scr.y, w: p.cu.scr.w, h: p.cu.scr.h } : { x: p.x + G.marco, y: p.y + G.marco, w: p.w - 2 * G.marco, h: p.h - 2 * G.marco });
+  let cp = ''; G.paneles.forEach((p) => { const v = vent(p); cp += `<rect x="${X(v.x)}" y="${Y(v.y + v.h)}" width="${Math.max(1, v.w * k)}" height="${Math.max(1, v.h * k)}"/>`; });
   g += `<defs><clipPath id="${id}">${cp}</clipPath></defs>`;
-  G.paneles.forEach((p) => { g += `<rect x="${X(p.x)}" y="${Y(p.y + p.h)}" width="${p.w * k}" height="${p.h * k}" rx="${Math.min(4, mk)}" fill="#0b0b0d" stroke="#2c2d33" stroke-width="1"/>`; });
+  G.paneles.forEach((p) => { g += p.cu ? frenteSVG(p.cu, X, Y, k, p.x, p.y) : `<rect x="${X(p.x)}" y="${Y(p.y + p.h)}" width="${p.w * k}" height="${p.h * k}" rx="${Math.min(4, mk)}" fill="#0b0b0d" stroke="#2c2d33" stroke-width="1"/>`; });
   if (G.vw) g += `<g clip-path="url(#${id})">${pinta(X(0), Y(G.base + G.H), G.W * k, G.H * k, id)}</g>`;
-  else G.paneles.forEach((p, i) => { const iid = id + 'p' + i; g += `<defs><clipPath id="${iid}"><rect x="${X(p.x + G.marco)}" y="${Y(p.y + p.h - G.marco)}" width="${(p.w - 2 * G.marco) * k}" height="${(p.h - 2 * G.marco) * k}"/></clipPath></defs><g clip-path="url(#${iid})">${pinta(X(p.x + G.marco), Y(p.y + p.h - G.marco), (p.w - 2 * G.marco) * k, (p.h - 2 * G.marco) * k, iid)}</g>`; });
+  else G.paneles.forEach((p, i) => { const iid = id + 'p' + i, v = vent(p); g += `<defs><clipPath id="${iid}"><rect x="${X(v.x)}" y="${Y(v.y + v.h)}" width="${v.w * k}" height="${v.h * k}"/></clipPath></defs><g clip-path="url(#${iid})">${pinta(X(v.x), Y(v.y + v.h), v.w * k, v.h * k, iid)}</g>`; });
   /* reflejo del cristal */
-  G.paneles.forEach((p) => { g += `<rect x="${X(p.x + G.marco)}" y="${Y(p.y + p.h - G.marco)}" width="${(p.w - 2 * G.marco) * k}" height="${(p.h - 2 * G.marco) * k * 0.45}" fill="#fff" fill-opacity=".035" pointer-events="none"/>`; });
+  G.paneles.forEach((p) => { const v = vent(p); g += `<rect x="${X(v.x)}" y="${Y(v.y + v.h)}" width="${v.w * k}" height="${v.h * k * 0.45}" fill="#fff" fill-opacity=".035" pointer-events="none"/>`; });
   /* otros equipos a escala (barra de vídeo, cámara…): rectángulos oscuros con su nombre */
   (G.extras || []).forEach((q) => { g += `<rect x="${X(q.x)}" y="${Y(q.y + q.h)}" width="${q.w * k}" height="${Math.max(3, q.h * k)}" rx="${Math.min(6, q.h * k / 2)}" fill="${q.fill || '#18191d'}" stroke="#000" stroke-opacity=".6"/>`
     + (q.txt ? `<text x="${X(q.x + q.w / 2)}" y="${Y(q.y + q.h) - 6}" text-anchor="middle" font-size="12" font-weight="800" fill="#fff" stroke="#000" stroke-opacity=".7" stroke-width="2.6" paint-order="stroke" font-family="Inter, sans-serif">${esc(q.txt)}</text>` : ''); });

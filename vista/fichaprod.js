@@ -4,6 +4,7 @@ import { T, textos, lang } from './util.js';
 import { marcas } from './listas.js';
 
 textos({
+  'Medidas (an × al × fo)': ['Dimensions (W × H × D)', 'Mides (am × al × fo)'], 'Peso': ['Weight', 'Pes'],
   'Tamaño': ['Size', 'Mida'], 'Resolución': ['Resolution', 'Resolució'], 'Brillo': ['Brightness', 'Brillantor'], 'Horas al día': ['Hours a day', 'Hores al dia'], 'Canales': ['Channels', 'Canals'], 'Potencia': ['Power', 'Potència'],
   'Entradas': ['Inputs', 'Entrades'], 'Salidas': ['Outputs', 'Sortides'], 'Ancho de banda': ['Bandwidth', 'Amplada de banda'], 'Ángulo horizontal': ['Horizontal angle', 'Angle horitzontal'], 'Zoom óptico': ['Optical zoom', 'Zoom òptic'], 'Zoom total': ['Total zoom', 'Zoom total'],
   'Lente panorámica': ['Wide lens', 'Lent panoràmica'], 'Campo de visión': ['Field of view', 'Camp de visió'], 'Fondo de sala': ['Room depth', 'Fons de sala'], 'Cobertura': ['Coverage', 'Cobertura'], 'Zonas': ['Zones', 'Zones'], 'Personas': ['People', 'Persones'], 'PoE': ['PoE', 'PoE'], 'Alto de rack': ['Rack height', 'Alçada de rack'],
@@ -35,6 +36,11 @@ export function busca(ref) {
 export function fichaDe(id) {
   const b = busca(id); if (!b || !globalThis.SC_FICHA) return null; const { x, mk } = b;
   const specs = SPEC.filter((s) => x[s[0]] != null && x[s[0]] !== '' && x[s[0]] !== false && typeof x[s[0]] !== 'object').map((s) => [T(s[1]), (x[s[0]] === true ? T('Sí') : x[s[0]]) + s[2]]);
+  /* v2.9 · medidas reales del cuerpo (comun/medidas.js) */
+  const Md = (globalThis.SC_MEDIDAS || {})[x.id], nf = (v) => (+v).toLocaleString(lang() === 'en' ? 'en-GB' : 'es-ES', { maximumFractionDigits: 1 });
+  if (Md) specs.push([T('Medidas (an × al × fo)'), nf(Md[0]) + ' × ' + nf(Md[1]) + ' × ' + nf(Md[2]) + ' mm']);
+  if (Md && Md[3]) specs.push([T('Peso'), nf(Md[3]) + ' kg']);
+  if (Md && Md[4]) specs.push(['VESA', Md[4].replace('x', ' × ') + ' mm']);
   const enl = [x.url, x.web, x.fuente].find((u) => /^https?:\/\//.test(String(u || '')));
   const html = window.SC_FICHA.fichaHTML({ cat: T(TIPO[x.tipo] || x.tipo || ''), icono: ICONO[x.tipo] || 'elec', marca: x.marca || mk, modelo: x.modelo || x.id, foto: fotoDe(x), fotoTrasera: x.urlFotoTrasera, specs: [[T('Referencia'), x.id]].concat(specs), notas: x.descripcion ? [traduceDes(x.descripcion, lang())] : [], enlace: enl, enlaceTxt: T('Ficha del fabricante'), acento: '#00b4ff', sel: true });
   return { tit: (x.marca || mk) + ' ' + (x.modelo || x.id), html, x, mk };

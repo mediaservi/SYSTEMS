@@ -52,7 +52,12 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v2.8)
+## Cambios de la versión actual (v2.9)
+- **Cada display a su medida exacta**, como los cuerpos de proyector de SCREENS: ancho, alto y fondo reales de 111 modelos (Samsung, LG y Clevertouch, según información de los fabricantes), con sus marcos por lado y la imagen activa en su sitio. Un cuerpo por familia: monitor, videowall de marco fino, exterior (marco ancho y tornillería), táctil con barra de altavoces, alargado y tótem de suelo con su base. Se ve así en la simulación a escala, en la vista lateral (fondo real) y en la 3D, en DISPLAYS y en VIDEOCONFERENCIA. En un videowall, los marcos reales entre pantallas.
+- La ficha de cada display añade medidas, peso y VESA.
+- Los textos de los esquemas llevan el color del tema en el propio dibujo (no salen negros en modo oscuro aunque el navegador guarde estilos viejos).
+
+## Cambios de la v2.8
 - **Simulación a escala, como la de SCREENS**, en DISPLAYS (vista de entrada) y en VIDEOCONFERENCIA: la pared con textura a escala real (hormigón, madera, mármol, ladrillos o sin pared), la persona de 1,75 m, cada display a su tamaño real con la carta de ajuste o el contenido que elijas (fuentes de prueba, YouTube, Vimeo, una imagen o un vídeo, o un archivo tuyo), las cotas y la foto oficial del modelo, que abre su ficha. En un videowall, un solo contenido para todo el muro. La simulación 3D muestra también la carta o la imagen elegida.
 - **Ficha de producto en pestaña nueva**: cualquier nombre de producto que aparece (resultado, despiece, cifras y esquemas) es un enlace a su ficha, en una página propia que se puede imprimir o compartir, con la foto oficial del fabricante.
 - **Fotos oficiales** de 460 referencias de las listas, según información de los fabricantes.
@@ -62,7 +67,6 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - Las descripciones de los equipos salen en inglés y catalán.
 - Icono propio para las cámaras (PTZ), distinto del de simulación.
 - En el móvil vertical, las pestañas de vista van debajo del título para que no se corte.
-- Los textos de los esquemas (CONTROL, AUDIO, SEÑAL, ELECTRÓNICA) llevan el color del tema en el propio dibujo: ya no salen negros en modo oscuro aunque el navegador tenga estilos viejos en caché.
 
 ## Cambios de la v2.7
 - Petición escrita como la de SCREENS: entiende números con letra («dos micros», «quatre», «twelve»), medidas en cm o mm, «10 metros de ancho por 16 de largo», «6 by 4 m» y «metros» en español, inglés y catalán.

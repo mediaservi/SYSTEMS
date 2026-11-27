@@ -82,7 +82,11 @@ export class Sala3D {
   }
   /* una pantalla en la pared frontal (o donde se diga), con la imagen encendida */
   pantalla(w, h, x, yBajo, z, txt, o = {}) {
-    this.caja(w + 0.04, h + 0.04, 0.06, x, yBajo + h / 2, z + 0.03, 0x111114, { metal: 0.6 });
+    const cu = o.cuerpo;   /* v2.9 · cuerpo a medida real (vista/cuerpos.js): w × h = cuerpo; la imagen, en su ventana */
+    if (cu) { this.caja(w, h, cu.D, x, yBajo + h / 2, z + cu.D / 2, cu.fam === 'exterior' ? 0x26282d : 0x0d0e11, { metal: 0.5 });
+      if (cu.totem) this.caja(w, Math.min(0.09, h * 0.05), cu.D + 0.01, x, Math.min(0.09, h * 0.05) / 2, z + cu.D / 2, 0x060608, { metal: 0.4 });
+      const s0 = cu.scr; x = x - w / 2 + s0.x + s0.w / 2; yBajo = yBajo + s0.y; w = s0.w; h = s0.h; z = z + cu.D - 0.066; }
+    else this.caja(w + 0.04, h + 0.04, 0.06, x, yBajo + h / 2, z + 0.03, 0x111114, { metal: 0.6 });
     if (o.tex) {   /* v2.8 · la imagen en la pantalla (carta de ajuste o el contenido elegido); uv = trozo de la imagen para un videowall */
       const g = new THREE.PlaneGeometry(w, h), uv = o.uv || [0, 0, 1, 1], at = g.attributes.uv;
       for (let i = 0; i < at.count; i++) at.setXY(i, uv[0] + at.getX(i) * (uv[2] - uv[0]), uv[1] + at.getY(i) * (uv[3] - uv[1]));
