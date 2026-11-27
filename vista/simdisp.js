@@ -12,7 +12,7 @@ textos({
   'Fuentes multimedia de prueba': ['Test media sources', 'Fonts multimèdia de prova'], 'Carta de ajuste': ['Test card', 'Carta d\'ajust'],
   'O usa tu propio contenido': ['Or use your own content', 'O fes servir el teu contingut'], 'Pega un enlace de YouTube, Vimeo, imagen o vídeo': ['Paste a YouTube, Vimeo, image or video link', 'Enganxa un enllaç de YouTube, Vimeo, imatge o vídeo'],
   'Subir imagen / vídeo': ['Upload image / video', 'Pujar imatge / vídeo'], 'Aplicar': ['Apply', 'Aplicar'], 'Reiniciar': ['Reset', 'Reiniciar'], 'Cerrar': ['Close', 'Tancar'],
-  'Vídeo': ['Video', 'Vídeo'], 'Foto del fabricante': ['Manufacturer photo', 'Foto del fabricant'], 'Ver la ficha': ['See the datasheet', 'Veure la fitxa'],
+  'Contenido de prueba': ['Test content', 'Contingut de prova'], 'Foto del fabricante': ['Manufacturer photo', 'Foto del fabricant'], 'Ver la ficha': ['See the datasheet', 'Veure la fitxa'],
   'La foto propia se queda solo en este navegador.': ['Your own file stays only in this browser.', 'El fitxer propi es queda només en aquest navegador.'],
   'Simulación de las pantallas a escala con una persona de 1,75 m': ['Simulation of the screens to scale with a 1.75 m person', 'Simulació de les pantalles a escala amb una persona d\'1,75 m']
 });
@@ -22,12 +22,21 @@ const PARED = { hormigon: [3.6, 2.39, 1], madera: [2.4, 3.0], marmol: [2.4, 2.4]
 const SUELO = { hormigon: '#bfe6d8', madera: '#bcd9f2', marmol: '#f2c9d4', 'ladrillo-rojo': '#c7e8c0', 'ladrillo-oscuro': '#f3e3a8', 'ladrillo-claro': '#c9c6f0', ninguno: '#cfd3da' };
 const FONDOS = [['hormigon', 'Hormigón'], ['madera', 'Madera'], ['marmol', 'Mármol'], ['ladrillo-rojo', 'Ladrillo rojo'], ['ladrillo-oscuro', 'Ladrillo oscuro'], ['ladrillo-claro', 'Ladrillo claro'], ['ninguno', 'Sin pared']];
 const CARTA = 'assets/SCCHART.jpg';
-/* fuentes de prueba: las mismas de SCREENS (la primera fija; las demás se editan y se guardan, compartidas con SCREENS) */
-const FUENTE_FIJA = 'https://www.youtube.com/playlist?list=PLe5oQrtGOkLA';
-const FUENTES_DEF = ['https://www.youtube.com/watch?v=ROboUHfPUrU', 'https://www.youtube.com/live/b4tE5aKhtlg', 'https://www.youtube.com/live/Qr61waJ6AZg', 'https://www.youtube.com/live/VlcwKEDOgOk', 'https://www.youtube.com/live/ewBqZHS9iG8'];
+/* v2.9 · fuente de prueba: solo el vídeo de mediaservi, recortado (del primer cambio de imagen, 4 s, a antes de «Suscribirse», 33 s) y en bucle;
+   lo demás, con «O usa tu propio contenido» (enlace o archivo) */
+const MS_VID = 'vKN4AcGz7zs', MS_INI = 4, MS_FIN = 33;
 const YT = '&autoplay=1&mute=1&playsinline=1&rel=0&controls=0&disablekb=1&fs=0&modestbranding=1&iv_load_policy=3&cc_load_policy=0&showinfo=0&loop=1';
-let FU = FUENTES_DEF.slice();
-try { const v = JSON.parse(localStorage.getItem('screens_fuentes_v2') || 'null'); if (Array.isArray(v) && v.length === 5) FU = v.map(String); } catch (e) {}
+const MS_URL = () => `https://www.youtube.com/embed/${MS_VID}?start=${MS_INI}&end=${MS_FIN}&autoplay=1&mute=1&playsinline=1&rel=0&controls=0&disablekb=1&fs=0&modestbranding=1&iv_load_policy=3&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;
+/* el bucle recortado: el reproductor avisa (API de YouTube por mensajes) y al llegar al final vuelve al principio del recorte */
+const ytMsg = (f, cmd, args) => { try { f.contentWindow.postMessage(JSON.stringify({ event: 'command', func: cmd, args: args || [] }), '*'); } catch (e) {} };
+window.addEventListener('message', (e) => {
+  if (!/youtube\.com$/.test(new URL(e.origin || 'http://x').hostname)) return; let d; try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch (er) { return; }
+  const f = [...document.querySelectorAll('iframe[data-ms-bucle]')].find((x) => x.contentWindow === e.source); if (!f || !d) return;
+  const st = d.info && typeof d.info === 'object' ? d.info.playerState : d.event === 'onStateChange' ? d.info : undefined;
+  const t = d.info && typeof d.info === 'object' ? d.info.currentTime : undefined;
+  if (st === 0 || (typeof t === 'number' && t >= MS_FIN - 0.15)) { ytMsg(f, 'seekTo', [MS_INI, true]); ytMsg(f, 'playVideo'); }
+});
+document.addEventListener('load', (e) => { const f = e.target; if (f && f.tagName === 'IFRAME' && f.hasAttribute('data-ms-bucle')) { try { f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'ms' }), '*'); } catch (er) {} } }, true);
 const E = Object.assign({ fondo: 'hormigon' }, lee('systems_sim') || {});
 let CONT = null, FSEL = -1, URLP = '';   /* CONT: { url, tipo: 'img' | 'video' | 'marco' }; null = carta de ajuste */
 
@@ -50,7 +59,7 @@ export const tex3D = () => (CONT && CONT.tipo === 'img' ? CONT.url : CARTA);
 /* contenido dentro de un rectángulo (px): imagen, vídeo o reproductor incrustado, recortado al rectángulo */
 function pinta(x, y, w, h, id) {
   if (CONT && CONT.tipo === 'marco') { const e = Math.max(w / 16, h / 9), iw = 16 * e, ih = 9 * e;
-    return `<foreignObject x="${x}" y="${y}" width="${w}" height="${h}"><div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;overflow:hidden;position:relative;background:#000"><iframe src="${esc(CONT.url)}" title="${esc(T('Contenido'))}" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;left:${(w - iw) / 2}px;top:${(h - ih) / 2}px;width:${iw}px;height:${ih}px;border:0;pointer-events:none"></iframe></div></foreignObject>`; }
+    return `<foreignObject x="${x}" y="${y}" width="${w}" height="${h}"><div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;overflow:hidden;position:relative;background:#000"><iframe src="${esc(CONT.url)}"${CONT.bucle ? ' data-ms-bucle' : ''} title="${esc(T('Contenido'))}" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;left:${(w - iw) / 2}px;top:${(h - ih) / 2}px;width:${iw}px;height:${ih}px;border:0;pointer-events:none"></iframe></div></foreignObject>`; }
   if (CONT && CONT.tipo === 'video') return `<foreignObject x="${x}" y="${y}" width="${w}" height="${h}"><video xmlns="http://www.w3.org/1999/xhtml" src="${esc(CONT.url)}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;background:#000"></video></foreignObject>`;
   return `<image href="${esc(CONT ? CONT.url : CARTA)}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${id})"/>`;
 }
@@ -109,10 +118,9 @@ export function simEscala(G, foto, o = {}) {
 function ventana() {
   cierra();
   const v = document.createElement('div'); v.className = 'sim-velo'; v.id = 'sim-velo';
-  const nom = (u) => { const y = String(u).match(/(?:v=|live\/|youtu\.be\/|shorts\/)([A-Za-z0-9_-]{11})/); return y ? 'YouTube · ' + y[1] : String(u).replace(/^https?:\/\/(www\.)?/, ''); };
-  const L = [['carta', T('Carta de ajuste'), ''], ['fija', 'mediaservi.com 24/7', FUENTE_FIJA]].concat(FU.map((u, i) => ['f' + i, T('Vídeo') + ' ' + (i + 1), nom(u)]));
+  const L = [['carta', T('Carta de ajuste'), ''], ['ms', 'mediaservi', 'YouTube · ' + MS_VID]];
   v.innerHTML = `<div class="vent ajustes" role="dialog" aria-modal="true" aria-label="${esc(T('Contenido de la pantalla'))}"><div class="vent-cab">${esc(T('Contenido de la pantalla'))}<span class="sep"></span><button type="button" class="tog" data-sim-x>${esc(T('Cerrar'))}</button></div><div class="vent-cu sim-vcu">
-    <p class="sub-t">${esc(T('Fuentes multimedia de prueba'))}</p>
+    <p class="sub-t">${esc(T('Contenido de prueba'))}</p>
     <div class="fila envuelve sim-fuentes">${L.map((f, i) => `<button type="button" class="tog" aria-pressed="${(i === 0 && !CONT) || FSEL === i}" data-sim-fu="${i}" title="${esc(f[2])}"><span>${esc(f[1])}</span></button>`).join('')}</div>
     <p class="sub-t">${esc(T('O usa tu propio contenido'))}</p>
     <div class="fila"><input type="url" class="pide" id="sim-url" value="${esc(URLP)}" placeholder="${esc(T('Pega un enlace de YouTube, Vimeo, imagen o vídeo'))}"><button type="button" class="tog" data-sim-sube style="flex:none"><span>${esc(T('Subir imagen / vídeo'))}</span></button><input type="file" id="sim-file" accept="image/*,video/*" hidden></div>
@@ -126,7 +134,7 @@ const repinta = () => { const b = document.querySelector('#sim-velo [data-acc="s
 document.addEventListener('click', (e) => {
   const q = (s) => e.target.closest && e.target.closest(s); let b;
   if (q('[data-sim-x]') || (e.target.id === 'sim-velo')) { cierra(); return; }
-  if ((b = q('[data-sim-fu]'))) { const i = +b.dataset.simFu; suelta(); URLP = ''; FSEL = i; CONT = i === 0 ? null : deEnlace(i === 1 ? FUENTE_FIJA : FU[i - 2]); repinta(); return; }
+  if ((b = q('[data-sim-fu]'))) { const i = +b.dataset.simFu; suelta(); URLP = ''; FSEL = i; CONT = i === 0 ? null : { url: MS_URL(), tipo: 'marco', bucle: true }; repinta(); return; }
   if (q('[data-sim-sube]')) { const f = document.getElementById('sim-file'); if (f) f.click(); return; }
   if (q('[data-sim-aplica]')) { const i = document.getElementById('sim-url'); URLP = i ? i.value.trim() : ''; if (URLP) { suelta(); CONT = deEnlace(URLP); FSEL = -1; } repinta(); return; }
   if (q('[data-sim-reinicia]')) { suelta(); CONT = null; FSEL = -1; URLP = ''; repinta(); return; }

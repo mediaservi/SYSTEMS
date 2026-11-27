@@ -55,6 +55,9 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 ## Cambios de la versión actual (v2.9)
 - **Cada display a su medida exacta**, como los cuerpos de proyector de SCREENS: ancho, alto y fondo reales de 111 modelos (Samsung, LG y Clevertouch, según información de los fabricantes), con sus marcos por lado y la imagen activa en su sitio. Un cuerpo por familia: monitor, videowall de marco fino, exterior (marco ancho y tornillería), táctil con barra de altavoces, alargado y tótem de suelo con su base. Se ve así en la simulación a escala, en la vista lateral (fondo real) y en la 3D, en DISPLAYS y en VIDEOCONFERENCIA. En un videowall, los marcos reales entre pantallas.
 - La ficha de cada display añade medidas, peso y VESA.
+- **Iconos de SCREENS**: los de la simulación (sala inmersiva con persona), tamaño, resolución, señal, cable, micrófono, audio, información, PDF y demás son los mismos que en SCREENS; «Dónde va» lleva la diana y «Uso» y «Horas al día», un reloj.
+- **Stock**: en público, la marca automática se llama «Cualquiera» y los equipos con stock solo se distinguen por un fondo azul sutil; «La que esté en stock» y «En stock / Bajo pedido» solo salen con el acceso interno. El candado va el último del grupo de la derecha del pie, como en SCREENS.
+- **Contenido de la simulación**: la carta de ajuste o el vídeo de mediaservi recortado (del primer cambio de imagen a antes de «Suscribirse») y en bucle; cualquier otro, con un enlace o un archivo propio.
 - Los textos de los esquemas llevan el color del tema en el propio dibujo (no salen negros en modo oscuro aunque el navegador guarde estilos viejos).
 
 ## Cambios de la v2.8

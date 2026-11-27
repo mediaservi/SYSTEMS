@@ -1,7 +1,7 @@
 // SYSTEMS · la casa: la misma consola de SCREENS (cabecera, barra de módulos, petición escrita, CALCULAR, SIMPLE / PRO y pie)
 // para todos los módulos (ELECTRÓNICA, SEÑAL Y CONECTIVIDAD, AUDIO, VIDEOCONFERENCIA y los que vengan). Cada módulo da sus datos,
 // su esquema, su resultado y sus cifras; aquí se pintan siempre en los mismos sitios. Licencia GPL-3.0 · mediaservi.com
-import { fichaDe, nombres, traduceDes, urlFicha } from './fichaprod.js';
+import { fichaDe, nombres, traduceDes, urlFicha, busca } from './fichaprod.js';
 import { normaliza } from './peticion.js';
 import { IDIOMAS, idioma, fijarIdioma, idiomaInicial } from '../textos.js';
 import { T, textos, esc, $, lee, guarda } from './util.js';
@@ -96,6 +96,7 @@ function marco() {
   const r = $('#hueco-comun');
   if (window.AVINSTALA) r.appendChild(window.AVINSTALA.boton({ app: 'SYSTEMS', idioma, sw: 'sw.js' }));
   if (window.AVFALLO) r.appendChild(window.AVFALLO.boton({ app: 'SYSTEMS', version: VERSION, idioma }));
+  const cand = $('.admin-esq'); if (cand) r.appendChild(cand);   /* v2.9 · el candado, el último del grupo de la derecha, como en SCREENS */
   pinta();
 }
 /* v2.8 · PDF en dos hojas como el de SCREENS (vista/pdfsys.js con pdf.js); si algo falla, la hoja de impresión de siempre */
@@ -133,7 +134,7 @@ function pinta() {
     c.innerHTML = `<section class="ss-blk ss-resumen" id="ss-resumen"><h2 class="ss-tit">${ic('lista')}<span class="ss-fit">${esc(T('Lo que pides'))}</span></h2>
         <div class="ss-filas">${filas.map((f) => `<button type="button" class="ss-fila" data-ss-q="${f[0]}" aria-label="${esc(T('Cambiar') + ': ' + T(f[2]))}">${ic(f[1])}<span class="ss-fk ss-fit">${esc(T(f[2]))}</span><b class="ss-fv ss-fit">${esc(f[3])}</b>${ic('lapiz', 'ss-lapiz')}</button>`).join('')}</div>
         <button type="button" class="ss-ancho" data-asis>${ic('varita')}<span class="ss-fit">${esc(T('Pregúntame otra vez'))}</span></button></section>
-      <section class="ss-blk ss-sim" id="ss-sim"><h2 class="ss-tit">${ic(esq.ic || 'sim')}<span class="ss-fit">${esc(T(esq.tit))}</span>${esq.extra || ''}${bt('ojo', 'Ver en grande', 'data-grande', 'g ss-ojo')}</h2><div class="ss-lienzo">${esq.html}</div></section>
+      <section class="ss-blk ss-sim" id="ss-sim"><h2 class="ss-tit">${ic((/^Simulaci/.test(esq.tit) ? 'sim' : esq.ic || 'sim'))}<span class="ss-fit">${esc(T(esq.tit))}</span>${esq.extra || ''}${bt('ojo', 'Ver en grande', 'data-grande', 'g ss-ojo')}</h2><div class="ss-lienzo">${esq.html}</div></section>
       <section class="ss-blk ss-res" id="ss-res" aria-live="polite"><div class="ss-res-cab"><h2 class="ss-tit">${ic('res')}<span class="ss-fit">${esc(T('Resultado'))}</span></h2>
         <div class="ss-acc"><button type="button" class="ss-bt2" data-pdf>${ic('pdf')}<span class="ss-fit">PDF</span></button><button type="button" class="ss-bt2 ss-pro" data-ss-sw="pro">${ic('pro')}<span class="ss-fit">${esc(T('Ver en PRO'))}</span></button></div></div>
         <p class="ss-linea"><span class="ss-fit">${R.linea || ''}</span></p>
@@ -144,7 +145,7 @@ function pinta() {
     const D = m.datos(R).slice(0, 4), areas = D.length >= 4 ? ['m1a', 'm1b', 'm2a', 'm2b'] : D.length === 3 ? ['m1a / m1a / m2a / m1a', 'm1b', 'm2b'] : D.length === 2 ? ['m1a / m1a / m2a / m1a', 'm1b / m1b / m2b / m1b'] : ['m1a / m1a / m2a / m1b'];
     const ids = D.length >= 4 ? ['M1A', 'M1B', 'M2A', 'M2B'] : D.length === 3 ? ['M1A', 'M1B', 'M2B'] : ['M1A', 'M1B'];
     let h = D.map((d, i) => blk(areas[i], ids[i], esc(T(d.tit)), d.ac || 'var(--azul)', d.html, d.extra || '', d.cls || '', d.ic)).join('');
-    h += blk('s1a', 'S1A', esc(T(esq.tit)), 'var(--verde-txt)', `<div class="lienzo-s">${esq.html}</div>`, (esq.extra || '') + bt('ojo', 'Ver en grande', 'data-grande'), 'pant', esq.ic || 'sim');
+    h += blk('s1a', 'S1A', esc(T(esq.tit)), 'var(--verde-txt)', `<div class="lienzo-s">${esq.html}</div>`, (esq.extra || '') + bt('ojo', 'Ver en grande', 'data-grande'), 'pant', (/^Simulaci/.test(esq.tit) ? 'sim' : esq.ic || 'sim'));
     h += blk('s1b', 'S1B', esc(T('Resultado')), 'var(--violeta)', m.resultado(R), '', '', 'res');
     'abcdef'.split('').forEach((x, i) => { const q = cif[i];
       h += q ? blk('m3' + x, 'M3' + x.toUpperCase(), esc(T(q.t)), q.c || COL[i], `<div class="cif-v">${esc(q.v)}${q.u ? `<small>${esc(q.u)}</small>` : ''}</div>${q.s ? `<div class="cif-s">${esc(q.s)}</div>` : ''}`, '', 'res', q.ic)
@@ -153,6 +154,7 @@ function pinta() {
   }
   if (m.despues) m.despues(c, R);
   if (idioma() !== 'es') c.querySelectorAll('.despiece td.des').forEach((d) => { [...d.childNodes].forEach((n) => { if (n.nodeType === 3) n.nodeValue = traduceDes(n.nodeValue, idioma()); }); });   /* v2.8 · descripciones de las listas en el idioma */
+  marcaStock(c);
   pintaRes(); guardaCasa(); ajusta(); try { enlaza(); } catch (e) {} monta3D(m, R);
 }
 /* v2.5 · simulación 3D: se monta cuando el dibujo trae su lienzo y se suelta entera al repintar (sin contextos WebGL colgando) */
@@ -183,6 +185,13 @@ let tT = 0;
 function tostada(t, ms = 3200) { const e = $('#tostada'); if (!e) return; e.textContent = t; e.classList.add('on'); clearTimeout(tT); tT = setTimeout(() => e.classList.remove('on'), ms); }
 function ventana(tit, html) {
   const v = $('#velo'); v.innerHTML = `<div class="vent" role="dialog" aria-modal="true"><div class="vent-cab"><b>${esc(tit)}</b><span class="sep"></span><button type="button" class="ic-bt" data-cierra aria-label="${esc(T('Cerrar'))}">${IC.x}</button></div><div class="vent-cu">${html}</div></div>`; v.classList.add('on');
+}
+/* v2.9 · como en SCREENS: en público, el único indicio de stock es un fondo azul sutil en los equipos que lo tienen (sin texto);
+   el «En stock / Bajo pedido» escrito solo sale con la llave de Josep */
+function marcaStock(raiz) {
+  raiz.querySelectorAll('.equipo').forEach((eq) => { let hay = false;
+    eq.querySelectorAll('table.despiece tr').forEach((tr) => { const td = tr.querySelector('td.ref'), b = td && busca(td.textContent.trim()); if (b && b.x.stock && b.x.stock !== 'false' && b.x.stock !== '0') { tr.classList.add('stk'); hay = true; } });
+    if (hay) eq.classList.add('stk'); });
 }
 /* v2.8 · ver en grande el dibujo (como el ojo de SCREENS): la vista elegida a toda ventana, también la simulación a escala y la 3D */
 let GRANDE = false;

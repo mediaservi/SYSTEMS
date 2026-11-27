@@ -25,7 +25,7 @@ textos({
   'Uso': ['Use', 'Ús'], 'Horas al día': ['Hours a day', 'Hores al dia'], 'Hasta 16 h': ['Up to 16 h', 'Fins a 16 h'], '24 h, sin apagar': ['24 h, never off', '24 h, sense apagar'],
   'Orientación': ['Orientation', 'Orientació'], 'Horizontal': ['Landscape', 'Horitzontal'], 'Vertical': ['Portrait', 'Vertical'],
   'Reproductor': ['Player', 'Reproductor'], 'Integrado en la pantalla': ['Built into the screen', 'Integrat a la pantalla'], 'Externo': ['External', 'Extern'],
-  'Marca': ['Brand', 'Marca'], 'La que esté en stock': ['Whichever is in stock', 'La que estigui en estoc'],
+  'Marca': ['Brand', 'Marca'], 'La que esté en stock': ['Whichever is in stock', 'La que estigui en estoc'], 'Cualquiera': ['Any', 'Qualsevol'],
   'Pantallas': ['Screens', 'Pantalles'], 'Brillo': ['Brightness', 'Brillantor'], 'Resolución': ['Resolution', 'Resolució'], 'Display': ['Display', 'Display'],
   'En stock': ['In stock', 'En estoc'], 'Bajo pedido': ['To order', 'Sota comanda'], 'Integrado': ['Built in', 'Integrat'],
   'La instalación vista de frente': ['The installation seen from the front', 'La instal·lació vista de front'], 'Vista frontal': ['Front view', 'Vista frontal'],
@@ -163,16 +163,16 @@ const cifras = (r) => [
   { t: 'Pantallas', v: String(r.n), u: '×', s: S.sitio === 'videowall' ? S.cols + ' × ' + S.filas : T(S.orient === 'v' ? 'Vertical' : 'Horizontal'), ic: 'tele', c: 'var(--azul)' },
   { t: 'Pulgadas', v: r.disp ? String(r.disp.pulgadas) : String(S.pulg), u: '″', s: r.vw ? N(r.vw.a, 2) + ' × ' + N(r.vw.h, 2) + ' m' : T('Pulgadas pedidas') + ' ' + S.pulg + '″', ic: 'regla', c: 'var(--violeta)' },
   { t: 'Brillo', v: r.disp && r.disp.nits ? N(r.disp.nits) : '—', u: 'nits', s: T((SITIOS.find((x) => x[0] === S.sitio) || SITIOS[0])[1]), ic: 'sol', c: 'var(--ambar)' },
-  { t: 'Horas al día', v: r.disp ? r.disp.horas : S.horas, s: r.disp && r.disp.res ? r.disp.res : '', ic: 'calidad', c: 'var(--verde)' },
+  { t: 'Horas al día', v: r.disp ? r.disp.horas : S.horas, s: r.disp && r.disp.res ? r.disp.res : '', ic: 'reloj', c: 'var(--verde)' },
   { t: 'Reproductor', v: r.disp ? T(r.disp.soc ? 'Integrado' : 'Externo') : '—', s: r.player ? r.player.modelo : '', ic: 'chip', c: 'var(--magenta, #e24bf0)' }];
 function datos() {
-  const marcas = [['auto', 'La que esté en stock'], ...ORDEN.filter((m) => equipos('display', m).length).map((m) => [m, m])];
-  return [{ tit: 'Dónde va', ic: 'display', ac: 'var(--verde-txt)', html: togs('sitio', SITIOS.map((x) => [x[0], x[1]]), S.sitio, 'dos') + etq('Marca') + togs('marca', marcas, S.marca, 'dos') },
+  const marcas = [['auto', esInterno() ? 'La que esté en stock' : 'Cualquiera'], ...ORDEN.filter((m) => equipos('display', m).length).map((m) => [m, m])];
+  return [{ tit: 'Dónde va', ic: 'diana', ac: 'var(--verde-txt)', html: togs('sitio', SITIOS.map((x) => [x[0], x[1]]), S.sitio, 'dos') + etq('Marca') + togs('marca', marcas, S.marca, 'dos') },
     { tit: 'Tamaño', ic: 'regla', ac: 'var(--azul)', html: num('pulg', 'Pulgadas', S.pulg, '″', 1, 10, 120) + (S.sitio === 'videowall' ? `<div class="nums">${num('cols', 'Columnas', S.cols, '', 1, 1, 10)}${num('filas', 'Filas', S.filas, '', 1, 1, 10)}</div>` : num('np', 'Cuántas', S.np, '', 1, 1, 50)) + etq('Orientación') + togs('orient', [['h', 'Horizontal'], ['v', 'Vertical']], S.orient, 'dos') },
-    { tit: 'Uso', ic: 'calidad', ac: 'var(--ambar)', html: etq('Horas al día') + togs('horas', [['16/7', 'Hasta 16 h'], ['24/7', '24 h, sin apagar']], S.horas, 'dos') + etq('Reproductor') + togs('player', [['soc', 'Integrado en la pantalla'], ['ext', 'Externo']], S.player, 'dos') + `<div class="pie-b"><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>` }];
+    { tit: 'Uso', ic: 'reloj', ac: 'var(--ambar)', html: etq('Horas al día') + togs('horas', [['16/7', 'Hasta 16 h'], ['24/7', '24 h, sin apagar']], S.horas, 'dos') + etq('Reproductor') + togs('player', [['soc', 'Integrado en la pantalla'], ['ext', 'Externo']], S.player, 'dos') + `<div class="pie-b"><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>` }];
 }
-const filas = () => [['sitio', 'display', 'Dónde va', T((SITIOS.find((x) => x[0] === S.sitio) || SITIOS[0])[1])], ['pulg', 'regla', 'Tamaño', S.pulg + '″'],
-  ['np', 'tele', 'Pantallas', S.sitio === 'videowall' ? S.cols + ' × ' + S.filas : String(S.np)], ['horas', 'calidad', 'Horas al día', T(S.horas === '24/7' ? '24 h, sin apagar' : 'Hasta 16 h')], ['orient', 'altura', 'Orientación', T(S.orient === 'v' ? 'Vertical' : 'Horizontal')]];
+const filas = () => [['sitio', 'diana', 'Dónde va', T((SITIOS.find((x) => x[0] === S.sitio) || SITIOS[0])[1])], ['pulg', 'regla', 'Tamaño', S.pulg + '″'],
+  ['np', 'tele', 'Pantallas', S.sitio === 'videowall' ? S.cols + ' × ' + S.filas : String(S.np)], ['horas', 'reloj', 'Horas al día', T(S.horas === '24/7' ? '24 h, sin apagar' : 'Hasta 16 h')], ['orient', 'altura', 'Orientación', T(S.orient === 'v' ? 'Vertical' : 'Horizontal')]];
 const pasos = () => ['sitio', 'pulg', 'np', 'horas', 'orient'];
 function pregunta(k) {
   switch (k) {

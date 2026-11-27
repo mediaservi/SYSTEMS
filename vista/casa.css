@@ -227,3 +227,8 @@ svg a.prod:hover text { fill: var(--azul); }
 .proy-f .fila { display: flex; gap: 8px; }
 .proy-f .calcular { flex: 1; }
 @media print { [data-grande], [data-proyecto] { display: none !important; } }
+/* v2.9 · equipos con stock: fondo azul sutil (en público, sin texto; como en SCREENS) */
+.equipo.stk { background-image: linear-gradient(rgba(0, 150, 255, .10), rgba(0, 150, 255, .10)); }
+.despiece tr.stk td { background: rgba(0, 150, 255, .08); }
+:root[data-tema="claro"] .equipo.stk { background-image: linear-gradient(rgba(0, 120, 255, .08), rgba(0, 120, 255, .08)); }
+@media print { .equipo.stk, .despiece tr.stk td { background: none !important; } }
