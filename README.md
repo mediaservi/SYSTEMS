@@ -62,6 +62,7 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - Las descripciones de los equipos salen en inglés y catalán.
 - Icono propio para las cámaras (PTZ), distinto del de simulación.
 - En el móvil vertical, las pestañas de vista van debajo del título para que no se corte.
+- Los textos de los esquemas (CONTROL, AUDIO, SEÑAL, ELECTRÓNICA) llevan el color del tema en el propio dibujo: ya no salen negros en modo oscuro aunque el navegador tenga estilos viejos en caché.
 
 ## Cambios de la v2.7
 - Petición escrita como la de SCREENS: entiende números con letra («dos micros», «quatre», «twelve»), medidas en cm o mm, «10 metros de ancho por 16 de largo», «6 by 4 m» y «metros» en español, inglés y catalán.

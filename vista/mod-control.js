@@ -82,7 +82,7 @@ function calcula() {
 function esquema(r, o = {}) {
   const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520;
   const sis = SIS.find((x) => x[0] === S.sis), cx = VW / 2;
-  const caja = (x, y, w, h, t, sub, col) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="var(--blk2)" stroke="${col}" stroke-width="2"/><text x="${x + w / 2}" y="${y + h / 2 - (sub ? 4 : -5)}" text-anchor="middle" font-size="15" font-weight="700">${esc(t)}</text>${sub ? `<text x="${x + w / 2}" y="${y + h / 2 + 16}" text-anchor="middle" font-size="12" class="t-mono t-ten">${esc(sub)}</text>` : ''}`;
+  const caja = (x, y, w, h, t, sub, col) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="var(--blk2)" stroke="${col}" stroke-width="2"/><text x="${x + w / 2}" y="${y + h / 2 - (sub ? 4 : -5)}" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--txt)">${esc(t)}</text>${sub ? `<text x="${x + w / 2}" y="${y + h / 2 + 16}" text-anchor="middle" font-size="12" class="t-mono t-ten">${esc(sub)}</text>` : ''}`;
   const bw = mov ? 300 : 340;
   let s = caja(cx - bw / 2, 40, bw, 70, T(sis[1]), T(sis[2]), 'var(--azul)');
   if (r.poe) s += caja(cx - bw / 2, 170, bw, 56, T('Switch PoE'), r.poe + ' × PoE', 'var(--ambar)') + `<line x1="${cx}" y1="110" x2="${cx}" y2="170" stroke="var(--ambar)" stroke-width="3"/>`;
