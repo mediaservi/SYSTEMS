@@ -1,6 +1,7 @@
 // SYSTEMS · la casa: la misma consola de SCREENS (cabecera, barra de módulos, petición escrita, CALCULAR, SIMPLE / PRO y pie)
 // para todos los módulos (ELECTRÓNICA, SEÑAL Y CONECTIVIDAD, AUDIO, VIDEOCONFERENCIA y los que vengan). Cada módulo da sus datos,
 // su esquema, su resultado y sus cifras; aquí se pintan siempre en los mismos sitios. Licencia GPL-3.0 · mediaservi.com
+import { fichaDe, nombres, traduceDes, urlFicha, busca } from './fichaprod.js';
 import { normaliza } from './peticion.js';
 import { IDIOMAS, idioma, fijarIdioma, idiomaInicial } from '../textos.js';
 import { T, textos, esc, $, lee, guarda } from './util.js';
@@ -15,7 +16,8 @@ import CAMARAS from './mod-camaras.js';
 import CONTROL from './mod-control.js';
 import { cargar, esInterno, urlInterno, salirInterno, marcas } from './listas.js';
 
-export const VERSION = 'v2.7';
+import { VERSION } from './version.js';   /* v2.8 · la versión vive en version.js (la usa también la página de ficha) */
+export { VERSION };
 const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR2MbbA6cbW1WbhU3UiqmDmshx-ncAdGYrFRy8PNjm9Wg6Mx3w/exec';
 const MODS = [ELEC, DISP, SENAL, AUDIO, SONIDO, VIDEO, CAMARAS, CONTROL];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage · v2.0 · SONORIZACIÓN · v2.2 · CÁMARAS y CONTROL
 fijarIdioma(idiomaInicial());
@@ -36,14 +38,10 @@ textos({
   'Cambiar': ['Change', 'Canviar'],
   'Ver en PRO': ['See in PRO', 'Veure a PRO'],
   'PDF': ['PDF', 'PDF'],
-  'Tamaño': ['Size', 'Mida'], 'Resolución': ['Resolution', 'Resolució'], 'Brillo': ['Brightness', 'Brillantor'], 'Horas al día': ['Hours a day', 'Hores al dia'], 'Canales': ['Channels', 'Canals'], 'Potencia': ['Power', 'Potència'],
-  'Entradas': ['Inputs', 'Entrades'], 'Salidas': ['Outputs', 'Sortides'], 'Ancho de banda': ['Bandwidth', 'Amplada de banda'], 'Ángulo horizontal': ['Horizontal angle', 'Angle horitzontal'], 'Zoom óptico': ['Optical zoom', 'Zoom òptic'], 'Zoom total': ['Total zoom', 'Zoom total'],
-  'Lente panorámica': ['Wide lens', 'Lent panoràmica'], 'Campo de visión': ['Field of view', 'Camp de visió'], 'Fondo de sala': ['Room depth', 'Fons de sala'], 'Cobertura': ['Coverage', 'Cobertura'], 'Zonas': ['Zones', 'Zones'], 'Personas': ['People', 'Persones'], 'PoE': ['PoE', 'PoE'], 'Alto de rack': ['Rack height', 'Alçada de rack'],
-  'Referencia': ['Reference', 'Referència'], 'Altavoz': ['Loudspeaker', 'Altaveu'], 'Subgrave': ['Subwoofer', 'Subgreu'], 'Micrófono': ['Microphone', 'Micròfon'], 'Cápsula': ['Capsule', 'Càpsula'], 'Transmisor': ['Transmitter', 'Transmissor'], 'Receptor': ['Receiver', 'Receptor'],
-  'Cámara': ['Camera', 'Càmera'], 'Barra de vídeo': ['Video bar', 'Barra de vídeo'], 'Display': ['Display', 'Display'], 'Kit de audio': ['Audio kit', 'Kit d\'àudio'], 'Audio para videoconferencia': ['Video conferencing audio', 'Àudio per a videoconferència'], 'Etapa': ['Amplifier', 'Etapa'],
-  'Procesador de audio': ['Audio processor', 'Processador d\'àudio'], 'Conmutador': ['Switcher', 'Commutador'], 'Extensor': ['Extender', 'Extensor'], 'Cable': ['Cable', 'Cable'], 'AV sobre IP': ['AV over IP', 'AV sobre IP'], 'Accesorio': ['Accessory', 'Accessori'], 'Soporte': ['Bracket', 'Suport'],
-  'Antena': ['Antenna', 'Antena'], 'Cargador': ['Charger', 'Carregador'], 'Interfaz de audio': ['Audio interface', 'Interfície d\'àudio'], 'Tarjeta de audio': ['Audio card', 'Targeta d\'àudio'], 'Conferencia': ['Conference', 'Conferència'], 'Tratamiento acústico': ['Acoustic treatment', 'Tractament acústic'],
-  'Servicio': ['Service', 'Servei'], 'Reproductor': ['Player', 'Reproductor'], 'Equipo de sala': ['Room system', 'Equip de sala'], 'Ficha del fabricante': ['Manufacturer datasheet', 'Fitxa del fabricant'], 'Sí': ['Yes', 'Sí'],
+  'Ver la ficha': ['See the datasheet', 'Veure la fitxa'],
+  'Ver en grande': ['See it large', 'Veure en gran'], 'Datos del proyecto: nombre, cliente y observaciones': ['Project data: name, client and notes', 'Dades del projecte: nom, client i observacions'],
+  'Datos del proyecto': ['Project data', 'Dades del projecte'], 'Proyecto': ['Project', 'Projecte'], 'Cliente': ['Client', 'Client'], 'Observaciones': ['Notes', 'Observacions'], 'Guardar': ['Save', 'Desar'], 'Borrar': ['Clear', 'Esborrar'],
+  'Datos del proyecto guardados: salen en el PDF.': ['Project data saved: it goes in the PDF.', 'Dades del projecte desades: surten al PDF.'],
   'Acceso interno activo: tócalo para cerrarlo': ['Internal access on: tap to close it', 'Accés intern actiu: toca\'l per tancar-lo'],
   'Restablecer': ['Reset', 'Restablir'],
   'SALTAR': ['SKIP', 'SALTAR'], 'SIGUIENTE': ['NEXT', 'SEGÜENT'], 'LISTO': ['DONE', 'FET'], 'ATRÁS': ['BACK', 'ENRERE'], 'Cerrar': ['Close', 'Tancar'],
@@ -89,7 +87,7 @@ function marco() {
       <nav data-blk="H1C" class="fam" aria-label="AVHUB">${fam}</nav>
       <div data-blk="H1R" class="h1r">${bt('info', 'Qué es esto y cómo se usa', 'data-info')}${bt('pdf', 'Ver o imprimir el PDF del proyecto', 'data-pdf')}${bt('nuevo', 'Nuevo cálculo: lo deja todo como al empezar', 'data-nuevo')}<button type="button" class="ic-bt g" data-idioma data-crudo title="${esc(tIdi)}" aria-label="${esc(tIdi)}" style="position:relative"><span class="ic ic-lang"></span><small class="cod">${l.toUpperCase()}</small></button>${bt('tema', 'Cambiar entre gris oscuro y gris claro', 'data-tema')}</div></header>
     <div class="franja f-hm"><div data-blk="HM1"><div class="fila grupo" style="flex:1 1 auto">${modTog(MODS[0])}${modTog(MODS[1])}</div><div class="fila grupo" style="flex:1 1 auto">${MODS.slice(2).map(modTog).join('')}</div></div>
-      <div data-blk="HM2">${bt('pega', 'Pegar una petición copiada', 'data-pega')}<div class="pide-caja"><input class="pide" id="pide" type="text" autocomplete="off" spellcheck="false" placeholder="" aria-label="" value="${esc(G.texto)}"><button type="button" class="pide-res" id="pide-res" hidden title="${esc(T('Resultado del cálculo. Toca para escribir otra petición'))}"></button></div>${bt('copia', 'Copiar el texto de la casilla (la petición o el resultado)', 'data-copiatxt')}</div>
+      <div data-blk="HM2">${bt('proyecto', 'Datos del proyecto: nombre, cliente y observaciones', 'data-proyecto')}${bt('pega', 'Pegar una petición copiada', 'data-pega')}<div class="pide-caja"><input class="pide" id="pide" type="text" autocomplete="off" spellcheck="false" placeholder="" aria-label="" value="${esc(G.texto)}"><button type="button" class="pide-res" id="pide-res" hidden title="${esc(T('Resultado del cálculo. Toca para escribir otra petición'))}"></button></div>${bt('copia', 'Copiar el texto de la casilla (la petición o el resultado)', 'data-copiatxt')}</div>
       <div data-blk="HM3"><button type="button" class="calcular" id="calcular">${esc(T('CALCULAR'))} →</button></div></div>
     <main id="cuerpo"></main>
     <footer class="franja f-f1"><div data-blk="F1L" id="pie-l"><span class="nota" data-aviso-calc><svg class="av-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6 2.4 20.2h19.2z"/><path d="M12 9.6v5"/><path d="M12 17.6h.01"/></svg><span>${esc(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'))}</span></span></div><div data-blk="F1C" id="pie-c" class="f-cred" data-crudo></div><div data-blk="F1R" class="f1r" id="hueco-comun"></div><a class="admin-esq${esInterno() ? ' on' : ''}" href="${esInterno() ? '#' : urlInterno()}"${esInterno() ? ' data-salir-int' : ''} title="${esc(T(esInterno() ? 'Acceso interno activo: tócalo para cerrarlo' : 'Panel de administración'))}" aria-label="${esc(T(esInterno() ? 'Acceso interno activo: tócalo para cerrarlo' : 'Panel de administración'))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a></footer>
@@ -98,7 +96,16 @@ function marco() {
   const r = $('#hueco-comun');
   if (window.AVINSTALA) r.appendChild(window.AVINSTALA.boton({ app: 'SYSTEMS', idioma, sw: 'sw.js' }));
   if (window.AVFALLO) r.appendChild(window.AVFALLO.boton({ app: 'SYSTEMS', version: VERSION, idioma }));
+  const cand = $('.admin-esq'); if (cand) r.appendChild(cand);   /* v2.9 · el candado, el último del grupo de la derecha, como en SCREENS */
   pinta();
+}
+/* v2.8 · PDF en dos hojas como el de SCREENS (vista/pdfsys.js con pdf.js); si algo falla, la hoja de impresión de siempre */
+let HACIENDO = false;
+async function pdfDirecto() {
+  if (HACIENDO) return; HACIENDO = true;
+  try { const m = M(), { hacePDF } = await import('./pdfsys.js'); await hacePDF({ m, R, caja: document.querySelector('[data-blk="S1A"] .lienzo-s') || document.querySelector('.ss-lienzo'), esqHtml: (() => { try { return m.esquema(R, {}).html; } catch (e) { return ''; } })(), cifras: m.cifras(R), nombreMod: m.nom, proyecto: PROY, tostada }); }
+  catch (e) { imprimir(); }
+  finally { HACIENDO = false; }
 }
 /* v1.3 · PDF: hoja en claro con la cabecera de SCREENS (logo de SYSTEMS · web y fecha · logo de AVHUB) y el pie de la app */
 function imprimir() {
@@ -127,7 +134,7 @@ function pinta() {
     c.innerHTML = `<section class="ss-blk ss-resumen" id="ss-resumen"><h2 class="ss-tit">${ic('lista')}<span class="ss-fit">${esc(T('Lo que pides'))}</span></h2>
         <div class="ss-filas">${filas.map((f) => `<button type="button" class="ss-fila" data-ss-q="${f[0]}" aria-label="${esc(T('Cambiar') + ': ' + T(f[2]))}">${ic(f[1])}<span class="ss-fk ss-fit">${esc(T(f[2]))}</span><b class="ss-fv ss-fit">${esc(f[3])}</b>${ic('lapiz', 'ss-lapiz')}</button>`).join('')}</div>
         <button type="button" class="ss-ancho" data-asis>${ic('varita')}<span class="ss-fit">${esc(T('Pregúntame otra vez'))}</span></button></section>
-      <section class="ss-blk ss-sim" id="ss-sim"><h2 class="ss-tit">${ic(esq.ic || 'sim')}<span class="ss-fit">${esc(T(esq.tit))}</span>${esq.extra || ''}</h2><div class="ss-lienzo">${esq.html}</div></section>
+      <section class="ss-blk ss-sim" id="ss-sim"><h2 class="ss-tit">${ic((/^Simulaci/.test(esq.tit) ? 'sim' : esq.ic || 'sim'))}<span class="ss-fit">${esc(T(esq.tit))}</span>${esq.extra || ''}${bt('ojo', 'Ver en grande', 'data-grande', 'g ss-ojo')}</h2><div class="ss-lienzo">${esq.html}</div></section>
       <section class="ss-blk ss-res" id="ss-res" aria-live="polite"><div class="ss-res-cab"><h2 class="ss-tit">${ic('res')}<span class="ss-fit">${esc(T('Resultado'))}</span></h2>
         <div class="ss-acc"><button type="button" class="ss-bt2" data-pdf>${ic('pdf')}<span class="ss-fit">PDF</span></button><button type="button" class="ss-bt2 ss-pro" data-ss-sw="pro">${ic('pro')}<span class="ss-fit">${esc(T('Ver en PRO'))}</span></button></div></div>
         <p class="ss-linea"><span class="ss-fit">${R.linea || ''}</span></p>
@@ -138,7 +145,7 @@ function pinta() {
     const D = m.datos(R).slice(0, 4), areas = D.length >= 4 ? ['m1a', 'm1b', 'm2a', 'm2b'] : D.length === 3 ? ['m1a / m1a / m2a / m1a', 'm1b', 'm2b'] : D.length === 2 ? ['m1a / m1a / m2a / m1a', 'm1b / m1b / m2b / m1b'] : ['m1a / m1a / m2a / m1b'];
     const ids = D.length >= 4 ? ['M1A', 'M1B', 'M2A', 'M2B'] : D.length === 3 ? ['M1A', 'M1B', 'M2B'] : ['M1A', 'M1B'];
     let h = D.map((d, i) => blk(areas[i], ids[i], esc(T(d.tit)), d.ac || 'var(--azul)', d.html, d.extra || '', d.cls || '', d.ic)).join('');
-    h += blk('s1a', 'S1A', esc(T(esq.tit)), 'var(--verde-txt)', `<div class="lienzo-s">${esq.html}</div>`, esq.extra || '', 'pant', esq.ic || 'sim');
+    h += blk('s1a', 'S1A', esc(T(esq.tit)), 'var(--verde-txt)', `<div class="lienzo-s">${esq.html}</div>`, (esq.extra || '') + bt('ojo', 'Ver en grande', 'data-grande'), 'pant', (/^Simulaci/.test(esq.tit) ? 'sim' : esq.ic || 'sim'));
     h += blk('s1b', 'S1B', esc(T('Resultado')), 'var(--violeta)', m.resultado(R), '', '', 'res');
     'abcdef'.split('').forEach((x, i) => { const q = cif[i];
       h += q ? blk('m3' + x, 'M3' + x.toUpperCase(), esc(T(q.t)), q.c || COL[i], `<div class="cif-v">${esc(q.v)}${q.u ? `<small>${esc(q.u)}</small>` : ''}</div>${q.s ? `<div class="cif-s">${esc(q.s)}</div>` : ''}`, '', 'res', q.ic)
@@ -146,13 +153,15 @@ function pinta() {
     c.innerHTML = h;
   }
   if (m.despues) m.despues(c, R);
-  pintaRes(); guardaCasa(); ajusta(); monta3D(m, R);
+  if (idioma() !== 'es') c.querySelectorAll('.despiece td.des').forEach((d) => { [...d.childNodes].forEach((n) => { if (n.nodeType === 3) n.nodeValue = traduceDes(n.nodeValue, idioma()); }); });   /* v2.8 · descripciones de las listas en el idioma */
+  marcaStock(c);
+  pintaRes(); guardaCasa(); ajusta(); try { enlaza(); } catch (e) {} monta3D(m, R);
 }
 /* v2.5 · simulación 3D: se monta cuando el dibujo trae su lienzo y se suelta entera al repintar (sin contextos WebGL colgando) */
 let S3 = null, n3 = 0;
-async function monta3D(m, r) {
+async function monta3D(m, r, dentro) {
   if (S3) { try { S3.destruir(); } catch (e) {} S3 = null; }
-  const cv = document.querySelector('canvas[data-sim3d]'), yo = ++n3; if (!cv || !m.escena3d) return;
+  const cv = (dentro || document).querySelector('canvas[data-sim3d]'), yo = ++n3; if (!cv || !m.escena3d) return;
   try { const { Sala3D } = await import('./sim3d.js'); if (yo !== n3 || !cv.isConnected) return; S3 = new Sala3D(cv); m.escena3d(S3, r); S3.encuadra(); }
   catch (e) { if (cv.isConnected) cv.insertAdjacentHTML('afterend', `<p class="sim-err">${esc(T('La simulación 3D no está disponible en este navegador.'))}</p>`); }
 }
@@ -177,25 +186,59 @@ function tostada(t, ms = 3200) { const e = $('#tostada'); if (!e) return; e.text
 function ventana(tit, html) {
   const v = $('#velo'); v.innerHTML = `<div class="vent" role="dialog" aria-modal="true"><div class="vent-cab"><b>${esc(tit)}</b><span class="sep"></span><button type="button" class="ic-bt" data-cierra aria-label="${esc(T('Cerrar'))}">${IC.x}</button></div><div class="vent-cu">${html}</div></div>`; v.classList.add('on');
 }
-/* v2.6 · ficha de producto como la de SCREENS (comun/ficha.js): al tocar un equipo del resultado, foto (o dibujo), marca, modelo,
-   especificaciones de la lista y enlace al fabricante. Sin precios ni stock (la ficha es pública y sale en el PDF). */
-const TIPO = { altavoz: 'Altavoz', subgrave: 'Subgrave', microfono: 'Micrófono', capsula: 'Cápsula', transmisor: 'Transmisor', receptor: 'Receptor', camara: 'Cámara', 'barra-vc': 'Barra de vídeo', display: 'Display', control: 'Control',
-  'kit-audio': 'Kit de audio', 'audio-vc': 'Audio para videoconferencia', etapa: 'Etapa', 'procesador-audio': 'Procesador de audio', conmutador: 'Conmutador', extensor: 'Extensor', cable: 'Cable', avoip: 'AV sobre IP', accesorio: 'Accesorio', soporte: 'Soporte',
-  antena: 'Antena', cargador: 'Cargador', 'interfaz-audio': 'Interfaz de audio', 'tarjeta-audio': 'Tarjeta de audio', conferencia: 'Conferencia', tratamiento: 'Tratamiento acústico', servicio: 'Servicio', signage: 'Reproductor', 'pc-vc': 'Equipo de sala' };
-const ICONO = { altavoz: 'altavoz', subgrave: 'altavoz', microfono: 'micro', capsula: 'micro', transmisor: 'micro', receptor: 'micro', camara: 'camara', 'barra-vc': 'camara', display: 'display', control: 'control', 'kit-audio': 'altavoz', 'audio-vc': 'micro', proyector: 'proy' };
-const SPEC = [['pulgadas', 'Tamaño', '″'], ['res', 'Resolución', ''], ['nits', 'Brillo', ' nits'], ['horas', 'Horas al día', ''], ['canales', 'Canales', ''], ['w', 'Potencia', ' W'], ['inp', 'Entradas', ''], ['out', 'Salidas', ''], ['gbps', 'Ancho de banda', ' Gbps'],
-  ['hfov', 'Ángulo horizontal', '°'], ['zoom', 'Zoom óptico', '×'], ['zoomTotal', 'Zoom total', '×'], ['hfovIA', 'Lente panorámica', '°'], ['fovH', 'Campo de visión', '°'], ['fondoMax', 'Fondo de sala', ' m'], ['m2', 'Cobertura', ' m²'], ['zonas', 'Zonas', ''], ['personas', 'Personas', ''], ['poe', 'PoE', ''], ['u', 'Alto de rack', ' U']];
-function abreFicha(id) {
-  const M = marcas(); let x = null, mk = '';
-  Object.keys(M).some((k) => (M[k] || []).some((y) => { if (y && y.id === id) { x = y; mk = k; return true; } return false; }));
-  if (!x || !window.SC_FICHA) return false;
-  const specs = SPEC.filter((s) => x[s[0]] != null && x[s[0]] !== '' && x[s[0]] !== false && typeof x[s[0]] !== 'object').map((s) => [T(s[1]), (x[s[0]] === true ? T('Sí') : x[s[0]]) + s[2]]);
-  const enl = [x.url, x.web, x.fuente].find((u) => /^https?:\/\//.test(String(u || '')));
-  const html = window.SC_FICHA.fichaHTML({ cat: T(TIPO[x.tipo] || x.tipo || ''), icono: ICONO[x.tipo] || 'elec', marca: x.marca || mk, modelo: x.modelo || x.id, foto: x.urlFoto || x.foto, fotoTrasera: x.urlFotoTrasera, specs: [[T('Referencia'), x.id]].concat(specs), notas: x.descripcion ? [x.descripcion] : [], enlace: enl, enlaceTxt: T('Ficha del fabricante'), acento: '#00b4ff', sel: true });
-  ventana((x.marca || mk) + ' ' + (x.modelo || x.id), html); return true;
+/* v2.9 · como en SCREENS: en público, el único indicio de stock es un fondo azul sutil en los equipos que lo tienen (sin texto);
+   el «En stock / Bajo pedido» escrito solo sale con la llave de Josep */
+function marcaStock(raiz) {
+  raiz.querySelectorAll('.equipo').forEach((eq) => { let hay = false;
+    eq.querySelectorAll('table.despiece tr').forEach((tr) => { const td = tr.querySelector('td.ref'), b = td && busca(td.textContent.trim()); if (b && b.x.stock && b.x.stock !== 'false' && b.x.stock !== '0') { tr.classList.add('stk'); hay = true; } });
+    if (hay) eq.classList.add('stk'); });
+}
+/* v2.8 · ver en grande el dibujo (como el ojo de SCREENS): la vista elegida a toda ventana, también la simulación a escala y la 3D */
+let GRANDE = false;
+function verGrande() {
+  const m = M(), esq = m.esquema(R, { vertical: movilV() }); GRANDE = true;
+  ventana(T(esq.tit), `<div class="grande">${esq.html}</div>`); const v = $('#velo .vent'); if (v) v.classList.add('v-grande');
+  if (/data-sim3d/.test(esq.html)) monta3D(m, R, $('#velo'));
+  try { enlaza($('#velo')); } catch (e) {}
+}
+/* v2.8 · datos del proyecto (como en SCREENS): nombre, cliente y observaciones; salen en la cabecera y en la primera hoja del PDF */
+let PROY = Object.assign({ proy: '', cliente: '', obs: '' }, lee('systems_proyecto') || {});
+function ventanaProyecto() {
+  ventana(T('Datos del proyecto'), `<div class="proy-f"><label>${esc(T('Proyecto'))}<input type="text" class="pide" id="pr-proy" maxlength="80" value="${esc(PROY.proy)}"></label><label>${esc(T('Cliente'))}<input type="text" class="pide" id="pr-cli" maxlength="80" value="${esc(PROY.cliente)}"></label><label>${esc(T('Observaciones'))}<textarea class="pide" id="pr-obs" rows="5" maxlength="1200">${esc(PROY.obs)}</textarea></label>
+    <div class="fila"><button type="button" class="calcular" data-proy-guarda>${esc(T('Guardar'))}</button><button type="button" class="tog" data-proy-borra><span>${esc(T('Borrar'))}</span></button></div></div>`);
+  const v = $('#velo .vent'); if (v) v.classList.add('ajustes'); setTimeout(() => { const i = $('#pr-proy'); if (i) i.focus(); }, 30);
+}
+/* v2.6 · ficha de producto (vista/fichaprod.js): en la ventana; v2.8 · también en su propia página, en pestaña nueva */
+function abreFicha(id) { if (!fichaDe(id)) return false; window.open(urlFicha(id), '_blank', 'noopener'); return true; }
+/* v2.8 · todo nombre de producto que aparece (resultado, cifras, despiece y esquemas) es un enlace a su ficha en pestaña nueva */
+const escRe = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+let REc = null, REk = null;
+function reNombres() {
+  const N = nombres(); if (REc && REk === N) return REc;
+  const ks = [...N.keys()].filter((k) => /\d/.test(k) || k.length >= 4).sort((a, b) => b.length - a.length).map(escRe);
+  REc = ks.length ? new RegExp('(^|[^A-Za-z0-9-])(' + ks.join('|') + ')(?![A-Za-z0-9-])', 'gi') : null; REk = N; return REc;
+}
+function enlaza(raiz = document.getElementById('app')) {
+  const re = reNombres(), N = nombres(); if (!re || !raiz) return;
+  const idDe = (t) => { const k = t.toUpperCase(), id = N.get(k); if (!id) return null; return (/\d/.test(k) || t === t.toUpperCase() || t === k) ? id : null; };
+  const zonas = raiz.querySelectorAll('.cif-v, .cif-s, .ss-cifra, .ss-linea, [data-blk="S1B"] .blk-cu, .lienzo-s, .ss-lienzo');
+  zonas.forEach((z) => {
+    const w = document.createTreeWalker(z, NodeFilter.SHOW_TEXT, { acceptNode: (n) => (n.parentElement && n.parentElement.closest('a, button, input, select, textarea, label, .tog, .prod')) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+    const nodos = []; while (w.nextNode()) nodos.push(w.currentNode);
+    nodos.forEach((n) => {
+      const t = n.nodeValue; re.lastIndex = 0; if (!re.test(t)) return; re.lastIndex = 0;
+      const svg = n.parentElement && n.parentElement.namespaceURI === 'http://www.w3.org/2000/svg';
+      if (svg) { let m, id = null; while (!id && (m = re.exec(t))) id = idDe(m[2]); if (!id) return; const tx = n.parentElement.closest('text'); if (!tx || tx.parentElement.closest('a')) return;
+        const a = document.createElementNS('http://www.w3.org/2000/svg', 'a'); a.setAttribute('href', urlFicha(id)); a.setAttribute('target', '_blank'); a.setAttribute('class', 'prod'); tx.replaceWith(a); a.appendChild(tx); return; }
+      const fr = document.createDocumentFragment(); let i = 0, m, hay = false;
+      while ((m = re.exec(t))) { const id = idDe(m[2]); if (!id) continue; const ini = m.index + m[1].length; fr.appendChild(document.createTextNode(t.slice(i, ini)));
+        const a = document.createElement('a'); a.className = 'prod'; a.href = urlFicha(id); a.target = '_blank'; a.rel = 'noopener'; a.title = T('Ver la ficha'); a.textContent = m[2]; fr.appendChild(a); i = ini + m[2].length; hay = true; }
+      if (!hay) return; fr.appendChild(document.createTextNode(t.slice(i))); n.replaceWith(fr);
+    });
+  });
 }
 const movilV = () => matchMedia('(max-width: 559px) and (orientation: portrait)').matches;   /* v1.8 · móvil vertical */
-const cierra = () => { const ic = $('#info-comun'), hc = $('#hueco-comun'); if (ic && hc) [...ic.children].forEach((x) => hc.insertBefore(x, hc.querySelector('.admin-esq'))); const v = $('#velo'); v.classList.remove('on'); v.innerHTML = ''; };
+const cierra = () => { GRANDE = false; const ic = $('#info-comun'), hc = $('#hueco-comun'); if (ic && hc) [...ic.children].forEach((x) => hc.insertBefore(x, hc.querySelector('.admin-esq'))); const v = $('#velo'); v.classList.remove('on'); v.innerHTML = ''; };
 function info() {
   ventana('SYSTEMS', `<p>${esc(T('Calcula la electrónica, la señal, el audio y la videoconferencia de un proyecto con los equipos de las marcas del catálogo.'))}</p><p>${esc(T('Elige arriba el módulo. En SIMPLE te pregunto lo justo y te doy la solución; en PRO ves y cambias todos los datos, el esquema y el despiece.'))}</p><p>${esc(T('También puedes escribir lo que necesitas en la casilla y pulsar CALCULAR.'))}</p><p class="nota">${esc(T('Solo se calcula y se propone con las marcas y los fabricantes de las listas del panel.'))}</p>` +
     MODS.map((m) => `<p><b>${esc(T(m.nom))}</b> · ${esc(T(m.info))}</p>`).join(''));
@@ -243,7 +286,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && e.target.id === 'pide') { calcular(); return; }
   if (e.key === 'Enter' && e.target.matches && e.target.matches('[data-num]')) { e.target.blur(); return; }
   if (e.key === 'Enter' && e.target.matches && e.target.matches('#ss-asis input')) { const b = document.querySelector('[data-ss-ok]'); if (b) b.click(); return; }
-  if (e.key === 'Escape') { if (ASIS) { ASIS = null; pregunta(); } else cierra(); }
+  if (e.key === 'Escape') { if (ASIS) { ASIS = null; pregunta(); } else { const g = GRANDE; cierra(); if (g) pinta(); } }
 });
 document.addEventListener('click', (e) => {
   const q = (s) => e.target.closest(s); let b;
@@ -254,10 +297,14 @@ document.addEventListener('click', (e) => {
   if (q('button[data-tema]')) { G.tema = G.tema === 'claro' ? 'oscuro' : 'claro'; document.documentElement.dataset.tema = G.tema; guardaCasa(); return; }
   if (q('[data-salir-int]')) { e.preventDefault(); salirInterno(); return; }
   if ((b = q('.equipo')) && !q('a, button')) { const ref = b.querySelector('.ref'); if (ref && abreFicha(ref.textContent.trim())) return; }
-  if (q('[data-pdf]')) { imprimir(); return; }
+  if (q('[data-pdf]')) { pdfDirecto(); return; }
   if (q('[data-info]')) { info(); if (movilV()) { const cu = document.querySelector('#velo .vent-cu'), hc = $('#hueco-comun'); if (cu && hc) { cu.insertAdjacentHTML('afterbegin', '<div class="fila info-comun" id="info-comun"></div>'); [...hc.children].filter((x) => !x.classList.contains('admin-esq')).forEach((x) => $('#info-comun').appendChild(x)); } } return; }
   if (q('[data-aviso-calc]') && movilV()) { tostada(T('Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.'), 6000); return; }
-  if (q('[data-cierra]') || e.target.id === 'velo') { cierra(); return; }
+  if (q('[data-cierra]') || e.target.id === 'velo') { const g = GRANDE; cierra(); if (g) pinta(); return; }
+  if (q('[data-grande]')) { verGrande(); return; }
+  if (q('[data-proyecto]')) { ventanaProyecto(); return; }
+  if (q('[data-proy-guarda]')) { PROY = { proy: ($('#pr-proy') || {}).value || '', cliente: ($('#pr-cli') || {}).value || '', obs: ($('#pr-obs') || {}).value || '' }; guarda('systems_proyecto', PROY); cierra(); tostada(T('Datos del proyecto guardados: salen en el PDF.')); return; }
+  if (q('[data-proy-borra]')) { PROY = { proy: '', cliente: '', obs: '' }; guarda('systems_proyecto', PROY); cierra(); return; }
   if (q('#calcular')) { calcular(); return; }
   if (q('#pide-res')) { EDITA = true; pintaRes(); const i = $('#pide'); i.focus(); i.select(); return; }
   if (q('[data-copiatxt]')) { const r = $('#pide-res'), t = (r && !r.hidden ? r.textContent : $('#pide').value).trim(); if (!t) tostada(T('La casilla está vacía: no hay nada que copiar.')); else (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => tostada(T('Copiado.')), () => tostada(T('Este navegador no deja copiar desde aquí.'))); return; }

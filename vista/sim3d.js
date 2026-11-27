@@ -82,8 +82,19 @@ export class Sala3D {
   }
   /* una pantalla en la pared frontal (o donde se diga), con la imagen encendida */
   pantalla(w, h, x, yBajo, z, txt, o = {}) {
-    this.caja(w + 0.04, h + 0.04, 0.06, x, yBajo + h / 2, z + 0.03, 0x111114, { metal: 0.6 });
-    this.caja(w, h, 0.01, x, yBajo + h / 2, z + 0.065, COL.imagen, { emis: 0.55, rough: 0.3 });
+    const cu = o.cuerpo;   /* v2.9 · cuerpo a medida real (vista/cuerpos.js): w × h = cuerpo; la imagen, en su ventana */
+    if (cu) { this.caja(w, h, cu.D, x, yBajo + h / 2, z + cu.D / 2, cu.fam === 'exterior' ? 0x26282d : 0x0d0e11, { metal: 0.5 });
+      if (cu.totem) this.caja(w, Math.min(0.09, h * 0.05), cu.D + 0.01, x, Math.min(0.09, h * 0.05) / 2, z + cu.D / 2, 0x060608, { metal: 0.4 });
+      const s0 = cu.scr; x = x - w / 2 + s0.x + s0.w / 2; yBajo = yBajo + s0.y; w = s0.w; h = s0.h; z = z + cu.D - 0.066; }
+    else this.caja(w + 0.04, h + 0.04, 0.06, x, yBajo + h / 2, z + 0.03, 0x111114, { metal: 0.6 });
+    if (o.tex) {   /* v2.8 · la imagen en la pantalla (carta de ajuste o el contenido elegido); uv = trozo de la imagen para un videowall */
+      const g = new THREE.PlaneGeometry(w, h), uv = o.uv || [0, 0, 1, 1], at = g.attributes.uv;
+      for (let i = 0; i < at.count; i++) at.setXY(i, uv[0] + at.getX(i) * (uv[2] - uv[0]), uv[1] + at.getY(i) * (uv[3] - uv[1]));
+      const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false });
+      this._tex = this._tex || {}; let t = this._tex[o.tex];
+      if (!t) { t = this._tex[o.tex] = new THREE.TextureLoader().load(o.tex, () => this.render()); t.colorSpace = THREE.SRGBColorSpace; }
+      mat.map = t; const m = new THREE.Mesh(g, mat); m.position.set(x, yBajo + h / 2, z + 0.072); this.grupo.add(m);
+    } else this.caja(w, h, 0.01, x, yBajo + h / 2, z + 0.065, COL.imagen, { emis: 0.55, rough: 0.3 });
     if (txt) this.etiqueta(txt, x, yBajo + h + 0.3, z + 0.1, 0.3, '#ffd600');
   }
   limpiar() { this._limpiar(); }

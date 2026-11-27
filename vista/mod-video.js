@@ -4,6 +4,9 @@
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos, esInterno, P } from './listas.js';
 import { COL, escala, cota, persona, suelo, etiqueta, lienzo, lienzo3D, pestanas, fmt } from './vt.js';
+import { simEscala, accionSim, tex3D } from './simdisp.js';
+import { fotoDe, urlFicha } from './fichaprod.js';
+import { cuerpo } from './cuerpos.js';
 textos({
   'Vista lateral': ['Side view', 'Vista lateral'], 'La sala vista de lado': ['The room seen from the side', 'La sala vista de costat'], 'oído': ['ear', 'oïda'], 'ojos': ['eyes', 'ulls'],
   'VIDEOCONF.': ['VIDEO CONF.', 'VIDEOCONF.'], 'Videoconferencia': ['Video conferencing', 'Videoconferència'],
@@ -75,15 +78,25 @@ function calcula() {
 
 /* v2.5 · simulación 3D: pantalla a su altura, cámara o barra con su campo de visión, mesa, público y micrófonos de techo */
 function escena3d(V, r) {
-  const A = S.ancho, F = S.fondo, H = 2.8, p = r.disp ? r.disp.pulgadas : r.pulg, w = p * 0.0254 * 0.8716, h = p * 0.0254 * 0.4903, bajo = Math.max(0.75, 1.3 - h / 2);
+  const A = S.ancho, F = S.fondo, H = 2.8, p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : p * 0.0254 * 0.8716, h = cu ? cu.H : p * 0.0254 * 0.4903, bajo = Math.max(0.75, 1.3 - h / 2);
   V.sala(A, F, H);
-  for (let i = 0; i < S.np; i++) V.pantalla(w, h, (i - (S.np - 1) / 2) * (w + 0.2), bajo, 0, i === 0 ? (r.disp ? r.disp.modelo + ' · ' : '') + p + '″' : '');
+  for (let i = 0; i < S.np; i++) V.pantalla(w, h, (i - (S.np - 1) / 2) * (w + 0.2), bajo, 0, i === 0 ? (r.disp ? r.disp.modelo + ' · ' : '') + p + '″' : '', { tex: tex3D(), cuerpo: cu });
   const hc = bajo + h + 0.1, fh = r.cam ? (r.cam.fovH || (r.cam.fovD ? r.cam.fovD * 0.87 : 80)) : 80;
   if (r.cam) { V.caja(r.ptz ? 0.18 : 0.6, 0.1, 0.1, 0, hc, 0.08, 0x1b1b1e, { metal: 0.6 }); V.cono([0, hc, 0.15], [0, 1.1, F - 0.3], fh, 0x00b4ff, 0.08); V.etiqueta(r.cam.modelo, 0, hc + 0.8, 0.2, 0.36); }
   const x1 = Math.min(S.fila, F - 0.6), x2 = Math.max(x1 + 0.6, F - 0.6), tw = Math.min(A * 0.4, 1.4);
   V.caja(tw, 0.05, x2 - x1, 0, 0.74, (x1 + x2) / 2, 0x3a3b42, { rough: 0.6 });
   const lado = Math.max(1, Math.ceil(S.pers / 2)); for (let i = 0; i < Math.min(S.pers, 30); i++) { const izq = i % 2 === 0, j = Math.floor(i / 2), z = x1 + (j + .5) * (x2 - x1) / lado; V.persona(izq ? -tw / 2 - 0.4 : tw / 2 + 0.4, z, izq ? Math.PI / 2 : -Math.PI / 2, 0.6); }
   if (r.mic) { const rr = Math.sqrt(r.mic.m2 / Math.PI); for (let i = 0; i < r.nmic; i++) { const z = F * (i + .5) / r.nmic; V.caja(0.5, 0.04, 0.5, 0, H - 0.02, z, 0x00ff04, { emis: 0.3 }); V.cono([0, H - 0.05, z], [0, 1.1, z], 2 * Math.atan(rr / (H - 1.1)) * 180 / Math.PI, 0x00ff04, 0.06); } }
+}
+/* v2.8 · simulación a escala (la de SCREENS): la pared frontal con la pantalla a su tamaño y altura, con contenido, la barra o la cámara encima,
+   la persona de 1,75 m y la foto oficial de cada equipo, que abre su ficha */
+function aEscala(r, o) {
+  const p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : p * 0.0254 * 0.8716, h = cu ? cu.H : p * 0.0254 * 0.4903, bajo = Math.max(0.75, 1.3 - h / 2), gap = 0.2;
+  const paneles = []; for (let i = 0; i < S.np; i++) paneles.push({ x: i * (w + gap), y: bajo, w, h, cu });
+  const W = S.np * w + (S.np - 1) * gap, extras = [];
+  if (r.cam) { const cw = r.ptz ? 0.17 : Math.min(0.9, W * 0.6), ch = r.ptz ? 0.17 : 0.075; extras.push({ x: W / 2 - cw / 2, y: bajo + h + 0.05, w: cw, h: ch, txt: r.cam.modelo }); }
+  const ft = [r.disp && { url: fotoDe(r.disp), href: urlFicha(r.disp.id), nombre: r.disp.marca + ' ' + r.disp.modelo }, r.cam && { url: fotoDe(r.cam), href: urlFicha(r.cam.id), nombre: r.cam.marca + ' ' + r.cam.modelo }];
+  return simEscala({ paneles, marco: 0.012, W, H: h + (r.cam ? 0.3 : 0), base: bajo, vw: false, extras, etiqueta: (r.disp ? r.disp.marca + ' ' + r.disp.modelo + ' · ' : '') + p + '″' + (r.cam ? ' · ' + r.cam.modelo : '') }, ft, o);
 }
 /* v2.3 · vista LATERAL como las de SCREENS: la pantalla a su altura, la cámara encima, la mesa y la mirada del espectador más lejano */
 let VT = 'planta';
@@ -136,7 +149,7 @@ function resultado(r) {
 const cifras = (r) => [
   { t: 'Diagonal mínima', v: String(r.pulg), u: '″', s: N(r.h, 2) + ' m · ' + N(r.dLej, 1) + ' m', ic: 'tele', c: 'var(--verde-txt)' },
   { t: 'Pantalla', v: r.disp ? r.disp.modelo : '—', s: r.disp ? r.disp.marca + ' · ' + r.disp.pulgadas + '″' : '', ic: 'tele', c: 'var(--azul)' },
-  { t: 'Cámara', v: r.cam ? r.cam.modelo : '—', s: r.cam ? r.cam.marca : '', ic: 'sim', c: 'var(--violeta)' },
+  { t: 'Cámara', v: r.cam ? r.cam.modelo : '—', s: r.cam ? r.cam.marca : '', ic: 'camara', c: 'var(--violeta)' },
   { t: 'Campo de visión', v: String(Math.round(r.fov)), u: '°', s: T('Primera fila a (m)') + ' ' + N(S.fila, 1), ic: 'ojo', c: 'var(--ambar)' },
   { t: 'Micrófonos', v: r.mic ? String(r.nmic) : '—', u: r.mic ? '× ' + T('de techo') : '', s: r.mic ? r.mic.modelo : T('Los de la barra'), ic: 'chispa', c: 'var(--verde)' },
   { t: 'Superficie', v: N(r.area, 1), u: 'm²', s: S.pers + ' ' + T('personas'), ic: 'regla', c: 'var(--magenta, #e24bf0)' }];
@@ -168,8 +181,8 @@ export default {
   info: 'Sala de reuniones: tamaño de pantalla, cámara o barra con su campo de visión y micrófonos por cobertura.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
   reconoce: (t) => /videoconf|sala de reuni|sala de reunions|teams|zoom|meeting room|personas|persones|people/i.test(t),
-  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : VT === '3d' ? 'Simulación 3D' : 'Plano de la sala', ic: 'cubo', html: VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : esquema(r, o), extra: pestanas(['planta', 'lateral', '3d'], VT) }),
+  esquema: (r, o) => ({ tit: VT === 'escala' ? 'Simulación a escala' : VT === 'lateral' ? 'Vista lateral' : VT === '3d' ? 'Simulación 3D' : 'Plano de la sala', ic: 'cubo', html: VT === 'escala' ? aEscala(r, o) : VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : esquema(r, o), extra: pestanas(['planta', 'escala', 'lateral', '3d'], VT) }),
   escena3d,
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d * (k === 'pers' || k === 'np' ? 1 : k === 'fila' ? 0.1 : 0.5)),
-  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
+  accion: (a) => { if (accionSim(a)) return; if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
 };

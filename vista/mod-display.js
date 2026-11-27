@@ -5,6 +5,9 @@
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos, esInterno, P as BP } from './listas.js';
 import { COL, escala, cota, persona, suelo, etiqueta, lienzo, lienzo3D, pestanas, fmt } from './vt.js';
+import { simEscala, accionSim, tex3D } from './simdisp.js';
+import { fotoDe, urlFicha } from './fichaprod.js';
+import { cuerpo } from './cuerpos.js';
 textos({
   'DISPLAYS': ['DISPLAYS', 'DISPLAYS'], 'Displays y señalética': ['Displays and signage', 'Displays i senyalització'],
   'Señalética y digital signage: el display que cumple con el sitio, el tamaño, las horas al día y el reproductor, de las marcas del catálogo.': ['Signage and digital signage: the display that meets the place, size, hours a day and player, from the catalogue brands.', 'Senyalització i digital signage: el display que compleix amb el lloc, la mida, les hores al dia i el reproductor, de les marques del catàleg.'],
@@ -17,11 +20,12 @@ textos({
   'Táctil': ['Touch', 'Tàctil'], 'Quiosco o punto de información': ['Kiosk or information point', 'Quiosc o punt d\'informació'],
   'Alargado': ['Stretched', 'Allargat'], 'Formato estirado (estanterías, barras)': ['Stretched format (shelves, bars)', 'Format estirat (prestatgeries, barres)'],
   'Transparente': ['Transparent', 'Transparent'], 'Se ve a través': ['You can see through it', 'S\'hi veu a través'],
+  'se dibujan 6 de {n}': ['6 of {n} drawn', 'se\'n dibuixen 6 de {n}'],
   'Tamaño': ['Size', 'Mida'], 'Pulgadas': ['Inches', 'Polzades'], 'Cuántas': ['How many', 'Quantes'], 'Columnas': ['Columns', 'Columnes'], 'Filas': ['Rows', 'Files'],
   'Uso': ['Use', 'Ús'], 'Horas al día': ['Hours a day', 'Hores al dia'], 'Hasta 16 h': ['Up to 16 h', 'Fins a 16 h'], '24 h, sin apagar': ['24 h, never off', '24 h, sense apagar'],
   'Orientación': ['Orientation', 'Orientació'], 'Horizontal': ['Landscape', 'Horitzontal'], 'Vertical': ['Portrait', 'Vertical'],
   'Reproductor': ['Player', 'Reproductor'], 'Integrado en la pantalla': ['Built into the screen', 'Integrat a la pantalla'], 'Externo': ['External', 'Extern'],
-  'Marca': ['Brand', 'Marca'], 'La que esté en stock': ['Whichever is in stock', 'La que estigui en estoc'],
+  'Marca': ['Brand', 'Marca'], 'La que esté en stock': ['Whichever is in stock', 'La que estigui en estoc'], 'Cualquiera': ['Any', 'Qualsevol'],
   'Pantallas': ['Screens', 'Pantalles'], 'Brillo': ['Brightness', 'Brillantor'], 'Resolución': ['Resolution', 'Resolució'], 'Display': ['Display', 'Display'],
   'En stock': ['In stock', 'En estoc'], 'Bajo pedido': ['To order', 'Sota comanda'], 'Integrado': ['Built in', 'Integrat'],
   'La instalación vista de frente': ['The installation seen from the front', 'La instal·lació vista de front'], 'Vista frontal': ['Front view', 'Vista frontal'],
@@ -87,11 +91,13 @@ function calcula() {
 }
 /* v2.3 · vistas técnicas como en SCREENS: FRONTAL (a escala, con la silueta de 1,75 m y cotas) y LATERAL (altura de montaje,
    distancia de quien mira y ángulo vertical). Mismas piezas que screens/vistas.js (vista/vt.js). */
-let VT = 'frontal';
-const geo = (r) => { const p = r.disp ? r.disp.pulgadas : S.pulg, vert = S.orient === 'v', w1 = vert ? alto16(p) : ancho16(p), h1 = vert ? ancho16(p) : alto16(p);
-  const vw = S.sitio === 'videowall', cols = vw ? S.cols : Math.min(nPant(), 6), fil = vw ? S.filas : 1, gap = vw ? 0.006 : 0.25;
-  const base = S.sitio === 'totem' ? BP('display.base.totem', 0.3) : S.sitio === 'tactil' ? BP('display.base.tactil', 0.9) : vw ? BP('display.base.videowall', 0.8) : S.sitio === 'escaparate' ? BP('display.base.escaparate', 0.9) : BP('display.base.pared', 1.2);
-  return { p, w1, h1, vw, cols, fil, gap, base, W: cols * w1 + (cols - 1) * gap, H: fil * h1 + (fil - 1) * gap }; };
+let VT = 'escala';   /* v2.8 · la simulación a escala, como en SCREENS, es la vista de entrada */
+/* v2.9 · con las medidas reales del modelo (vista/cuerpos.js), cada display es su cuerpo exacto: ancho, alto, fondo y marcos de su ficha */
+const geo = (r) => { const p = r.disp ? r.disp.pulgadas : S.pulg, vert = S.orient === 'v', cu = r.disp ? cuerpo(r.disp, vert) : null;
+  const w1 = cu ? cu.W : vert ? alto16(p) : ancho16(p), h1 = cu ? cu.H : vert ? ancho16(p) : alto16(p);
+  const vw = S.sitio === 'videowall', cols = vw ? S.cols : Math.min(nPant(), 6), fil = vw ? S.filas : 1, gap = vw ? (cu ? 0 : 0.006) : 0.25;
+  const base = cu && cu.totem ? 0 : S.sitio === 'totem' ? BP('display.base.totem', 0.3) : S.sitio === 'tactil' ? BP('display.base.tactil', 0.9) : vw ? BP('display.base.videowall', 0.8) : S.sitio === 'escaparate' ? BP('display.base.escaparate', 0.9) : BP('display.base.pared', 1.2);
+  return { p, w1, h1, vw, cols, fil, gap, base, cu, W: cols * w1 + (cols - 1) * gap, H: fil * h1 + (fil - 1) * gap }; };
 function frontal(r, o) {
   const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, G = geo(r), top = G.base + G.H;
   const xMin = -1.0, xMax = G.W + 0.4, E = escala(VW, VH, { l: 56, r: 56, t: 44, b: 40 }, xMin, xMax, 0, Math.max(2.0, top + 0.35)), { X, Y, k } = E;
@@ -113,7 +119,7 @@ function lateral(r, o) {
   const xMax = d + 1.0, E = escala(VW, VH, { l: 60, r: 40, t: 44, b: 40 }, -0.4, xMax, 0, Math.max(2.2, top + 0.4)), { X, Y, k } = E;
   let g = suelo(X, Y, -0.4, xMax) + `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(0)}" y2="${Y(Math.max(2.2, top + 0.3))}" stroke="${COL.pared}" stroke-width="4"/>`;
   if (S.sitio === 'totem') g += `<rect x="${X(0.02)}" y="${Y(G.base)}" width="${0.35 * k}" height="${G.base * k}" fill="${COL.equipo}" stroke="${COL.linea}"/>`;
-  g += `<rect x="${X(0.02)}" y="${Y(top)}" width="${Math.max(4, 0.07 * k)}" height="${G.H * k}" fill="${COL.imagenB}"/>`;
+  g += `<rect x="${X(0.02)}" y="${Y(top)}" width="${Math.max(3, (G.cu ? G.cu.D : 0.07) * k)}" height="${G.H * k}" fill="${COL.imagenB}"/>`;
   g += `<path d="M${X(d)} ${Y(ojo)} L${X(0.09)} ${Y(top)} L${X(0.09)} ${Y(G.base)} Z" fill="${COL.haz}" stroke="rgba(255,214,0,.5)" stroke-width="1"/>`;
   g += persona(X, Y, d, k) + `<circle cx="${X(d)}" cy="${Y(ojo)}" r="4" fill="${COL.lente}"/>`;
   const aSup = Math.atan2(top - ojo, d) * 180 / Math.PI, aInf = Math.atan2(ojo - G.base, d) * 180 / Math.PI;
@@ -129,12 +135,21 @@ function escena3d(V, r) {
   const G = geo(r), A = Math.max(4, G.W + 3), d = Math.max(1.2, Math.min(12, (S.sitio === 'tactil' ? BP('display.distanciaTactil', 0.6) : (S.sitio === 'escaparate' || S.sitio === 'exterior' ? BP('display.factorDistanciaCalle', 4) : BP('display.factorDistancia', 3)) * G.h1))), F = d + 2, H = Math.max(3, G.base + G.H + 0.8);
   V.sala(A, F, H);
   for (let f = 0; f < G.fil; f++) for (let c = 0; c < G.cols; c++) { const x = -G.W / 2 + c * (G.w1 + G.gap) + G.w1 / 2, y = G.base + f * (G.h1 + G.gap);
-    V.pantalla(G.w1, G.h1, x, y, S.sitio === 'totem' ? 0.4 : 0, f === G.fil - 1 && c === 0 ? (r.disp ? r.disp.modelo + ' · ' : '') + G.p + '″' : '');
-    if (S.sitio === 'totem') V.caja(G.w1 * 0.4, G.base, 0.3, x, G.base / 2, 0.45, 0x1b1b1e, { metal: 0.6 }); }
+    V.pantalla(G.w1, G.h1, x, y, S.sitio === 'totem' ? 0.4 : 0, f === G.fil - 1 && c === 0 ? (r.disp ? r.disp.modelo + ' · ' : '') + G.p + '″' : '', { tex: tex3D(), uv: G.vw ? [c / G.cols, f / G.fil, (c + 1) / G.cols, (f + 1) / G.fil] : null, cuerpo: G.cu });
+    if (S.sitio === 'totem' && !(G.cu && G.cu.totem)) V.caja(G.w1 * 0.4, G.base, 0.3, x, G.base / 2, 0.45, 0x1b1b1e, { metal: 0.6 }); }
   V.persona(0.4, d, Math.PI, 1);
   V.cota([0.4, 0, 0], [0.4, 0, d], fmt(d) + ' m', 0.4);
 }
-const esquema = (r, o = {}) => (VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : frontal(r, o));
+/* v2.8 · simulación a escala (la de SCREENS): pared con textura, persona de 1,75 m, cada display a su tamaño real con la carta de ajuste
+   o el contenido elegido, y la foto oficial del modelo que abre su ficha */
+function aEscala(r, o) {
+  const G = geo(r), paneles = [];
+  for (let f = 0; f < G.fil; f++) for (let c = 0; c < G.cols; c++) paneles.push({ x: c * (G.w1 + G.gap), y: G.base + f * (G.h1 + G.gap), w: G.w1, h: G.h1, cu: G.cu });
+  const d = r.disp, et = (d ? d.marca + ' ' + d.modelo + ' · ' : '') + G.p + '″' + (G.vw ? ' · ' + S.cols + ' × ' + S.filas : nPant() > 6 ? ' · ' + T('se dibujan 6 de {n}', { n: nPant() }) : nPant() > 1 ? ' · ' + nPant() + ' ×' : '');
+  return simEscala({ paneles, marco: G.vw ? 0.0018 : 0.012, W: G.W, H: G.H, base: G.base, vw: G.vw, totem: S.sitio === 'totem' && !(G.cu && G.cu.totem), etiqueta: et },
+    d ? { url: fotoDe(d), href: urlFicha(d.id), nombre: d.marca + ' ' + d.modelo } : null, o);
+}
+const esquema = (r, o = {}) => (VT === 'escala' ? aEscala(r, o) : VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : frontal(r, o));
 const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${x.prioritario ? '⭐ ' : ''}${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}</td></tr></table></div>` : '';
 function resultado(r) {
   let h = `<div class="veredicto ${r.sem === 'A' ? 'aviso' : r.sem === 'R' ? 'mal' : ''}"><b>${esc(r.semTxt)}</b><p>${esc(r.lineaTxt)}</p></div>`;
@@ -148,16 +163,16 @@ const cifras = (r) => [
   { t: 'Pantallas', v: String(r.n), u: '×', s: S.sitio === 'videowall' ? S.cols + ' × ' + S.filas : T(S.orient === 'v' ? 'Vertical' : 'Horizontal'), ic: 'tele', c: 'var(--azul)' },
   { t: 'Pulgadas', v: r.disp ? String(r.disp.pulgadas) : String(S.pulg), u: '″', s: r.vw ? N(r.vw.a, 2) + ' × ' + N(r.vw.h, 2) + ' m' : T('Pulgadas pedidas') + ' ' + S.pulg + '″', ic: 'regla', c: 'var(--violeta)' },
   { t: 'Brillo', v: r.disp && r.disp.nits ? N(r.disp.nits) : '—', u: 'nits', s: T((SITIOS.find((x) => x[0] === S.sitio) || SITIOS[0])[1]), ic: 'sol', c: 'var(--ambar)' },
-  { t: 'Horas al día', v: r.disp ? r.disp.horas : S.horas, s: r.disp && r.disp.res ? r.disp.res : '', ic: 'calidad', c: 'var(--verde)' },
+  { t: 'Horas al día', v: r.disp ? r.disp.horas : S.horas, s: r.disp && r.disp.res ? r.disp.res : '', ic: 'reloj', c: 'var(--verde)' },
   { t: 'Reproductor', v: r.disp ? T(r.disp.soc ? 'Integrado' : 'Externo') : '—', s: r.player ? r.player.modelo : '', ic: 'chip', c: 'var(--magenta, #e24bf0)' }];
 function datos() {
-  const marcas = [['auto', 'La que esté en stock'], ...ORDEN.filter((m) => equipos('display', m).length).map((m) => [m, m])];
-  return [{ tit: 'Dónde va', ic: 'display', ac: 'var(--verde-txt)', html: togs('sitio', SITIOS.map((x) => [x[0], x[1]]), S.sitio, 'dos') + etq('Marca') + togs('marca', marcas, S.marca, 'dos') },
+  const marcas = [['auto', esInterno() ? 'La que esté en stock' : 'Cualquiera'], ...ORDEN.filter((m) => equipos('display', m).length).map((m) => [m, m])];
+  return [{ tit: 'Dónde va', ic: 'diana', ac: 'var(--verde-txt)', html: togs('sitio', SITIOS.map((x) => [x[0], x[1]]), S.sitio, 'dos') + etq('Marca') + togs('marca', marcas, S.marca, 'dos') },
     { tit: 'Tamaño', ic: 'regla', ac: 'var(--azul)', html: num('pulg', 'Pulgadas', S.pulg, '″', 1, 10, 120) + (S.sitio === 'videowall' ? `<div class="nums">${num('cols', 'Columnas', S.cols, '', 1, 1, 10)}${num('filas', 'Filas', S.filas, '', 1, 1, 10)}</div>` : num('np', 'Cuántas', S.np, '', 1, 1, 50)) + etq('Orientación') + togs('orient', [['h', 'Horizontal'], ['v', 'Vertical']], S.orient, 'dos') },
-    { tit: 'Uso', ic: 'calidad', ac: 'var(--ambar)', html: etq('Horas al día') + togs('horas', [['16/7', 'Hasta 16 h'], ['24/7', '24 h, sin apagar']], S.horas, 'dos') + etq('Reproductor') + togs('player', [['soc', 'Integrado en la pantalla'], ['ext', 'Externo']], S.player, 'dos') + `<div class="pie-b"><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>` }];
+    { tit: 'Uso', ic: 'reloj', ac: 'var(--ambar)', html: etq('Horas al día') + togs('horas', [['16/7', 'Hasta 16 h'], ['24/7', '24 h, sin apagar']], S.horas, 'dos') + etq('Reproductor') + togs('player', [['soc', 'Integrado en la pantalla'], ['ext', 'Externo']], S.player, 'dos') + `<div class="pie-b"><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>` }];
 }
-const filas = () => [['sitio', 'display', 'Dónde va', T((SITIOS.find((x) => x[0] === S.sitio) || SITIOS[0])[1])], ['pulg', 'regla', 'Tamaño', S.pulg + '″'],
-  ['np', 'tele', 'Pantallas', S.sitio === 'videowall' ? S.cols + ' × ' + S.filas : String(S.np)], ['horas', 'calidad', 'Horas al día', T(S.horas === '24/7' ? '24 h, sin apagar' : 'Hasta 16 h')], ['orient', 'altura', 'Orientación', T(S.orient === 'v' ? 'Vertical' : 'Horizontal')]];
+const filas = () => [['sitio', 'diana', 'Dónde va', T((SITIOS.find((x) => x[0] === S.sitio) || SITIOS[0])[1])], ['pulg', 'regla', 'Tamaño', S.pulg + '″'],
+  ['np', 'tele', 'Pantallas', S.sitio === 'videowall' ? S.cols + ' × ' + S.filas : String(S.np)], ['horas', 'reloj', 'Horas al día', T(S.horas === '24/7' ? '24 h, sin apagar' : 'Hasta 16 h')], ['orient', 'altura', 'Orientación', T(S.orient === 'v' ? 'Vertical' : 'Horizontal')]];
 const pasos = () => ['sitio', 'pulg', 'np', 'horas', 'orient'];
 function pregunta(k) {
   switch (k) {
@@ -188,8 +203,8 @@ export default {
   info: 'Señalética y digital signage: el display que cumple con el sitio, el tamaño, las horas al día y el reproductor, de las marcas del catálogo.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide,
   reconoce: (t) => /se[ñn]al[eé]tica|senyal[eè]tica|signage|cartel|escaparate|aparador|shop window|t[oòó]tem|videowall|video wall/i.test(t),
-  esquema: (r, o) => ({ tit: VT === 'lateral' ? 'Vista lateral' : VT === '3d' ? 'Simulación 3D' : 'Vista frontal', ic: 'display', html: esquema(r, o), extra: pestanas(['frontal', 'lateral', '3d'], VT) }),
+  esquema: (r, o) => ({ tit: VT === 'escala' ? 'Simulación a escala' : VT === 'lateral' ? 'Vista lateral' : VT === '3d' ? 'Simulación 3D' : 'Vista frontal', ic: 'display', html: esquema(r, o), extra: pestanas(['escala', 'frontal', 'lateral', '3d'], VT) }),
   escena3d,
   set: pon, num: pon, pm: (k, d) => pon(k, +S[k] + d),
-  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
+  accion: (a) => { if (accionSim(a)) return; if (a === 'reset') S = Object.assign({}, DEF); else if (/^vt:/.test(a)) VT = a.slice(3); }, reset: () => { S = Object.assign({}, DEF); },
 };

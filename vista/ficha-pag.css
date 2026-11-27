@@ -1,0 +1,28 @@
+/* SYSTEMS · página de ficha de producto (v2.8) · GPL-3.0 · mediaservi.com */
+html, body.fp { height: auto; min-height: 100%; overflow: auto; }
+body.fp { margin: 0; display: flex; flex-direction: column; min-height: 100dvh; background: var(--fondo); color: var(--txt); font-family: Inter, system-ui, sans-serif; }
+.fp-cab { display: flex; align-items: center; gap: 12px; padding: 14px 20px; background: var(--franja); border-bottom: 1px solid #000; }
+.fp-logo img { height: 34px; width: auto; display: block; }
+.fp-sep { flex: 1; }
+.fp-bt { padding: 10px 18px; border-radius: 9px; border: 1px solid #000; background: var(--blk2); color: var(--txt); font: 800 .8rem/1 Inter, system-ui, sans-serif; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.fp-bt:hover { border-color: var(--azul); }
+.fp-cu { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: clamp(14px, 4vw, 48px) clamp(10px, 3vw, 32px); }
+.fp-cu > .ficha { width: min(760px, 100%); }
+.fp-nada { text-align: center; line-height: 1.7; color: var(--tenue); }
+.fp-nada b { color: var(--txt); }
+.fp-nada a { color: var(--azul); }
+.fp-pie { padding: 12px 20px; text-align: center; font-size: 13px; color: var(--tenue); border-top: 1px solid var(--linea); }
+.fp-pie a { color: inherit; }
+@media print { .fp-cab, .fp-pie { display: none; } body.fp { background: #fff; } .fp-cu { padding: 0; } }
+/* en su propia página la ficha se ve grande: foto grande a la izquierda y datos a la derecha */
+.fp-cu > .ficha { width: min(980px, 100%); padding: clamp(14px, 2.4vw, 26px); gap: 14px; }
+.fp .fi-cat { font-size: 13px; }
+.fp .fi-cuerpo { grid-template-columns: minmax(180px, 46%) minmax(0, 1fr); gap: clamp(14px, 3vw, 30px); }
+.fp .fi-marca { font-size: 14px; }
+.fp .fi-modelo { font-size: clamp(22px, 3.4vw, 36px); }
+.fp .fi-specs { grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 4px 16px; }
+.fp .fi-specs dt { font-size: 11px; }
+.fp .fi-specs dd { font-size: 16px; }
+.fp .fi-nota, .fp .fi-aviso { font-size: 14px; }
+.fp .fi-enlace { font-size: 14px; }
+@media (max-width: 600px) { .fp .fi-cuerpo { grid-template-columns: 1fr; } }

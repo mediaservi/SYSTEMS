@@ -390,7 +390,7 @@ export default {
   id: 'elec', nom: 'Electrónica de pantalla', corto: 'ELECTRÓNICA', ic: 'led', ejemplo: 'Escríbela: «pantalla LED de 8960 x 1536 con 3 salidas DP por fibra»',
   info: 'Para quien ya tiene la pantalla y las fuentes: procesador LED, reparto de la señal, fibra y backup, o la señal hacia proyectores y displays.',
   calcula, filas, pasos, pregunta, datos, resultado, cifras, pide, reconoce,
-  esquema: (r, o = {}) => ({ tit: 'Esquema de la señal', ic: 'sim', html: S.dest === 'led' ? esqLED(r, !!o.vertical) : esqDistrib(r, !!o.vertical) }),
+  esquema: (r, o = {}) => ({ tit: 'Esquema de la señal', ic: 'senal', html: S.dest === 'led' ? esqLED(r, !!o.vertical) : esqDistrib(r, !!o.vertical) }),
   set: (k, v) => { if (k === 'cant' && v === 'varias' && S.dest === 'led') S.cab = false; pon(k, v); },
   num: (k, v) => pon(k, v),
   pm: (k, d) => { const m = /^p([wh])(\d)$/.exec(k), cur = m ? S.pants[+m[2]][m[1] === 'w' ? 0 : 1] : +S[k]; pon(k, cur + d * (['dist'].includes(k) ? 5 : 1)); },

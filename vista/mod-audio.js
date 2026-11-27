@@ -20,28 +20,28 @@ function grafLinea(g) {
   const paso = [0.5, 1, 2, 3, 5, 6, 10, 12, 20, 50].find(p => (y1 - y0) / p <= 7) || 100; y0 = Math.floor(y0 / paso) * paso; y1 = Math.ceil(y1 / paso) * paso; if (y1 === y0) y1 = y0 + paso;
   const X = (x) => ml + (g.log ? Math.log(x / x0) / Math.log(x1 / x0) : (x - x0) / (x1 - x0)) * (W - ml - mr), Y = (y) => mt + (1 - (Math.min(y1, Math.max(y0, y)) - y0) / (y1 - y0)) * (H - mt - mb);
   let h = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(T(g.tit))}">`;
-  for (let y = y0; y <= y1 + 1e-9; y += paso) h += `<line x1="${ml}" x2="${W - mr}" y1="${Y(y)}" y2="${Y(y)}" stroke="rgba(255,255,255,.08)"/><text x="${ml - 6}" y="${Y(y) + 4}" font-size="11" text-anchor="end">${F(y, 1)}</text>`;
+  for (let y = y0; y <= y1 + 1e-9; y += paso) h += `<line x1="${ml}" x2="${W - mr}" y1="${Y(y)}" y2="${Y(y)}" stroke="rgba(255,255,255,.08)"/><text x="${ml - 6}" y="${Y(y) + 4}" font-size="11" text-anchor="end" style="fill:var(--txt)">${F(y, 1)}</text>`;
   const marcas = []; if (g.log) { for (let d = Math.pow(10, Math.floor(Math.log10(x0))); d <= x1; d *= 10) [1, 2, 5].forEach(m => { if (d * m >= x0 * 0.999 && d * m <= x1 * 1.001) marcas.push(d * m); }); } else for (let i = 0; i <= 5; i++) marcas.push(x0 + (x1 - x0) * i / 5);
-  marcas.forEach(x => { h += `<line x1="${X(x)}" x2="${X(x)}" y1="${mt}" y2="${H - mb}" stroke="rgba(255,255,255,.08)"/><text x="${X(x)}" y="${H - mb + 15}" font-size="11" text-anchor="middle">${x >= 1000 ? F(x / 1000, 1) + 'k' : F(x, 1)}</text>`; });
+  marcas.forEach(x => { h += `<line x1="${X(x)}" x2="${X(x)}" y1="${mt}" y2="${H - mb}" stroke="rgba(255,255,255,.08)"/><text x="${X(x)}" y="${H - mb + 15}" font-size="11" text-anchor="middle" style="fill:var(--txt)">${x >= 1000 ? F(x / 1000, 1) + 'k' : F(x, 1)}</text>`; });
   if (g.marca && g.marca >= x0 && g.marca <= x1) h += `<line x1="${X(g.marca)}" x2="${X(g.marca)}" y1="${mt}" y2="${H - mb}" stroke="#9900ff" stroke-width="1.5" stroke-dasharray="4 4"/>`;
   g.series.forEach(s => { h += `<polyline fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" points="${s.ys.map((y, i) => X(xs[i]).toFixed(1) + ',' + Y(y).toFixed(1)).join(' ')}"/>`; });
-  h += `<text x="${W - mr}" y="${H - 4}" font-size="11" text-anchor="end">${esc(g.xlab || '')}</text><text x="6" y="${mt - 9}" font-size="11">${esc(g.ylab || '')}</text></svg>`;
+  h += `<text x="${W - mr}" y="${H - 4}" font-size="11" text-anchor="end" style="fill:var(--txt)">${esc(g.xlab || '')}</text><text x="6" y="${mt - 9}" font-size="11" style="fill:var(--txt)">${esc(g.ylab || '')}</text></svg>`;
   if (g.series.length > 1) h += `<div class="ley">${g.series.map(s => `<span><i style="background:${s.color}"></i>${esc(T(s.nom))}</span>`).join('')}</div>`;
   return h;
 }
 function grafPolar(g) {
   const S = 320, c = S / 2, R = 126, min = g.min || -30;
   let h = `<svg viewBox="0 0 ${S} ${S}" role="img" aria-label="${esc(T(g.tit))}">`;
-  for (let d = 0; d >= min; d -= 6) { const r = R * (d - min) / -min; if (r > 0) h += `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="rgba(255,255,255,${d === 0 ? .28 : .09})"/>` + (d < 0 && d > min ? `<text x="${c + 3}" y="${c - r + 11}" font-size="9">${d}</text>` : ''); }
-  for (let a = 0; a < 360; a += 30) { const s = Math.sin(a * Math.PI / 180), k = Math.cos(a * Math.PI / 180); h += `<line x1="${c}" y1="${c}" x2="${c + R * s}" y2="${c - R * k}" stroke="rgba(255,255,255,.08)"/><text x="${c + (R + 15) * s}" y="${c - (R + 15) * k + 4}" font-size="10" text-anchor="middle">${a > 180 ? a - 360 : a}°</text>`; }
+  for (let d = 0; d >= min; d -= 6) { const r = R * (d - min) / -min; if (r > 0) h += `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="rgba(255,255,255,${d === 0 ? .28 : .09})"/>` + (d < 0 && d > min ? `<text x="${c + 3}" y="${c - r + 11}" font-size="9" style="fill:var(--txt)">${d}</text>` : ''); }
+  for (let a = 0; a < 360; a += 30) { const s = Math.sin(a * Math.PI / 180), k = Math.cos(a * Math.PI / 180); h += `<line x1="${c}" y1="${c}" x2="${c + R * s}" y2="${c - R * k}" stroke="rgba(255,255,255,.08)"/><text x="${c + (R + 15) * s}" y="${c - (R + 15) * k + 4}" font-size="10" text-anchor="middle" style="fill:var(--txt)">${a > 180 ? a - 360 : a}°</text>`; }
   g.series.forEach(s => { const p = s.pts.map((d, a) => { const r = R * Math.max(0, (Math.min(0, d) - min) / -min), t = a * Math.PI / 180; return (c + r * Math.sin(t)).toFixed(1) + ',' + (c - r * Math.cos(t)).toFixed(1); }); h += `<polygon points="${p.join(' ')}" fill="${s.color}22" stroke="${s.color}" stroke-width="2" stroke-linejoin="round"/>`; });
-  return h + `<text x="${c}" y="${S - 4}" font-size="10" text-anchor="middle">dB · 0° = ${esc(T('delante'))}</text></svg>`;
+  return h + `<text x="${c}" y="${S - 4}" font-size="10" text-anchor="middle" style="fill:var(--txt)">dB · 0° = ${esc(T('delante'))}</text></svg>`;
 }
 function grafPlanta(g) {
   const W = 600, k = Math.min((W - 20) / g.L, 300 / g.W), w = g.L * k, hh = g.W * k, H = hh + 20, ox = (W - w) / 2, oy = 10;
   let h = `<svg viewBox="0 0 ${W} ${H.toFixed(0)}" role="img" aria-label="${esc(T(g.tit))}"><rect x="${ox}" y="${oy}" width="${w}" height="${hh}" fill="#17171a" stroke="#74747b" stroke-width="1.5"/><clipPath id="hw-sala"><rect x="${ox}" y="${oy}" width="${w}" height="${hh}"/></clipPath><g clip-path="url(#hw-sala)">`;
   if (g.nx * g.ny <= 600) for (let i = 0; i < g.nx; i++) for (let j = 0; j < g.ny; j++) { const x = ox + (i + .5) * w / g.nx, y = oy + (j + .5) * hh / g.ny; h += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(g.r * k).toFixed(1)}" fill="rgba(0,255,4,.10)" stroke="rgba(0,255,4,.45)"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="#00ff04"/>`; }
-  return h + `</g><text x="${W / 2}" y="${H - 1}" font-size="11" text-anchor="middle">${F(g.L, 1)} × ${F(g.W, 1)} m</text></svg>`;
+  return h + `</g><text x="${W / 2}" y="${H - 1}" font-size="11" text-anchor="middle" style="fill:var(--txt)">${F(g.L, 1)} × ${F(g.W, 1)} m</text></svg>`;
 }
 function grafDip(g) {
   let h = `<svg viewBox="0 0 400 110" role="img" aria-label="${esc(T(g.tit))}"><rect x="8" y="8" width="384" height="94" rx="8" fill="#1b2a6b" stroke="#000"/><text x="20" y="26" font-size="11" style="fill:#fff">ON</text>`;
@@ -58,7 +58,7 @@ function grafConector(g) {
   if (g.con === 'rj45') { const col = ['#ff9a2e', '#ff9a2e', '#2fd23a', '#2a7cff', '#2a7cff', '#2fd23a', '#9a6a3c', '#9a6a3c'];
     let h = `<svg viewBox="0 0 600 150" role="img" aria-label="${esc(T(g.tit))}"><rect x="130" y="14" width="340" height="104" rx="8" fill="#2d2d31" stroke="#000"/>`;
     col.forEach((c, i) => { const x = 150 + i * 38, raya = i % 2 === 0; h += `<rect x="${x}" y="28" width="26" height="62" rx="3" fill="${raya ? '#f2f2f3' : c}" stroke="#000"/>${raya ? `<rect x="${x + 9}" y="28" width="8" height="62" fill="${c}"/>` : ''}<text x="${x + 13}" y="108" font-size="12" text-anchor="middle" style="fill:#f2f2f3">${i + 1}</text>`; });
-    return h + `<text x="300" y="140" font-size="11.5" text-anchor="middle">${esc(T('Pestaña hacia abajo y contactos hacia ti: el 1, a la izquierda'))}</text></svg>`; }
+    return h + `<text x="300" y="140" font-size="11.5" text-anchor="middle" style="fill:var(--txt)">${esc(T('Pestaña hacia abajo y contactos hacia ti: el 1, a la izquierda'))}</text></svg>`; }
   return '';
 }
 // mapa de cobertura: suma coherente de las fuentes con caída 1/r; 0 dB = las fuentes en fase a 10 m

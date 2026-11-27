@@ -291,3 +291,6 @@ html.ss-apila .ss-cd > span { font-size: calc(var(--s) * 12.5); }
 .ss-resumen span { white-space: nowrap; }
 .ss-resumen b { color: #c6e04a; font-weight: 700; }
 :root[data-tema="claro"] .ss-resumen b { color: #4f6b00; }
+/* v2.9 · iconos de SCREENS (máscara o SVG propio) dentro de SIMPLE: ocupan la caja del icono */
+.ss-icm { display: inline-flex; align-items: center; justify-content: center; }
+.ss-icm > .ic, .ss-icm > svg { width: 100%; height: 100%; vertical-align: 0; }
