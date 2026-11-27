@@ -29,5 +29,10 @@
   <script src="comun/medidas.js?v=2.9"></script>
   <script src="comun/motor-i18n.js?v=2.9"></script>
   <script type="module" src="vista/ficha-pag.js?v=2.9"></script>
+  <script>/* v2.9 · si la ficha no ha arrancado (archivos viejos en la caché del servidor justo después de una actualización), aviso y reintento */
+  setTimeout(function () { var c = document.getElementById('fp-cu'); if (!c || !/^\s*…\s*$/.test(c.textContent)) return; var l = (new URLSearchParams(location.search).get('lang') || navigator.language || 'es').slice(0, 2);
+    var M = { es: ['La ficha está tardando en cargar.', 'Reintentar'], en: ['The datasheet is taking long to load.', 'Retry'], ca: ['La fitxa triga a carregar.', 'Tornar-ho a provar'] }[l] || ['La ficha está tardando en cargar.', 'Reintentar'];
+    var u = new URL(location.href); u.searchParams.set('r', Date.now());
+    c.innerHTML = '<p class="fp-nada">' + M[0] + '<br><a href="' + u.href.replace(/"/g, '&quot;') + '">' + M[1] + '</a></p>'; }, 7000);</script>
 </body>
 </html>
