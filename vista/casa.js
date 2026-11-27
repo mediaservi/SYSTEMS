@@ -1,7 +1,7 @@
 // SYSTEMS · la casa: la misma consola de SCREENS (cabecera, barra de módulos, petición escrita, CALCULAR, SIMPLE / PRO y pie)
 // para todos los módulos (ELECTRÓNICA, SEÑAL Y CONECTIVIDAD, AUDIO, VIDEOCONFERENCIA y los que vengan). Cada módulo da sus datos,
 // su esquema, su resultado y sus cifras; aquí se pintan siempre en los mismos sitios. Licencia GPL-3.0 · mediaservi.com
-import { fichaDe, nombres, traduceDes, urlFicha, busca } from './fichaprod.js';
+import { fichaDe, nombres, traduceDes, urlFicha, busca, fotoDe, webDe } from './fichaprod.js';
 import { normaliza } from './peticion.js';
 import { IDIOMAS, idioma, fijarIdioma, idiomaInicial } from '../textos.js';
 import { T, textos, esc, $, lee, guarda } from './util.js';
@@ -49,6 +49,7 @@ textos({
   'Hola. Te haré unas preguntas muy sencillas y te diré qué necesitas.': ['Hi. I will ask you a few very simple questions and tell you what you need.', 'Hola. Et faré unes preguntes molt senzilles i et diré què necessites.'],
   'Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.': ['Automatic calculation that may contain errors: check it before quoting or installing.', 'Càlcul automàtic que pot contenir errors: revisa\'l abans de pressupostar o instal·lar.'],
   'Panel de administración': ['Admin panel', 'Panell d\'administració'],
+  'Ficha': ['Datasheet', 'Fitxa'], 'Fabricante': ['Manufacturer', 'Fabricant'], 'Ver la foto en grande': ['See the photo full size', 'Veure la foto en gran'],
   'También he preparado {m} con esta petición: está en su pestaña.': ['I have also set up {m} from this request: it is in its tab.', 'També he preparat {m} amb aquesta petició: és a la seva pestanya.'],
   'No he entendido la petición: prueba con los botones o escríbela de otra forma.': ['I did not understand the request: try the buttons or write it another way.', 'No he entès la petició: prova amb els botons o escriu-la d\'una altra manera.'],
   'La casilla está vacía: no hay nada que copiar.': ['The box is empty: nothing to copy.', 'La casella és buida: no hi ha res a copiar.'],
@@ -149,14 +150,14 @@ function pinta() {
     h += blk('s1a', 'S1A', esc(T(esq.tit)), 'var(--verde-txt)', `<div class="lienzo-s">${esq.html}</div>`, (esq.extra || '') + bt('ojo', 'Ver en grande', 'data-grande'), 'pant', (/^Simulaci/.test(esq.tit) ? 'sim' : esq.ic || 'sim'));
     h += blk('s1b', 'S1B', esc(T('Resultado')), 'var(--violeta)', m.resultado(R), '', '', 'res');
     'abcdef'.split('').forEach((x, i) => { const q = cif[i];
-      h += q ? blk('m3' + x, 'M3' + x.toUpperCase(), esc(T(q.t)), q.c || COL[i], `<div class="cif-v">${esc(q.v)}${q.u ? `<small>${esc(q.u)}</small>` : ''}</div>${q.s ? `<div class="cif-s">${esc(q.s)}</div>` : ''}`, '', 'res', q.ic)
+      h += q ? blk('m3' + x, 'M3' + x.toUpperCase(), esc(T(q.t)), q.c || COL[i], `${q.ref ? `<i hidden data-cref="${esc(q.ref)}"></i>` : ''}<div class="cif-v">${esc(q.v)}${q.u ? `<small>${esc(q.u)}</small>` : ''}</div>${q.s ? `<div class="cif-s">${esc(q.s)}</div>` : ''}`, '', 'res', q.ic)
         : blk('m3' + x, 'M3' + x.toUpperCase(), '&nbsp;', COL[i], '<div class="cif-v">—</div>', '', 'res vacio'); });
     c.innerHTML = h;
   }
   if (m.despues) m.despues(c, R);
   if (idioma() !== 'es') c.querySelectorAll('.despiece td.des').forEach((d) => { [...d.childNodes].forEach((n) => { if (n.nodeType === 3) n.nodeValue = traduceDes(n.nodeValue, idioma()); }); });   /* v2.8 · descripciones de las listas en el idioma */
   marcaStock(c);
-  pintaRes(); guardaCasa(); ajusta(); try { enlaza(); } catch (e) {} monta3D(m, R);
+  pintaRes(); guardaCasa(); ajusta(); try { enlaza(); } catch (e) {} try { prodCifras(); } catch (e) {} monta3D(m, R);
 }
 /* v2.5 · simulación 3D: se monta cuando el dibujo trae su lienzo y se suelta entera al repintar (sin contextos WebGL colgando) */
 let S3 = null, n3 = 0;
@@ -219,6 +220,30 @@ function reNombres() {
   const ks = [...N.keys()].filter((k) => /\d/.test(k) || k.length >= 4).sort((a, b) => b.length - a.length).map(escRe);
   REc = ks.length ? new RegExp('(^|[^A-Za-z0-9-])(' + ks.join('|') + ')(?![A-Za-z0-9-])', 'gi') : null; REk = N; return REc;
 }
+/* v3.2 · en las cifras de abajo, si hay sitio, el producto que nombran: su foto oficial (con el ojo para verla en grande),
+   su ficha, el PDF de la ficha técnica y su página (charmex.net o la web del fabricante). Si no cabe, primero se quita la foto y después todo */
+function prodHtml(x, mini) {
+  const W = webDe(x) || {}, f = fotoDe(x), nom = (x.marca || x.fab || '') + ' ' + (x.modelo || x.id);
+  const ln = [[urlFicha(x.id), T('Ficha')], W.pdf ? [W.pdf, 'PDF'] : null, W.web ? [W.web, W.charmex ? 'charmex.net' : T('Fabricante')] : null].filter(Boolean);
+  return `<div class="cp${mini ? ' mini' : ''}">${f && !mini ? `<button type="button" class="cp-foto" data-zoom="${esc(x.id)}" title="${esc(T('Ver la foto en grande'))}" aria-label="${esc(T('Ver la foto en grande') + ' · ' + nom)}"><img src="${esc(f)}" alt="" loading="lazy" onerror="this.closest('.cp-foto').remove()"><span class="cp-ojo">${icb('ojo')}</span></button>` : ''}<div class="cp-ln">${ln.map(([u, t]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join('')}</div></div>`;
+}
+function prodCifras() {
+  if (document.documentElement.classList.contains('ss-apila') && matchMedia('(max-width: 559px)').matches) return;
+  document.querySelectorAll('.blk.res[data-blk^="M3"]').forEach((b) => {
+    const cu = b.querySelector('.blk-cu'); if (!cu || cu.querySelector('.cp')) return;
+    const cr = cu.querySelector('[data-cref]'), a = cu.querySelector('.cif-v a.prod, .cif-s a.prod'); if (!cr && !a) return;
+    const id = cr ? cr.dataset.cref : decodeURIComponent((/[?&]ref=([^&]+)/.exec(a.getAttribute('href')) || [])[1] || ''), bx = busca(id); if (!bx) return;
+    const x = Object.assign({ marca: bx.mk }, bx.x);
+    const pon = (mini) => { const o = cu.querySelector('.cp'); if (o) o.remove(); cu.insertAdjacentHTML('beforeend', prodHtml(x, mini)); b.classList.add('con-prod'); return cu.scrollHeight <= cu.clientHeight + 1; };
+    if (pon(false)) return; if (pon(true)) return;
+    const o = cu.querySelector('.cp'); if (o) o.remove(); b.classList.remove('con-prod');
+  });
+}
+document.addEventListener('click', (e) => {
+  const z = e.target.closest && e.target.closest('[data-zoom]'); if (!z) return; e.preventDefault();
+  const bx = busca(z.dataset.zoom); if (!bx) return; const x = Object.assign({ marca: bx.mk }, bx.x), f = fotoDe(x);
+  ventana((x.marca || '') + ' ' + (x.modelo || x.id), `<div class="cp-grande"><img src="${esc(f)}" alt="${esc((x.marca || '') + ' ' + (x.modelo || x.id))}"></div>${prodHtml(x, true)}`);
+});
 function enlaza(raiz = document.getElementById('app')) {
   const re = reNombres(), N = nombres(); if (!re || !raiz) return;
   const idDe = (t) => { const k = t.toUpperCase(), id = N.get(k); if (!id) return null; return (/\d/.test(k) || t === t.toUpperCase() || t === k) ? id : null; };

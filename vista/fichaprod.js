@@ -12,7 +12,7 @@ textos({
   'Cámara': ['Camera', 'Càmera'], 'Barra de vídeo': ['Video bar', 'Barra de vídeo'], 'Display': ['Display', 'Display'], 'Kit de audio': ['Audio kit', 'Kit d\'àudio'], 'Audio para videoconferencia': ['Video conferencing audio', 'Àudio per a videoconferència'], 'Etapa': ['Amplifier', 'Etapa'],
   'Procesador de audio': ['Audio processor', 'Processador d\'àudio'], 'Conmutador': ['Switcher', 'Commutador'], 'Extensor': ['Extender', 'Extensor'], 'Cable': ['Cable', 'Cable'], 'AV sobre IP': ['AV over IP', 'AV sobre IP'], 'Accesorio': ['Accessory', 'Accessori'], 'Soporte': ['Bracket', 'Suport'],
   'Antena': ['Antenna', 'Antena'], 'Cargador': ['Charger', 'Carregador'], 'Interfaz de audio': ['Audio interface', 'Interfície d\'àudio'], 'Tarjeta de audio': ['Audio card', 'Targeta d\'àudio'], 'Conferencia': ['Conference', 'Conferència'], 'Tratamiento acústico': ['Acoustic treatment', 'Tractament acústic'],
-  'Servicio': ['Service', 'Servei'], 'Reproductor': ['Player', 'Reproductor'], 'Equipo de sala': ['Room system', 'Equip de sala'], 'Ficha del fabricante': ['Manufacturer datasheet', 'Fitxa del fabricant'], 'Sí': ['Yes', 'Sí'],
+  'Servicio': ['Service', 'Servei'], 'Reproductor': ['Player', 'Reproductor'], 'Equipo de sala': ['Room system', 'Equip de sala'], 'Ficha del fabricante': ['Manufacturer datasheet', 'Fitxa del fabricant'], 'Página del producto': ['Product page', 'Pàgina del producte'], 'Web del fabricante': ['Manufacturer website', 'Web del fabricant'], 'Ficha técnica (PDF)': ['Datasheet (PDF)', 'Fitxa tècnica (PDF)'], 'Sí': ['Yes', 'Sí'],
 });
 
 const TIPO = { altavoz: 'Altavoz', subgrave: 'Subgrave', microfono: 'Micrófono', capsula: 'Cápsula', transmisor: 'Transmisor', receptor: 'Receptor', camara: 'Cámara', 'barra-vc': 'Barra de vídeo', display: 'Display', control: 'Control',
@@ -24,6 +24,9 @@ const SPEC = [['pulgadas', 'Tamaño', '″'], ['res', 'Resolución', ''], ['nits
 
 /* v2.8 · la foto oficial: la de la lista del panel o, si no trae, la de la web del distribuidor (comun/fotos.js) */
 export const fotoDe = (x) => (x && (x.urlFoto || x.foto || (globalThis.SC_FOTOS || {})[x.id])) || '';
+/* v3.2 · página del producto y PDF de su ficha (comun/web.js: charmex.net por referencia; si no está, la web del fabricante) */
+export const webDe = (x) => { if (!x) return null; const u = [x.url, x.web, x.fuente].find((v) => /^https?:\/\//.test(String(v || ''))); const w = globalThis.SC_WEB ? globalThis.SC_WEB(x.id, x.marca || x.fab) : null;
+  return u ? { web: u, pdf: (w && w.pdf) || '', charmex: false, propia: true } : w; };
 export const urlFicha = (id) => 'ficha.html?ref=' + encodeURIComponent(id) + '&lang=' + lang();
 /* la referencia y su marca, por id (o por modelo) */
 export function busca(ref) {
@@ -41,8 +44,8 @@ export function fichaDe(id) {
   if (Md) specs.push([T('Medidas (an × al × fo)'), nf(Md[0]) + ' × ' + nf(Md[1]) + ' × ' + nf(Md[2]) + ' mm']);
   if (Md && Md[3]) specs.push([T('Peso'), nf(Md[3]) + ' kg']);
   if (Md && Md[4]) specs.push(['VESA', Md[4].replace('x', ' × ') + ' mm']);
-  const enl = [x.url, x.web, x.fuente].find((u) => /^https?:\/\//.test(String(u || '')));
-  const html = window.SC_FICHA.fichaHTML({ cat: T(TIPO[x.tipo] || x.tipo || ''), icono: ICONO[x.tipo] || 'elec', marca: x.marca || mk, modelo: x.modelo || x.id, foto: fotoDe(x), fotoTrasera: x.urlFotoTrasera, specs: [[T('Referencia'), x.id]].concat(specs), notas: x.descripcion ? [traduceDes(x.descripcion, lang())] : [], enlace: enl, enlaceTxt: T('Ficha del fabricante'), acento: '#00b4ff', sel: true });
+  const W = webDe(Object.assign({ marca: mk }, x)), enl = W ? W.web : '';
+  const html = window.SC_FICHA.fichaHTML({ cat: T(TIPO[x.tipo] || x.tipo || ''), icono: ICONO[x.tipo] || 'elec', marca: x.marca || mk, modelo: x.modelo || x.id, foto: fotoDe(x), fotoTrasera: x.urlFotoTrasera, specs: [[T('Referencia'), x.id]].concat(specs), notas: x.descripcion ? [traduceDes(x.descripcion, lang())] : [], enlace: enl, enlaceTxt: T(W && W.charmex ? 'Página del producto' : 'Web del fabricante'), enlaces: W && W.pdf ? [[W.pdf, T('Ficha técnica (PDF)')]] : [], acento: '#00b4ff', sel: true });
   return { tit: (x.marca || mk) + ' ' + (x.modelo || x.id), html, x, mk };
 }
 /* v2.8 · nombres de producto que se enlazan a su ficha: modelo e id de cada referencia (de 3 caracteres o más) → id */

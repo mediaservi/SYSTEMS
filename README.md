@@ -52,7 +52,11 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.1)
+## Cambios de la versión actual (v3.2)
+- **El producto en las cifras de abajo**: si hay sitio, cada cifra que nombra un equipo muestra su foto oficial (con el ojo para verla en grande) y los enlaces a su **ficha**, al **PDF** de la ficha técnica y a su **página en charmex.net** (o la web del fabricante si no está). Si no cabe, primero se quita la foto y después todo: nunca se corta nada.
+- **Página del producto y PDF** de 477 referencias de las listas (`comun/web.js`, comprobado en charmex.net por referencia exacta), también en la ficha de producto.
+
+## Cambios de la v3.1
 - **VIDEOCONFERENCIA para salas de presentaciones**: la videoconferencia se puede quitar (sin cámara ni micrófonos) y la pantalla puede ser **monitor, interactiva o proyección**.
 - **Espectador más lejano**: si la petición da la distancia máxima de visualización, el tamaño de imagen sale de ella y no del fondo de la sala. Línea discontinua en el plano.
 - **Alto de la sala**: la imagen no pasa del techo (borde de abajo a 1 m en proyección y centrado a 1,3 m en un monitor, valores de BRIAN). Si el espectador más lejano pide más, aviso de hasta dónde se ve bien.

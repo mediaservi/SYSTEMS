@@ -240,7 +240,7 @@ function resultado(r) {
   return h;
 }
 const cifras = (r) => {
-  const pant = { t: 'Pantalla', v: r.proy ? T('Proyección') : r.disp ? r.disp.modelo : '—', s: r.proy ? N(r.proy.w, 2) + ' × ' + N(r.proy.h, 2) + ' m' : r.disp ? r.disp.marca + ' · ' + r.disp.pulgadas + '″' : '', ic: 'tele', c: 'var(--azul)' };
+  const pant = { t: 'Pantalla', ref: r.disp ? r.disp.id : '', v: r.proy ? T('Proyección') : r.disp ? r.disp.modelo : '—', s: r.proy ? N(r.proy.w, 2) + ' × ' + N(r.proy.h, 2) + ' m' : r.disp ? r.disp.marca + ' · ' + r.disp.pulgadas + '″' : '', ic: 'tele', c: 'var(--azul)' };
   const base = [{ t: 'Diagonal mínima', v: String(r.pulg), u: '″', s: N(r.h, 2) + ' m · ' + N(r.dLej, 1) + ' m', ic: 'tele', c: 'var(--verde-txt)' }, pant];
   const sup = { t: 'Superficie', v: N(r.area, 1), u: 'm²', s: S.pers + ' ' + T('personas'), ic: 'regla', c: 'var(--magenta, #e24bf0)' };
   if (S.vc) return base.concat([
@@ -251,7 +251,7 @@ const cifras = (r) => {
   return base.concat([
     { t: 'Espectador más lejano', v: N(r.dLej, 1), u: 'm', s: T(S.dist > 0 ? 'Dato de la petición' : 'Por el fondo de la sala'), ic: 'ojo', c: 'var(--ambar)' },
     { t: 'Alto máximo de imagen', v: N(r.hTope, 2), u: 'm', s: T('Techo') + ' ' + N(S.alto, 2) + ' m', ic: 'regla', c: 'var(--violeta)' },
-    { t: 'Alternativa', v: r.altI ? r.altI.modelo : '—', s: r.altI ? S.alt + '″ · ' + T('hasta {d} m', { d: N(r.altDok, 1) }) : T('Sin alternativa'), ic: 'mano', c: r.altI ? ({ v: 'var(--verde)', a: 'var(--ambar)', r: 'var(--rojo)' })[r.semA] : 'var(--tenue)' }, sup]);
+    { t: 'Alternativa', ref: r.altI ? r.altI.id : '', v: r.altI ? r.altI.modelo : '—', s: r.altI ? S.alt + '″ · ' + T('hasta {d} m', { d: N(r.altDok, 1) }) : T('Sin alternativa'), ic: 'mano', c: r.altI ? ({ v: 'var(--verde)', a: 'var(--ambar)', r: 'var(--rojo)' })[r.semA] : 'var(--tenue)' }, sup]);
 };
 const TIPOS = [['monitor', 'Monitor'], ['interactivo', 'Interactivo'], ['proyeccion', 'Proyección']];
 function datos() {
