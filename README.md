@@ -52,7 +52,10 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v2.9)
+## Cambios de la versión actual (v3.0)
+- El vídeo de mediaservi de la simulación sale siempre sin subtítulos (la traducción automática quedaba mal), aunque el navegador los tenga activados en YouTube.
+
+## Cambios de la v2.9
 - **Cada display a su medida exacta**, como los cuerpos de proyector de SCREENS: ancho, alto y fondo reales de 111 modelos (Samsung, LG y Clevertouch, según información de los fabricantes), con sus marcos por lado y la imagen activa en su sitio. Un cuerpo por familia: monitor, videowall de marco fino, exterior (marco ancho y tornillería), táctil con barra de altavoces, alargado y tótem de suelo con su base. Se ve así en la simulación a escala, en la vista lateral (fondo real) y en la 3D, en DISPLAYS y en VIDEOCONFERENCIA. En un videowall, los marcos reales entre pantallas.
 - La ficha de cada display añade medidas, peso y VESA.
 - **Iconos de SCREENS**: los de la simulación (sala inmersiva con persona), tamaño, resolución, señal, cable, micrófono, audio, información, PDF y demás son los mismos que en SCREENS; «Dónde va» lleva la diana y «Uso» y «Horas al día», un reloj.

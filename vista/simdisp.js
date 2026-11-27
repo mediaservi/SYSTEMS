@@ -26,7 +26,7 @@ const CARTA = 'assets/SCCHART.jpg';
    lo demás, con «O usa tu propio contenido» (enlace o archivo) */
 const MS_VID = 'vKN4AcGz7zs', MS_INI = 4, MS_FIN = 33;
 const YT = '&autoplay=1&mute=1&playsinline=1&rel=0&controls=0&disablekb=1&fs=0&modestbranding=1&iv_load_policy=3&cc_load_policy=0&showinfo=0&loop=1';
-const MS_URL = () => `https://www.youtube.com/embed/${MS_VID}?start=${MS_INI}&end=${MS_FIN}&autoplay=1&mute=1&playsinline=1&rel=0&controls=0&disablekb=1&fs=0&modestbranding=1&iv_load_policy=3&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;
+const MS_URL = () => `https://www.youtube.com/embed/${MS_VID}?start=${MS_INI}&end=${MS_FIN}&autoplay=1&mute=1&playsinline=1&rel=0&controls=0&disablekb=1&fs=0&modestbranding=1&iv_load_policy=3&cc_load_policy=0&enablejsapi=1&origin=${encodeURIComponent(location.origin)}`;
 /* el bucle recortado: el reproductor avisa (API de YouTube por mensajes) y al llegar al final vuelve al principio del recorte */
 const ytMsg = (f, cmd, args) => { try { f.contentWindow.postMessage(JSON.stringify({ event: 'command', func: cmd, args: args || [] }), '*'); } catch (e) {} };
 window.addEventListener('message', (e) => {
@@ -35,6 +35,8 @@ window.addEventListener('message', (e) => {
   const st = d.info && typeof d.info === 'object' ? d.info.playerState : d.event === 'onStateChange' ? d.info : undefined;
   const t = d.info && typeof d.info === 'object' ? d.info.currentTime : undefined;
   if (st === 0 || (typeof t === 'number' && t >= MS_FIN - 0.15)) { ytMsg(f, 'seekTo', [MS_INI, true]); ytMsg(f, 'playVideo'); }
+  /* sin subtítulos: la traducción automática queda mal (aunque el navegador los tenga activados en YouTube) */
+  if (!f.dataset.sinSubs || st === 1) { f.dataset.sinSubs = '1'; ytMsg(f, 'unloadModule', ['captions']); ytMsg(f, 'unloadModule', ['cc']); }
 });
 document.addEventListener('load', (e) => { const f = e.target; if (f && f.tagName === 'IFRAME' && f.hasAttribute('data-ms-bucle')) { try { f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'ms' }), '*'); } catch (er) {} } }, true);
 const E = Object.assign({ fondo: 'hormigon' }, lee('systems_sim') || {});
