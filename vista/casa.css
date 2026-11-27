@@ -232,3 +232,18 @@ svg a.prod:hover text { fill: var(--azul); }
 .despiece tr.stk td { background: rgba(0, 150, 255, .08); }
 :root[data-tema="claro"] .equipo.stk { background-image: linear-gradient(rgba(0, 120, 255, .08), rgba(0, 120, 255, .08)); }
 @media print { .equipo.stk, .despiece tr.stk td { background: none !important; } }
+
+/* v3.1 · VIDEOCONF.: la pantalla de proyección (sin ficha) lleva su enlace a SCREENS; la alternativa interactiva en cinco botones */
+.equipo.sin-ficha { cursor: default; } .equipo.sin-ficha:hover { border-color: var(--verde-txt); }
+.equipo .ir-scr { display: inline-block; margin-top: calc(var(--u) * 8); padding: calc(var(--u) * 6) calc(var(--u) * 12); border: 1px solid var(--azul); border-radius: calc(var(--u) * 8); color: var(--azul); font-size: calc(var(--u) * 12); font-weight: 800; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
+.equipo .ir-scr:hover { background: color-mix(in srgb, var(--azul) 14%, transparent); }
+.blk-cu .fila.cinco .tog { flex-basis: calc(20% - var(--u) * 8); padding: 0 calc(var(--u) * 2); letter-spacing: 0; min-width: 0; }
+.blk-cu .par2 { flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--u) * 10); align-items: end; }
+.blk-cu .par2 > div { min-width: 0; display: flex; flex-direction: column; }
+.blk-cu .par2 select.sel { height: calc(var(--u) * 38); font-size: calc(var(--u) * 13); padding: 0 calc(var(--u) * 6); }
+/* v3.1 · SEMÁFORO de cada solución propuesta (verde viable, ámbar casi, rojo no) en el lateral de su ficha */
+.equipo.sem-v { border-left: calc(var(--u) * 5) solid var(--verde); }
+.equipo.sem-a { border-left: calc(var(--u) * 5) solid var(--ambar); }
+.equipo.sem-r { border-left: calc(var(--u) * 5) solid var(--rojo); }
+.blk-cu .pie-b .tog[aria-pressed="true"] { border-color: var(--verde-txt); color: var(--verde-txt); background: color-mix(in srgb, var(--verde) 12%, var(--blk)); box-shadow: inset 0 0 0 1px var(--verde-txt); }
+.blk-cu .pie-b .tog { text-transform: uppercase; }

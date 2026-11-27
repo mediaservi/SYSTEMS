@@ -52,11 +52,15 @@ textos({
   'Más zonas de las que admite el sistema ZM 2000 (54): repartir en varios sistemas.': ['More zones than the ZM 2000 system supports (54): split into several systems.', 'Més zones de les que admet el sistema ZM 2000 (54): repartir en diversos sistemes.'],
   'La central ZM 2124 da 240 W: para más potencia, etapas UP de apoyo.': ['The ZM 2124 unit gives 240 W: for more power, add UP amplifiers.', 'La central ZM 2124 dona 240 W: per a més potència, etapes UP de suport.'],
   'Ningún altavoz de la lista para este caso.': ['No loudspeaker in the list for this case.', 'Cap altaveu de la llista per a aquest cas.'],
+  /* v3.1 */
+  'Económico': ['Budget', 'Econòmic'], 'Junto a la pantalla': ['Next to the screen', 'Al costat de la pantalla'],
+  'Económico: una pareja de altavoces junto a la pantalla, sin retardos ni subgraves, para una sala de poco uso.': ['Budget: a pair of loudspeakers next to the screen, with no delays or subwoofers, for a room that is seldom used.', 'Econòmic: una parella d\'altaveus al costat de la pantalla, sense retards ni subgreus, per a una sala de poc ús.'],
+  'Con la sala llena, al fondo (a partir de unos {d} m) se oirá algo más bajo; si hace falta, se amplía con una pareja de retardo.': ['With the room full, the back (beyond about {d} m) will sound a little quieter; if needed, add a pair of delay speakers.', 'Amb la sala plena, al fons (a partir d\'uns {d} m) se sentirà una mica més baix; si cal, s\'amplia amb una parella de retard.'],
 });
-const DEF = { ancho: 10, fondo: 16, alto: 3, zonas: 1, uso: 'evento', montaje: 'pared', color: 'negro', mano: 1, cuerpo: 1, tipoC: 'solapa', mesa: 0, pantalla: true, falso: false, dante: true, en54: false, reverb: false, discreto: false };
+const DEF = { ancho: 10, fondo: 16, alto: 3, zonas: 1, uso: 'evento', montaje: 'pared', color: 'negro', mano: 1, cuerpo: 1, tipoC: 'solapa', mesa: 0, pantalla: true, falso: false, dante: true, en54: false, reverb: false, discreto: false, eco: false };
 let S = Object.assign({}, DEF, lee('systems_sonido') || {});
 const NUMS = { ancho: [2, 80, 1], fondo: [2, 120, 1], alto: [2, 25, 1], zonas: [1, 54, 0], mano: [0, 16, 0], cuerpo: [0, 16, 0], mesa: [0, 40, 0] };
-const BOOL = ['pantalla', 'falso', 'dante', 'en54', 'reverb', 'discreto'];
+const BOOL = ['pantalla', 'falso', 'dante', 'en54', 'reverb', 'discreto', 'eco'];   /* v3.1 · ECONÓMICO: sala de poco uso y presupuesto ajustado */
 const USOS = [['musica', 'Música de fondo', 'Hilo musical, tiendas, restaurantes', 'onda'], ['avisos', 'Megafonía', 'Avisos y música en 100 V: colegio, oficina, nave', 'altavoz'], ['sala', 'Sala con micros', 'Reuniones, formación, aulas', 'micro'], ['evento', 'Eventos', 'Presentaciones: voz y música con subgraves', 'personas']];
 const nomUso = (u) => (USOS.find((x) => x[0] === u) || USOS[2])[1];
 const RAD = Math.PI / 180;   /* v2.1 · los valores de partida del cálculo salen de BRIAN (panel ADMIN), con estos de fábrica si no llega */
@@ -108,6 +112,15 @@ function calcula() {
       const id = F <= 15 ? 'VSA-850-II' : F <= 25 ? 'VSA-1250-II' : 'VSA-2050-II', x = S.color === 'blanco' ? ref(id) : ref(id + '-B');
       add('Altavoces', x, 2); r.mains = [x, x];
       av.push(['info', T('Sala grande y reverberante: columnas VSA de haz orientable, que dirigen la voz al público.')]);
+    } else if (S.eco && S.montaje === 'pared') {
+      /* v3.1 · ECONÓMICO (sala de poco uso, presupuesto ajustado): una pareja junto a la pantalla, sin retardos ni subgraves.
+         Sin micrófonos y sala corta, MR 50 (económico, solo para sonido de reproducción); si no, WMR 60T. Sin micrófonos, un DMA 82
+         (2 × 80 W con DSP y los presets del fabricante para MR y WMR); con micrófonos, una KPS de 2 canales */
+      const lejos = F > P('sonido.ecoMRhasta', 8), x = (!mics && !lejos) ? col('MR-50') : col('WMR-60T');
+      if (x) { add('Altavoces', x, x.pareja ? 1 : 2, T('Junto a la pantalla')); r.mains = [x, x]; wMax = Math.max(wMax, x.w || 0); }
+      if (mics) ch += 2; else add('Electrónica', ref('DMA-82'), 1, '2 × 80 W');
+      av.push(['info', T('Económico: una pareja de altavoces junto a la pantalla, sin retardos ni subgraves, para una sala de poco uso.')]);
+      if (F > P('sonido.retardoDesde', 6) + 2) av.push(['info', T('Con la sala llena, al fondo (a partir de unos {d} m) se oirá algo más bajo; si hace falta, se amplía con una pareja de retardo.', { d: N(P('sonido.retardoDesde', 6) + 2, 0) })]);
     } else if (S.montaje === 'techo') {
       const x = cuelga ? col('PMR-60T-B') : ref('CMR-60T-W'), n = malla();
       /* en techo, los altavoces van en paralelo en línea de 100 V: un canal por zona (mínimo 2), 10 W por toma */
@@ -307,7 +320,7 @@ function datos() {
   return [{ tit: 'Sala', ic: 'regla', ac: 'var(--azul)', html: `<div class="nums">${num('ancho', 'Ancho (m)', S.ancho, 'm', 0.5, 2, 80)}${num('fondo', 'Fondo (m)', S.fondo, 'm', 0.5, 2, 120)}</div><div class="nums">${num('alto', 'Alto (m)', S.alto, 'm', 0.1, 2, 25)}${num('zonas', 'Zonas', S.zonas, '', 1, 1, 54)}</div>` },
     { tit: 'Uso', ic: 'altavoz', ac: 'var(--verde-txt)', html: togs('uso', USOS.map((u) => [u[0], u[1]]), S.uso, 'dos') + etq('Montaje y acabado') + `<div class="fila envuelve dos">${[['montaje', 'pared', 'Pared'], ['montaje', 'techo', 'Techo'], ['color', 'negro', 'Negro'], ['color', 'blanco', 'Blanco']].map((o) => `<button type="button" class="tog" aria-pressed="${S[o[0]] === o[1]}" data-set="${o[0]}" data-v="${o[1]}"><span>${esc(T(o[2]))}</span></button>`).join('')}</div>` },
     { tit: 'Micrófonos', ic: 'micro', ac: 'var(--violeta)', html: num('mano', 'De mano', S.mano, '', 1, 0, 16) + num('cuerpo', 'De cuerpo', S.cuerpo, '', 1, 0, 16) + togs('tipoC', [['solapa', 'Solapa'], ['diadema', 'Diadema']], S.tipoC, 'dos') + num('mesa', 'Sobremesa', S.mesa, '', 1, 0, 40) },
-    { tit: 'Proyecto', ic: 'chispa', ac: 'var(--ambar)', html: `<div class="fila envuelve dos">${BOOL.map((b) => `<button type="button" class="tog" aria-pressed="${!!S[b]}" data-set="${b}" data-v="${!S[b]}"><span>${esc(T({ pantalla: 'Pantalla delante', falso: 'Falso techo', dante: 'Red Dante', en54: 'Evacuación EN 54', reverb: 'Reverberante', discreto: 'Que no se vea' }[b]))}</span></button>`).join('')}</div>` + `<div class="pie-b"><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>` }];
+    { tit: 'Proyecto', ic: 'chispa', ac: 'var(--ambar)', html: `<div class="fila envuelve dos">${BOOL.filter((b) => b !== 'eco').map((b) => `<button type="button" class="tog" aria-pressed="${!!S[b]}" data-set="${b}" data-v="${!S[b]}"><span>${esc(T({ pantalla: 'Pantalla delante', falso: 'Falso techo', dante: 'Red Dante', en54: 'Evacuación EN 54', reverb: 'Reverberante', discreto: 'Que no se vea', eco: 'Económico' }[b]))}</span></button>`).join('')}</div>` + `<div class="pie-b"><button type="button" class="tog" aria-pressed="${!!S.eco}" data-set="eco" data-v="${!S.eco}"><span>${esc(T('Económico'))}</span></button><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>` }];   /* v3.1 · ECONÓMICO junto a RESTABLECER, para que el bloque no crezca */
 }
 const micTxt = () => { const p = []; if (S.mano) p.push(S.mano + ' ' + T('De mano').toLowerCase()); if (S.cuerpo) p.push(S.cuerpo + ' ' + T(S.tipoC === 'diadema' ? 'Diadema' : 'Solapa').toLowerCase()); if (S.mesa) p.push(S.mesa + ' ' + T('Sobremesa').toLowerCase()); return p.join(' · ') || T('Sin micrófonos'); };
 const filas = () => [['sala', 'regla', 'Sala', N(S.ancho, 1) + ' × ' + N(S.fondo, 1) + ' × ' + N(S.alto, 1) + ' m'], ['uso', 'altavoz', 'Uso', T(nomUso(S.uso))], ['montaje', 'techo', 'Montaje', T(S.montaje === 'techo' ? 'Techo' : 'Pared')], ['mics', 'micro', 'Micrófonos', micTxt()], ['en54', 'escudo', 'Evacuación EN 54', T(S.en54 ? 'Sí' : 'No')]];
@@ -338,10 +351,17 @@ function pide(t) {
   if (/megafon|avisos|paging|colegio|nave/.test(s)) { S.uso = 'avisos'; ok = true; }
   if (/evento|presentaci|auditorio|conferencia|event/.test(s)) { S.uso = 'evento'; ok = true; }
   if (/reuni|formaci|aula|meeting|classroom/.test(s)) { S.uso = 'sala'; ok = true; }
-  if (/techo|ceiling|sostre/.test(s)) S.montaje = 'techo'; if (/pared|wall|paret/.test(s)) S.montaje = 'pared';
+  /* v3.1 · «proyector de techo» habla del proyector, no de los altavoces */
+  const sm = s.replace(/(?:proyector|projector|pantalla|screen)(?: de| a| al| en)? (?:techo|sostre)|ceiling[- ]?(?:mounted )?projector/g, '');
+  if (/techo|ceiling|sostre/.test(sm)) S.montaje = 'techo'; if (/pared|wall|paret/.test(sm)) S.montaje = 'pared';
   if (/pantalla|led|screen/.test(s)) S.pantalla = true; if (/evacuaci|en ?54|voice alarm/.test(s)) S.en54 = true;
-  if (/dante/.test(s)) S.dante = true; if (/reverber|cristal|eco/.test(s)) S.reverb = true; if (/blanco|white|blanc/.test(s)) S.color = 'blanco';
+  if (/dante/.test(s)) S.dante = true; if (/reverber|cristal|eco/.test(s)) S.reverb = true; if (/blanco|white|blanc/.test(s.replace(/(?:pantalla|screen|tela|lona|llenç)[^.,;]{0,30}?(?:blanca|blanc|white)|white (?:projection )?screen/g, ''))) S.color = 'blanco';   /* v3.1 · «pantalla blanca» es la de proyección, no el color de los altavoces */
   if ((m = s.match(/(\d+)\s*zonas?/))) S.zonas = Math.min(54, +m[1]);
+  /* v3.1 · alto con palabras («alçada 2,80 m»), pareja de altavoces y presupuesto ajustado → ECONÓMICO (sin micrófonos si no se piden, sin Dante si no se dice) */
+  if ((m = s.match(/(?:alto|altura|alçada|alcada|height)[^0-9.]{0,12}(\d+(?:\.\d+)?)\s*m\b/))) { const a = +m[1]; if (a >= 2 && a <= 25) S.alto = a; }
+  const nAlt = (s.match(/(\d+)\s*(?:altavoces|altaveus|speakers|loudspeakers)/) || [])[1];
+  const eco = /ajustad|ajustat|econ[oòó]mic|low budget|tight budget|poco uso|poc ús|inversi[oó]n? (?:contenida|continguda|m[ií]nima)|2 o 3 reuni/.test(s) || nAlt === '2';
+  if (eco) { S.eco = true; if (!/micro|micr[oóò]fon|mics?\b/.test(s)) { S.mano = 0; S.cuerpo = 0; S.mesa = 0; } if (!/dante/.test(s)) S.dante = false; ok = true; }
   return ok || /altavoc|sonoriz|sonido|speaker|so de/.test(s);
 }
 export default {

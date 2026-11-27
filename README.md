@@ -52,7 +52,18 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.0)
+## Cambios de la versión actual (v3.1)
+- **VIDEOCONFERENCIA para salas de presentaciones**: la videoconferencia se puede quitar (sin cámara ni micrófonos) y la pantalla puede ser **monitor, interactiva o proyección**.
+- **Espectador más lejano**: si la petición da la distancia máxima de visualización, el tamaño de imagen sale de ella y no del fondo de la sala. Línea discontinua en el plano.
+- **Alto de la sala**: la imagen no pasa del techo (borde de abajo a 1 m en proyección y centrado a 1,3 m en un monitor, valores de BRIAN). Si el espectador más lejano pide más, aviso de hasta dónde se ve bien.
+- **Proyección**: pantalla blanca 16:9 a la medida justa, con el botón **Calcular el proyector en SCREENS**, que abre SCREENS con la pantalla, su altura, el techo y la distancia ya puestos.
+- **Pulgadas pedidas**: si la petición dice «interactiva de 75 pulgadas» o «monitor de 86″», se respeta (con aviso si se queda pequeña). Selector de pulgadas junto a «Cuántas pantallas».
+- **Alternativa interactiva para comparar** (55, 65, 75 u 86″): sale en ALTERNATIVAS con hasta dónde se ve bien y, en el PDF, en su propia lista con su ficha.
+- **Semáforo de soluciones**: cada pantalla propuesta lleva el lateral verde (se ve bien desde el último espectador), ámbar (casi, desde el 80 %) o rojo (no llega).
+- **SONORIZACIÓN · ECONÓMICO** (sala de poco uso, presupuesto ajustado): una pareja junto a la pantalla, sin retardos ni subgraves; MR 50 o WMR 60T con DMA 82 sin micrófonos, o con KPS de 2 canales si los hay.
+- **Petición de varias cosas**: un texto con pantalla y altavoces prepara VIDEOCONFERENCIA y SONORIZACIÓN a la vez (aviso en pantalla). Se leen la altura con palabras («alçada 2,80 m»), «dos altavoces», el presupuesto ajustado, y «proyector de techo» o «pantalla blanca» ya no ponen los altavoces en el techo ni en blanco.
+
+## Cambios de la v3.0
 - El vídeo de mediaservi de la simulación sale siempre sin subtítulos (la traducción automática quedaba mal), aunque el navegador los tenga activados en YouTube.
 
 ## Cambios de la v2.9

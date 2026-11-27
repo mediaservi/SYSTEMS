@@ -49,6 +49,7 @@ textos({
   'Hola. Te haré unas preguntas muy sencillas y te diré qué necesitas.': ['Hi. I will ask you a few very simple questions and tell you what you need.', 'Hola. Et faré unes preguntes molt senzilles i et diré què necessites.'],
   'Cálculo automático que puede contener errores: revísalo antes de presupuestar o instalar.': ['Automatic calculation that may contain errors: check it before quoting or installing.', 'Càlcul automàtic que pot contenir errors: revisa\'l abans de pressupostar o instal·lar.'],
   'Panel de administración': ['Admin panel', 'Panell d\'administració'],
+  'También he preparado {m} con esta petición: está en su pestaña.': ['I have also set up {m} from this request: it is in its tab.', 'També he preparat {m} amb aquesta petició: és a la seva pestanya.'],
   'No he entendido la petición: prueba con los botones o escríbela de otra forma.': ['I did not understand the request: try the buttons or write it another way.', 'No he entès la petició: prova amb els botons o escriu-la d\'una altra manera.'],
   'La casilla está vacía: no hay nada que copiar.': ['The box is empty: nothing to copy.', 'La casella és buida: no hi ha res a copiar.'],
   'Copiado.': ['Copied.', 'Copiat.'], 'Este navegador no deja copiar desde aquí.': ['This browser does not allow copying from here.', 'Aquest navegador no deixa copiar des d\'aquí.'],
@@ -271,7 +272,10 @@ function responde(v) { const m = M(), q = m.pregunta(ASIS.claves[ASIS.i], R); q.
 function cambiaModulo(id) { if (id === G.mod) return; G.mod = id; EDITA = true; const i = $('#pide'); if (i) { i.value = ''; G.texto = ''; } pinta(); if (G.vista === 'simple' && !lee('systems_asis_' + id)) asis(M().pasos(), true); }
 function calcular() {
   const i = $('#pide'), t = (i ? i.value : '').trim(); G.texto = t;
-  if (t) { const n = normaliza(t), cual = (M().reconoce && M().reconoce(n)) ? null : [VIDEO, CAMARAS, CONTROL, DISP, SENAL, ELEC, SONIDO, AUDIO].find((m) => m !== M() && m.reconoce && m.reconoce(n)); if (cual) { G.mod = cual.id; cual.pide(n); } else if (!M().pide(n)) tostada(T('No he entendido la petición: prueba con los botones o escríbela de otra forma.'), 5000); }
+  if (t) { const n = normaliza(t), cual = (M().reconoce && M().reconoce(n)) ? null : [VIDEO, CAMARAS, CONTROL, DISP, SENAL, ELEC, SONIDO, AUDIO].find((m) => m !== M() && m.reconoce && m.reconoce(n)); let ok = true; if (cual) { G.mod = cual.id; cual.pide(n); } else if (!M().pide(n)) { ok = false; tostada(T('No he entendido la petición: prueba con los botones o escríbela de otra forma.'), 5000); }
+    /* v3.1 · una petición de sala con pantalla y sonido (p. ej. proyector y dos altavoces) prepara también el otro módulo, que queda listo en su pestaña */
+    if (ok) { const par = [VIDEO, SONIDO].filter((m) => m !== M() && [VIDEO, SONIDO].includes(M()) && m.reconoce(n) && (m === SONIDO ? /altavo|altaveu|speaker|sonoriz|sonorit|sound system/.test(n) : /proyector|projector|proyecci|projecci|pantalla|screen|videoconf/.test(n)));
+      par.forEach((m) => { m.pide(n); try { m.calcula(); } catch (e) {} }); if (par.length) setTimeout(() => tostada(T('También he preparado {m} con esta petición: está en su pestaña.', { m: T(par[0].corto) }), 6000), 400); } }
   EDITA = false; pinta();
   const b = $('#calcular'); b.classList.remove('pulso'); void b.offsetWidth; b.classList.add('pulso');
 }
