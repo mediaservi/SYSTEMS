@@ -15,6 +15,10 @@ textos({
   'Ningún procesador de la lista llega a {px} Mpx y {w} px de ancho con una entrada {t}.': ['No processor in the list reaches {px} Mpx and {w} px wide with one {t} input.', 'Cap processador de la llista arriba a {px} Mpx i {w} px d\'ample amb una entrada {t}.'],
   'NDI llega por la red: hace falta un decodificador NDI que lo pase a HDMI o un procesador con entrada IP. Compruébalo en la ficha.': ['NDI arrives over the network: you need an NDI decoder to HDMI or a processor with an IP input. Check the datasheet.', 'L\'NDI arriba per la xarxa: cal un descodificador NDI que el passi a HDMI o un processador amb entrada IP. Comprova-ho a la fitxa.'],
   'Conexión': ['Connection', 'Connexió'], 'Cable de red Cat6 · hasta 100 m por línea': ['Cat6 network cable · up to 100 m per line', 'Cable de xarxa Cat6 · fins a 100 m per línia'], 'Refresco': ['Refresh', 'Refresc'], 'Máximo por salida': ['Maximum per output', 'Màxim per sortida'], 'Backup': ['Backup', 'Backup'], 'Sí': ['Yes', 'Sí'], 'No': ['No', 'No'], 'Líneas duplicadas 1:1': ['Lines duplicated 1:1', 'Línies duplicades 1:1'], 'Sin líneas de reserva': ['No spare lines', 'Sense línies de reserva'],
+  'Conector de la salida': ['Output connector', 'Connector de la sortida'], 'máximo': ['maximum', 'màxim'], '1920 × 1080 a 60 Hz': ['1920 × 1080 at 60 Hz', '1920 × 1080 a 60 Hz'], '4096 × 2160 a 60 Hz': ['4096 × 2160 at 60 Hz', '4096 × 2160 a 60 Hz'], '7680 × 4320 a 60 Hz': ['7680 × 4320 at 60 Hz', '7680 × 4320 a 60 Hz'], '3840 × 2160 a 60 Hz': ['3840 × 2160 at 60 Hz', '3840 × 2160 a 60 Hz'], 'Por la red (IP): hasta 4K60': ['Over the network (IP): up to 4K60', 'Per la xarxa (IP): fins a 4K60'],
+  'Elegido': ['Chosen', 'Triat'], 'Elegir': ['Choose', 'Triar'], 'Volver a la recomendada': ['Back to the recommended one', 'Tornar a la recomanada'], 'Por qué no hay solución': ['Why there is no solution', 'Per què no hi ha solució'], 'Equipo': ['Unit', 'Equip'], 'Le falta': ['What it lacks', 'Què li falta'],
+  'capacidad {c} Mpx': ['capacity {c} Mpx', 'capacitat {c} Mpx'], 'ancho máximo {w} px': ['maximum width {w} px', 'amplada màxima {w} px'], 'alto máximo {h} px': ['maximum height {h} px', 'alçada màxima {h} px'], '{p} puertos RJ45': ['{p} RJ45 ports', '{p} ports RJ45'], 'sin salida de fibra': ['no fibre output', 'sense sortida de fibra'],
+  'Prueba con fibra, con menos píxeles por salida o repartiendo la pantalla en varias zonas.': ['Try fibre, fewer pixels per output or splitting the screen into several zones.', 'Prova amb fibra, amb menys píxels per sortida o repartint la pantalla en diverses zones.'], 'Prueba repartiendo la pantalla en varias zonas o con otra marca.': ['Try splitting the screen into several zones or another brand.', 'Prova repartint la pantalla en diverses zones o amb una altra marca.'],
   'Fuente': ['Source', 'Font'], 'Un reproductor con controladora': ['A player with built-in controller', 'Un reproductor amb controladora'], 'Guarda los contenidos, sin ordenador': ['Stores the content, no computer', 'Desa els continguts, sense ordinador'], 'Ordenador': ['Computer', 'Ordinador'], 'Reproductor': ['Player', 'Reproductor'], 'Contenidos': ['Content', 'Continguts'],
   'Reproductor: guarda y reproduce los contenidos y lleva la controladora dentro, sin ordenador ni otro procesador.': ['Player: it stores and plays the content and has the controller built in, with no computer or other processor.', 'Reproductor: desa i reprodueix els continguts i porta la controladora a dins, sense ordinador ni cap altre processador.'],
   'Con un ordenador como fuente y un procesador, sí.': ['With a computer as the source and a processor, yes.', 'Amb un ordinador com a font i un processador, sí.'],
@@ -55,7 +59,7 @@ textos({
 });
 
 /* ---------- estado ---------- */
-const DEF = { fuenteL: 'pc', dest: 'led', cant: 'una', n: 2, pants: [[1920, 1080], [1920, 1080], [1920, 1080], [1920, 1080]], cab: false, resW: 1920, resH: 1080, cabW: 640, cabH: 384, nW: 3, nH: 3, hz: 60, salidas: 1, tipo: 'HDMI', maxSal: '4K', conexion: 'directo', backup: false, marca: 'todas',
+const DEF = { procSel: '', fuenteL: 'pc', dest: 'led', cant: 'una', n: 2, pants: [[1920, 1080], [1920, 1080], [1920, 1080], [1920, 1080]], cab: false, resW: 1920, resH: 1080, cabW: 640, cabH: 384, nW: 3, nH: 3, hz: 60, salidas: 1, tipo: 'HDMI', maxSal: '4K', conexion: 'directo', backup: false, marca: 'todas',
   nproy: 2, modoP: 'espejo', resP: '4k', dist: 10, fuentes: 1, ndisp: 2, modoD: 'espejo', vwC: 2, vwF: 2, pulg: 55, uso: 'pared', horas: '24/7', marcaD: 'todas' };
 let S = Object.assign({}, DEF, (lee('systems_elec2') || {}));
 const guardaS = () => guarda('systems_elec2', S);
@@ -71,6 +75,17 @@ const COLS = ['#c6e04a', '#00b4ff', '#a033ff', '#ffb000', '#4fdc62', '#ff4d5e'];
 const USOS = [['pared', 'Interior'], ['escaparate', 'Escaparate'], ['exterior', 'Exterior'], ['interactivo', 'Interactivo'], ['totem', 'Tótem']];
 const E = () => globalThis.SC_ELEC;
 function reparte(total, partes) { const b = Math.floor(total / partes), x = total % partes; return Array.from({ length: partes }, (_, i) => b + (i < x ? 1 : 0)); }
+
+/* v3.12 · (auditoría LED, bloque 1) ENTRADAS como tarjetas de conector: la salida de la fuente se elige por su conector y su generación
+   (color: verde Full HD · azul 4K60 · violeta 8K · ámbar IP); cada una lleva su resolución máxima en la ayuda */
+const CONS = [['HDMI', '2K', 'HDMI 1.4', '1920 × 1080 a 60 Hz'], ['HDMI', '4K', 'HDMI 2.0', '4096 × 2160 a 60 Hz'], ['HDMI', '8K', 'HDMI 2.1', '7680 × 4320 a 60 Hz'],
+  ['DP', '4K', 'DP 1.2', '4096 × 2160 a 60 Hz'], ['DP', '8K', 'DP 1.4', '7680 × 4320 a 60 Hz'], ['SDI', '2K', '3G-SDI', '1920 × 1080 a 60 Hz'], ['SDI', '4K', '12G-SDI', '3840 × 2160 a 60 Hz'], ['NDI', '4K', 'NDI', 'Por la red (IP): hasta 4K60']];
+const GENC = { '2K': '#4fdc62', '4K': '#00b4ff', '8K': '#a033ff', IP: '#ffb000' };
+const CONIC = { HDMI: '<path d="M3 8h18v4.5l-2.5 3.5h-13L3 12.5z"/><path d="M7 11h10"/>', DP: '<path d="M3 8h15l3 3v5H3z"/><path d="M7 12h9"/>', SDI: '<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.2"/><path d="M12 3v2M5.5 6l1.3 1.3"/>', NDI: '<rect x="4" y="5" width="16" height="13" rx="1.5"/><path d="M8 18v-4h8v4M9 9h1M12 9h1M15 9h0"/>' };
+function conectores() {
+  return `<div class="cons" role="group" aria-label="${esc(T('Conector de la salida'))}">${CONS.map(([t, g, nom, max]) => { const on = S.tipo === t && (t === 'NDI' || S.maxSal === g), c = GENC[t === 'NDI' ? 'IP' : g];
+    return `<button type="button" class="con" data-acc="con:${t}:${g}" aria-pressed="${on}" style="--gc:${c}" title="${esc(nom + ' · ' + T('máximo') + ' ' + T(max))}"><svg viewBox="0 0 24 24" aria-hidden="true">${CONIC[t]}</svg><span>${esc(nom)}</span></button>`; }).join('')}</div>`;
+}
 
 /* ---------- LED ---------- */
 function corte(W, H, cab) {
@@ -101,11 +116,14 @@ function calcLED() {
   let lista = el.calcularElectronicas(st, Object.assign({}, o, repro ? { escalador: 'indiferente', entradas: 1 } : {}), []).filter((x) => repro ? x.reproductor : !x.reproductor);
   if (S.marca !== 'todas') lista = lista.filter((x) => x.marca === S.marca);
   const menciona = (x) => x.modular || /^MX(2000|6000)/.test(x.key || '') || new RegExp(S.tipo === 'DP' ? '\\bDP\\b' : S.tipo).test(x.resumen || '');
-  r.lista = lista; r.rec = repro ? lista[0] || null : lista.find(menciona) || lista[0] || null; r.repro = repro;
+  r.lista = lista; r.rec = repro ? lista[0] || null : lista.find(menciona) || lista[0] || null; r.repro = repro; r.auto = r.rec;
+  /* v3.12 · (bloque 1) varias soluciones comparables: al tocar una alternativa pasa a ser la elegida; «Volver a la recomendada» la deshace */
+  const elegido = S.procSel && lista.find((x) => (x.key || x.modelo) === S.procSel); if (elegido) r.rec = elegido; else S.procSel = '';
   if (repro) { if (r.faltan) { delete r.faltan; delete r.error; } r.n = 1; r.eq = '';
     if (r.rec) av.push(['info', T('Reproductor: guarda y reproduce los contenidos y lleva la controladora dentro, sin ordenador ni otro procesador.')]);
     else r.error = T('Ningún reproductor de la lista llega a {px} Mpx y {w} px de ancho.', { px: N(px / 1e6, 2), w: N(W) }) + ' ' + T('Con un ordenador como fuente y un procesador, sí.'); }
   else if (r.rec) { r.lista = [r.rec].concat(lista.filter((x) => x !== r.rec)); if (!menciona(r.rec)) av.push(['', T('La ficha de {m} no nombra entradas {t}: hará falta un adaptador activo o comprobarlo.', { m: r.rec.modelo, t: S.tipo })]); }
+  if (!r.rec && !repro) r.porque = porQue(st, W, H, n);
   if (!r.error && !r.rec) r.error = n === 1 ? T('Ningún procesador de la lista llega a {px} Mpx y {w} px de ancho con una entrada {t}.', { px: N(px / 1e6, 1), w: N(W), t: S.tipo }) : T('Ningún procesador de la lista llega a {px} Mpx y {w} px de ancho con {m} entradas {t}.', { px: N(px / 1e6, 1), w: N(W), m: n, t: S.tipo });
   /* v1.1 · conversores de fibra CVT10 (10 líneas cada uno) junto a la pantalla: los del despiece del procesador o, si no los trae, los que salen de las líneas */
   if (S.conexion === 'fibra') { const d = r.rec && (r.rec.equipos || []).find((e) => /CVT/i.test(e.ref || '')); r.cvt = d ? { n: d.cant, ref: d.ref } : { n: Math.ceil(lines * r.bk / 10), ref: 'CVT10' }; }
@@ -276,9 +294,17 @@ function esqDistrib(r, mov) {
 }
 
 /* ---------- resultado ---------- */
-function equipoHTML(x, rec) {
+/* v3.12 · (bloque 1) «sin solución» explicado: los equipos más cercanos y qué les falta */
+function porQue(st, W, H, n) {
+  const D = (E().ELEC_DEVICES || []).filter((d) => !d.reproductor && (S.marca === 'todas' || d.marca === S.marca));
+  return D.map((d) => { const f = []; if (d.capPx && st.totalPix > d.capPx) f.push(T('capacidad {c} Mpx', { c: N(d.capPx / 1e6, 1) })); if (d.maxW && W > d.maxW) f.push(T('ancho máximo {w} px', { w: N(d.maxW) })); if (d.maxH && H > d.maxH) f.push(T('alto máximo {h} px', { h: N(d.maxH) }));
+    if (S.conexion === 'directo' && d.rj && st.lines * (S.backup ? 2 : 1) > d.rj) f.push(T('{p} puertos RJ45', { p: d.rj })); if (S.conexion === 'fibra' && !d.opt) f.push(T('sin salida de fibra'));
+    return { d, f, k: (d.capPx ? st.totalPix / d.capPx : 1) }; }).filter((x) => x.f.length).sort((a, b) => Math.abs(1 - a.k) - Math.abs(1 - b.k)).slice(0, 4);
+}
+function equipoHTML(x, rec, sel) {
   const filas = [[1, x.modular ? '' : x.modelo, x.resumen || '']].concat((x.equipos || []).filter((e) => e.cant > 0).map((e) => [e.cant, e.ref, e.desc]));
-  return `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${x.serie ? ' · ' + esc(x.serie) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div>
+  const k = esc(x.key || x.modelo);
+  return `<div class="equipo${rec ? ' rec' : ' elegible'}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${x.serie ? ' · ' + esc(x.serie) : ''}</span>${rec ? `<span class="etq">${T(sel ? 'Elegido' : 'Recomendado').toUpperCase()}</span>${sel ? `<button type="button" class="tog eq-sel" data-acc="proc:">${esc(T('Volver a la recomendada'))}</button>` : ''}` : `<button type="button" class="tog eq-sel" data-acc="proc:${k}">${esc(T('Elegir'))}</button>`}</div>
     <div class="eq-sub">${esc(TM(x.puertos))} · ${T('Capacidad')} ${esc(TM(x.capacidad))}</div>
     <table class="despiece">${filas.filter((f) => f[1]).map((f) => `<tr><td>${f[0]}×</td><td class="ref">${esc(f[1])}</td><td class="des">${esc(TM(f[2]))}</td></tr>`).join('')}</table>
     ${(x.urlFab || x.pdf) ? `<div class="eq-links">${x.urlFab ? `<a href="${esc(x.urlFab)}" target="_blank" rel="noopener">${T('Página del producto')} ↗</a>` : ''}${x.pdf ? `<a href="${esc(x.pdf)}" target="_blank" rel="noopener">${T('Ficha técnica')} ↗</a>` : ''}</div>` : ''}</div>`;
@@ -291,11 +317,12 @@ function tablaTramos(r) {
 function resultado(r) {
   const tipo = r.error ? 'mal' : r.sem === 'A' ? 'aviso' : '';
   let h = `<div class="veredicto ${tipo}"><b>${esc(r.faltan ? T('Faltan salidas en la fuente') : r.semTxt)}</b><p>${esc(r.lineaTxt || '')}</p></div>`;
-  if (S.dest === 'led') { if (r.rec) h += equipoHTML(r.rec, true); if (r.rec && softAplica(r.rec)) h += `<div class="soft-sys" data-soft="${esc(r.rec.key || r.rec.modelo || '')}">${softHTML(r.rec, lang())}</div>`; }
+  if (S.dest === 'led') { if (r.rec) h += equipoHTML(r.rec, true, r.rec !== r.auto);
+    if (r.porque && r.porque.length) h += `<p class="alt-t">${esc(T('Por qué no hay solución'))}</p><table class="tabla-v porque"><tr><th>${esc(T('Equipo'))}</th><th>${esc(T('Le falta'))}</th></tr>${r.porque.map((q) => `<tr><td class="m">${esc(q.d.modelo)}</td><td>${esc(q.f.join(' · '))}</td></tr>`).join('')}</table><p class="nota-pq">${esc(T(S.conexion === 'directo' ? 'Prueba con fibra, con menos píxeles por salida o repartiendo la pantalla en varias zonas.' : 'Prueba repartiendo la pantalla en varias zonas o con otra marca.'))}</p>`; if (r.rec && softAplica(r.rec)) h += `<div class="soft-sys" data-soft="${esc(r.rec.key || r.rec.modelo || '')}">${softHTML(r.rec, lang())}</div>`; }
   else if (S.dest === 'proy') { h += eqSimple(r.blend, 1, 'Equipo de blending', true) + eqSimple(r.sel, 1, 'Conmutador', !r.blend) + eqSimple(r.conm || r.dist, 1, 'Conmutador', !r.blend && !r.sel) + tablaTramos(r); }
   else { h += eqSimple(r.disp, r.n, 'Display', true) + eqSimple(r.sel, 1, 'Conmutador') + eqSimple(r.conm || r.dist, 1, 'Conmutador') + tablaTramos(r); }
   if (r.av.length) h += `<ul class="avisos">${r.av.map((a) => `<li class="${a[0]}">${esc(a[1])}</li>`).join('')}</ul>`;
-  const alts = S.dest === 'led' ? (r.lista || []).slice(1) : (r.alts || []);
+  const alts = S.dest === 'led' ? (r.lista || []).filter((x) => x !== r.rec) : (r.alts || []);
   if (alts.length) h += `<p class="alt-t">${T('Alternativas')}</p>` + alts.map((x) => S.dest === 'led' ? equipoHTML(x, false) : eqSimple(x, S.dest === 'disp' ? r.n : 1, '', false)).join('');
   return h;
 }
@@ -331,7 +358,7 @@ function datos() {
       : num('n', 'Cuántas', S.n, '', 1, 2, 4) + S.pants.slice(0, S.n).map((p, i) => `<p class="sub-t">${esc(T('Pantalla {n}', { n: i + 1 }))}</p><div class="nums">${num('pw' + i, 'Ancho (px)', p[0], 'px')}${num('ph' + i, 'Alto (px)', p[1], 'px')}</div>`).join('');
     return [{ tit: 'Destino', ic: 'led', html: dest + etq('Refresco') + togs('hz', [[50, '50 Hz'], [60, '60 Hz'], [120, '120 Hz']], S.hz), ac: 'var(--verde-txt)' },
       { tit: 'Pantalla', ic: 'regla', html: pant, ac: 'var(--azul)' },
-      { tit: 'Fuentes', ic: 'media', html: (S.cant === 'una' ? togs('fuenteL', [['pc', 'Ordenador'], ['repro', 'Reproductor']], S.fuenteL, 'dos') : '') + (S.cant === 'una' && S.fuenteL === 'repro' ? '' : fuentes(true).replace(S.cant === 'una' ? /^<p class="sub-t">[^<]*<\/p>/ : /^$/, '') + etq('Máximo por salida') + togs('maxSal', [['2K', 'Full HD'], ['4K', '4K60'], ['8K', '8K']], S.maxSal, 'tres')), ac: 'var(--violeta)' },
+      { tit: 'Fuentes', ic: 'media', html: (S.cant === 'una' ? togs('fuenteL', [['pc', 'Ordenador'], ['repro', 'Reproductor']], S.fuenteL, 'dos') : '') + (S.cant === 'una' && S.fuenteL === 'repro' ? '' : `<div class="nums">${num('salidas', 'Salidas', S.salidas, '', 1, 1, 16)}</div>` + etq('Conector de la salida') + conectores()), ac: 'var(--violeta)' },
       { tit: 'Instalación', ic: 'red', html: togs('conexion', [['directo', 'Cable de red'], ['fibra', 'Fibra']], S.conexion, 'dos') + togs('backup', [[false, 'Sin backup'], [true, 'Backup 1:1']], S.backup, 'dos') + etq('Marca') + togs('marca', [['todas', 'Todas'], ['NOVASTAR', 'NOVASTAR'], ['COEX', 'COEX']], S.marca) + `<div class="pie-b"><button type="button" data-acc="reset">${esc(T('RESTABLECER'))}</button></div>`, ac: 'var(--ambar)' }];
   }
   if (S.dest === 'proy') return [{ tit: 'Destino', ic: 'proy', html: dest, ac: 'var(--verde-txt)' },
@@ -398,7 +425,7 @@ function pide(t) {
   const s = t.toLowerCase().replace(/,/g, '.'); let ok = false;
   /* v3.8 · (auditoría LED, bloque 0, error 2) cada petición parte de cero: 60 Hz, sin backup, cable de red, una salida HDMI 4K60 y ordenador,
      salvo lo que diga el texto */
-  Object.assign(S, { hz: 60, backup: false, conexion: 'directo', salidas: 1, tipo: 'HDMI', maxSal: '4K', fuenteL: 'pc', marca: 'todas' }); NOENT = [];
+  Object.assign(S, { hz: 60, backup: false, conexion: 'directo', salidas: 1, tipo: 'HDMI', maxSal: '4K', fuenteL: 'pc', marca: 'todas', procSel: '' }); NOENT = [];
   /* «pantalla LED» se queda en LED aunque diga DisplayPort (antes «display» de «displayport» lo mandaba a DISPLAYS) */
   if (/\bled\b|cabinet|procesador led|led processor/.test(s)) { S.dest = 'led'; ok = true; }
   else if (/proyector|projector|proyecci|blending/.test(s)) { S.dest = 'proy'; ok = true; } else if (/monitor|\bdisplays?\b|samsung|\blg\b|clever|videowall|video wall/.test(s)) { S.dest = 'disp'; ok = true; } else if (/pantalla|screen|nsign|procesador/.test(s)) { S.dest = 'led'; ok = true; }
@@ -442,6 +469,8 @@ export default {
   set: (k, v) => { if (k === 'cant' && v === 'varias' && S.dest === 'led') S.cab = false; pon(k, v); },
   num: (k, v) => pon(k, v),
   pm: (k, d) => { const m = /^p([wh])(\d)$/.exec(k), cur = m ? S.pants[+m[2]][m[1] === 'w' ? 0 : 1] : +S[k]; pon(k, cur + d * (['dist'].includes(k) ? 5 : 1)); },
-  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF, { dest: S.dest }); },
+  accion: (a) => { if (a === 'reset') S = Object.assign({}, DEF, { dest: S.dest });
+    else if (/^con:/.test(a)) { const [, t, g] = a.split(':'); S.tipo = t; S.maxSal = g; S.procSel = ''; guardaS(); }
+    else if (/^proc:/.test(a)) { S.procSel = a.slice(5); guardaS(); } },
   reset: () => { S = Object.assign({}, DEF); },
 };
