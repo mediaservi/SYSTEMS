@@ -52,7 +52,11 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.3)
+## Cambios de la versión actual (v3.4)
+- **Icono de la pestaña y de la app**: el símbolo va en un azul más claro (#8ee8ff) para que contraste con la placa magenta (solo en estos dos iconos; el resto de la marca sigue con su azul).
+- **Simulación**: recorte a mano de la imagen de pantalla en las fotos de ambiente o con dos pantallas (Clevertouch CL PRO2, High Bright y tótems; LG UH5Q, UL3Q, UL5Q, UH7Q y PK640): el contenido es lo que el fabricante enseña en la pantalla, sin fondos ni marcos.
+
+## Cambios de la v3.3
 - **Pantalla de proyección real, siempre**: VIDEOCONF. propone un modelo real de pantalla de proyección (`comun/pantallas.js`: 72 modelos de imagen 16:9 o 16:10 de ORAY, Da-Lite y Stumpfl, según información de los fabricantes), el más pequeño cuya imagen llega al espectador más lejano sin pasar del techo, con su foto, ficha, PDF y página. Montaje a elegir: eléctrica, de falso techo o marco fijo. Las de la misma medida salen en ALTERNATIVAS. SCREENS se abre con el formato de esa pantalla.
 - **Simulación a escala**: el contenido por defecto es la imagen que el fabricante enseña en la pantalla de su foto oficial (en las fotos frontales, recortada a la imagen activa; en las demás, la foto entera) y cambia sola al cambiar de modelo. La carta de ajuste y el vídeo de mediaservi siguen en CONTENIDO.
 - En lugar de la tarjeta de foto, **los cuadros de datos de SCREENS**: resolución (4K · ULTRA HD · 3840×2160 px), resumen (pantallas, pulgadas, ancho y alto) y distancia de visionado (mínima y óptima).
