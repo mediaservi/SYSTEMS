@@ -164,7 +164,7 @@
     const resRep = reps.sort((a, b) => a.idx - b.idx).map(aRes);
 
     // H Series (solo con escalador): chasis + tarjetas de salida
-    if (o.escalador === 'con' && (lines >= 8 || res.length === 0)) {
+    if ((o.escalador === 'con' || o.escalador === 'indiferente') && (lines >= 8 || res.length === 0)) {   /* v11.53 · «Igual» también admite la H Series (lleva escalador) */
       let tarj, equipos, puertos;
       if (directo) {
         tarj = Math.ceil(lines * mult / ELEC_H_TARJ_RJ.puertos);
@@ -204,6 +204,14 @@
         }
       }
     }
+    /* v11.53 · REPARTO EN VARIAS CONTROLADORAS (como ROE Calculator 2.0): si ningún equipo solo cubre la pantalla, se parte en n zonas de columnas
+       iguales (n ≤ BRIAN elec.reparto.maxEquipos) y se busca el equipo más pequeño que cubra una zona. La imagen llega a cada equipo por su entrada. */
+    if (!res.length && !hItem && !reps.length && !o.sinReparto) {
+      for (let n = 2; n <= REPARTO_MAX && !res.length; n++) {
+        const sub = calcularElectronicas({ lines: Math.ceil(lines / n), totalPix: Math.ceil(totalPix / n), porSup: null, resW: Math.ceil((stats.resW || 0) / n), resH: stats.resH }, { ...o, sinReparto: true }, hoja).filter((x) => !x.reproductor && !x.modular);
+        if (sub.length) { const x = sub[0]; res.push({ ...x, key: 'R' + n + '-' + x.key, modelo: n + ' × ' + x.modelo, reparto: n, equipos: (x.equipos || []).map((q) => ({ ...q, cant: q.cant * n })),
+          puertos: n + ' zonas de ' + Math.ceil((stats.resW || 0) / n) + '×' + stats.resH + ' px · cada una ' + x.puertos, capacidad: elecMpx(totalPix) + ' Mpx repartidos en ' + n + ' equipos',
+          nota: 'Pantalla repartida en ' + n + ' zonas: hace falta una fuente con ' + n + ' salidas sincronizadas (mediaserver o splitter).' }); } } }
     // Máximo 4 controladoras (una fila en el PDF): si hay H Series, se reserva un hueco para ella; los reproductores van detrás
     return (hItem ? res.slice(0, 3).concat([hItem]) : res.slice(0, 4)).concat(resRep);
   };
@@ -234,6 +242,7 @@
   };
   /* v11.49 · BRIAN (panel AVHUB ADMIN, tema «Electrónica LED · motor común», app TODAS): capacidades de puertos, conversores, ranuras y tarjetas.
      Sin dato, las de siempre. Se llama con el objeto de parámetros ya leído por la app. */
+  let REPARTO_MAX = 4;
   const ELEC_DEF = { px: 650000, cvt: 10, mx2i: 2, mx2o: 2, mx6i: 8, mx6o: 8, mxOpt: 4, hRj: 20, hOpt: 2, hPpo: 8 };
   function fijaParams(b) { const v = (k, d) => { const n = Number(String(b && b[k] != null ? b[k] : '').replace(',', '.')); return isFinite(n) && n > 0 ? n : d; };
     ELEC_PX_PUERTO = v('elec.pixelesPorPuerto', ELEC_DEF.px); ELEC_CVT.porCvt = v('elec.conversor.puertos', ELEC_DEF.cvt);
@@ -241,6 +250,7 @@
     ELEC_MX_CHASIS.MX6000.slotsIn = v('elec.mx6000.ranurasEntrada', ELEC_DEF.mx6i); ELEC_MX_CHASIS.MX6000.slotsOut = v('elec.mx6000.ranurasSalida', ELEC_DEF.mx6o);
     ELEC_MX_TARJ_OUT.opt = v('elec.mx.tarjetaSalida.fibras', ELEC_DEF.mxOpt); ELEC_H_TARJ_RJ.puertos = v('elec.h.tarjetaRJ45.puertos', ELEC_DEF.hRj);
     ELEC_H_TARJ_FIB.opt = v('elec.h.tarjetaFibra.fibras', ELEC_DEF.hOpt); ELEC_H_TARJ_FIB.ppo = v('elec.h.tarjetaFibra.puertosPorFibra', ELEC_DEF.hPpo);
+    REPARTO_MAX = v('elec.reparto.maxEquipos', 4);
     if (globalThis.SC_ELEC) globalThis.SC_ELEC.ELEC_PX_PUERTO = ELEC_PX_PUERTO; }
   globalThis.SC_ELEC = { fijaParams, aplicaListas, listas: () => LISTAS, ELEC_BLEND, calcularBlending, ELEC_PX_PUERTO, ELEC_PX_4K, ELEC_CVT, CHARMEX_NOVASTAR, charmexBusca, ELEC_DEVICES, ELEC_MX_CHASIS, ELEC_MX_TARJ_OUT, ELEC_MX_SFP, ELEC_MX_CVT, ELEC_H_CHASIS, ELEC_H_IN_BASE, ELEC_H_PREVIO, ELEC_H_TARJ_RJ, ELEC_H_TARJ_FIB, ELEC_H_TARJ_IN, ELEC_MEDIASERVERS, elecNorm, elecMpx, elecDeHoja, calcularElectronicas, calcularMediaservers };
 })();

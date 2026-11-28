@@ -22,7 +22,7 @@ const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR
 const MODS = [ELEC, DISP, SENAL, AUDIO, SONIDO, VIDEO, CAMARAS, CONTROL];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage · v2.0 · SONORIZACIÓN · v2.2 · CÁMARAS y CONTROL
 fijarIdioma(idiomaInicial());
 
-textos({ 'ACCESOS DIRECTOS': ['DIRECT LINKS', 'ACCESSOS DIRECTES'], 'COPIAR': ['COPY', 'COPIAR'], 'Copiar': ['Copy', 'Copiar'], 'Dirección copiada: {u}': ['Address copied: {u}', 'Adreça copiada: {u}'] });
+textos({ 'No puedo usar {x}: revisa la resolución (de 8 a 65.536 px por lado).': ['I cannot use {x}: check the resolution (8 to 65,536 px per side).', 'No puc fer servir {x}: revisa la resolució (de 8 a 65.536 px per costat).'], 'ACCESOS DIRECTOS': ['DIRECT LINKS', 'ACCESSOS DIRECTES'], 'COPIAR': ['COPY', 'COPIAR'], 'Copiar': ['Copy', 'Copiar'], 'Dirección copiada: {u}': ['Address copied: {u}', 'Adreça copiada: {u}'] });
 textos({
   'Nuevo cálculo: lo deja todo como al empezar': ['New calculation: back to the start', 'Nou càlcul: ho deixa tot com al començar'],
   'Qué es esto y cómo se usa': ['What this is and how to use it', 'Què és això i com es fa servir'],
@@ -309,7 +309,7 @@ function responde(v) { const m = M(), q = m.pregunta(ASIS.claves[ASIS.i], R); q.
 function cambiaModulo(id) { if (id === G.mod) return; G.mod = id; EDITA = true; const i = $('#pide'); if (i) { i.value = ''; G.texto = ''; } pinta(); if (G.vista === 'simple' && !lee('systems_asis_' + id)) asis(M().pasos(), true); }
 function calcular() {
   const i = $('#pide'), t = (i ? i.value : '').trim(); G.texto = t;
-  if (t) { const n = normaliza(t), cual = (M().reconoce && M().reconoce(n)) ? null : [VIDEO, CAMARAS, CONTROL, DISP, SENAL, ELEC, SONIDO, AUDIO].find((m) => m !== M() && m.reconoce && m.reconoce(n)); let ok = true; if (cual) { G.mod = cual.id; cual.pide(n); } else if (!M().pide(n)) { ok = false; tostada(T('No he entendido la petición: prueba con los botones o escríbela de otra forma.'), 5000); }
+  if (t) { const n = normaliza(t), cual = (M().reconoce && M().reconoce(n)) ? null : [VIDEO, CAMARAS, CONTROL, DISP, SENAL, ELEC, SONIDO, AUDIO].find((m) => m !== M() && m.reconoce && m.reconoce(n)); let ok = true; if (cual) { G.mod = cual.id; cual.pide(n); } else if (!M().pide(n)) { ok = false; const ne = M().noEntendido ? M().noEntendido() : []; tostada(ne.length ? T('No puedo usar {x}: revisa la resolución (de 8 a 65.536 px por lado).', { x: ne.join(', ') }) : T('No he entendido la petición: prueba con los botones o escríbela de otra forma.'), 6000); }
     /* v3.1 · una petición de sala con pantalla y sonido (p. ej. proyector y dos altavoces) prepara también el otro módulo, que queda listo en su pestaña */
     if (ok) { const par = [VIDEO, SONIDO].filter((m) => m !== M() && [VIDEO, SONIDO].includes(M()) && m.reconoce(n) && (m === SONIDO ? /altavo|altaveu|speaker|sonoriz|sonorit|sound system/.test(n) : /proyector|projector|proyecci|projecci|pantalla|screen|videoconf/.test(n)));
       par.forEach((m) => { m.pide(n); try { m.calcula(); } catch (e) {} }); if (par.length) setTimeout(() => tostada(T('También he preparado {m} con esta petición: está en su pestaña.', { m: T(par[0].corto) }), 6000), 400); } }

@@ -52,7 +52,15 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.7)
+## Cambios de la versión actual (v3.8)
+- **Salidas de la fuente por ancho de banda** (ELECTRÓNICA › LED), no con un tope fijo de 3840 px: «Máximo por salida» es ahora Full HD (HDMI 1.4 · DVI · 3G-SDI), **4K60** (HDMI 2.0 · DP 1.2 · 12G-SDI, unos 8,85 Mpx: 4096 × 2160 cabe en una) u **8K** (HDMI 2.1 · DP 1.4, 7680 × 4320 por un cable). Menos píxeles por salida a más hercios. Las tiras estrechas se **pliegan** en una sola salida (7680 × 540 o 25600 × 64 van por un cable), con su aviso.
+- **Cada petición escrita parte de cero** (60 Hz, sin backup, cable de red, una salida HDMI 4K60, ordenador), salvo lo que diga el texto.
+- **Nunca se ignora en silencio:** una resolución fuera de rango se dice en el aviso; se aceptan lienzos pequeños o muy alargados (128 × 64, 25600 × 64).
+- La petición entiende «N salidas» o «4 HDMI», NDI (con su aviso: decodificador o entrada IP), 12G-SDI, 3G-SDI, HDMI 2.1, DP 1.4 y la distancia en metros (a más de 100 m, fibra). «Pantalla LED … DisplayPort» se queda en LED.
+- Si ningún equipo solo cubre la pantalla, se reparte en varias controladoras (motor común de electrónica LED, igual que SCREENS).
+- Errata: «con una entrada» en lugar de «1 entradas».
+
+## Cambios de la v3.7
 - **ACCESOS DIRECTOS** al final de la información (botón «i»): la dirección del módulo abierto, la primera y resaltada; después la general de SYSTEMS y la de cada módulo (`systems.mediaservi.com/?mod=elec`, `disp`, `senal`, `audio`, `sonido`, `video`, `camaras`, `control`). Cada línea lleva su nombre (abre la dirección), la dirección entera y COPIAR, en español, inglés y catalán.
 - Las direcciones de CÁMARAS y CONTROL ya abren su módulo.
 
