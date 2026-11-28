@@ -52,7 +52,11 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.6)
+## Cambios de la versión actual (v3.7)
+- **ACCESOS DIRECTOS** al final de la información (botón «i»): la dirección del módulo abierto, la primera y resaltada; después la general de SYSTEMS y la de cada módulo (`systems.mediaservi.com/?mod=elec`, `disp`, `senal`, `audio`, `sonido`, `video`, `camaras`, `control`). Cada línea lleva su nombre (abre la dirección), la dirección entera y COPIAR, en español, inglés y catalán.
+- Las direcciones de CÁMARAS y CONTROL ya abren su módulo.
+
+## Cambios de la v3.6
 - **Personalizar la simulación sin ventanas** (DISPLAYS y VIDEOCONF., «A escala»), con el mismo esquema que SCREENS: arriba a la derecha, **ELEVACIÓN DESDE EL SUELO** con flechas técnicas (de 10 en 10 cm; cambia también las vistas frontal, lateral y 3D, y RESTABLECER vuelve a la altura del cálculo) y, debajo y al mismo ancho, dos grupos de botones:
   - **CONTENIDO:** foto del fabricante (la de siempre por defecto), carta de ajuste, vídeo de prueba de mediaservi.com en bucle y contenido propio (vídeo, foto o enlace: solo este abre su pequeña ventana).
   - **PARED:** cemento, madera, mármol, ladrillos (con sus tres colores en círculos dentro del grupo) y pared propia (foto o enlace, guardada solo en este navegador).

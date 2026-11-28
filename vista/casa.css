@@ -308,3 +308,14 @@ svg a.prod:hover text { fill: var(--azul); }
 .sim-vpeq { width: min(560px, 94vw); }
 .sim-vpeq .vent-cab { display: flex; align-items: center; gap: 8px; }
 .simctl > .elev > span { flex: 1 1 auto; }
+/* v3.7 · ACCESOS DIRECTOS al final de la información */
+.accesos { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--linea); }
+.accesos ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; }
+.acc-l { display: grid; grid-template-columns: minmax(0, 13em) minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 6px 8px; border: 1px solid var(--linea); border-radius: 8px; }
+.acc-l.on { border-color: var(--verde); box-shadow: inset 3px 0 0 var(--verde); }
+.acc-l a { color: var(--txt); font-weight: 800; text-decoration: none; overflow-wrap: anywhere; }
+.acc-l a:hover { color: var(--azul); text-decoration: underline; }
+.acc-l code { font-family: 'Share Tech Mono', monospace; font-size: .92em; color: var(--tenue); overflow-wrap: anywhere; min-width: 0; }
+.acc-l .acc-cp { flex: none; width: auto; min-height: 0; padding: 5px 12px; font-size: 11px; letter-spacing: .08em; }
+.acc-l .acc-cp.hecho { border-color: var(--verde); color: var(--verde); }
+@media (max-width: 559px) { .acc-l { grid-template-columns: minmax(0, 1fr) auto; } .acc-l code { grid-column: 1 / -1; grid-row: 2; } .acc-l .acc-cp { grid-row: 1; grid-column: 2; } }

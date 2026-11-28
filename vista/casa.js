@@ -22,6 +22,7 @@ const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR
 const MODS = [ELEC, DISP, SENAL, AUDIO, SONIDO, VIDEO, CAMARAS, CONTROL];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage · v2.0 · SONORIZACIÓN · v2.2 · CÁMARAS y CONTROL
 fijarIdioma(idiomaInicial());
 
+textos({ 'ACCESOS DIRECTOS': ['DIRECT LINKS', 'ACCESSOS DIRECTES'], 'COPIAR': ['COPY', 'COPIAR'], 'Copiar': ['Copy', 'Copiar'], 'Dirección copiada: {u}': ['Address copied: {u}', 'Adreça copiada: {u}'] });
 textos({
   'Nuevo cálculo: lo deja todo como al empezar': ['New calculation: back to the start', 'Nou càlcul: ho deixa tot com al començar'],
   'Qué es esto y cómo se usa': ['What this is and how to use it', 'Què és això i com es fa servir'],
@@ -66,7 +67,7 @@ textos({
 
 /* ---------- estado de la casa ---------- */
 const G = Object.assign({ mod: 'elec', vista: 'simple', tema: 'oscuro', texto: '' }, lee('systems_casa') || {});
-try { const q = new URLSearchParams(location.search).get('mod'); if (q && ['elec', 'disp', 'senal', 'audio', 'sonido', 'video'].includes(q)) G.mod = q; } catch (e) {}
+try { const q = new URLSearchParams(location.search).get('mod'); if (q && ['elec', 'disp', 'senal', 'audio', 'sonido', 'video', 'camaras', 'control'].includes(q)) G.mod = q; } catch (e) {}
 const M = () => MODS.find((m) => m.id === G.mod) || MODS[0];
 const guardaCasa = () => guarda('systems_casa', G);
 let R = null, EDITA = true, ASIS = null;
@@ -267,8 +268,19 @@ const movilV = () => matchMedia('(max-width: 559px) and (orientation: portrait)'
 const cierra = () => { GRANDE = false; const ic = $('#info-comun'), hc = $('#hueco-comun'); if (ic && hc) [...ic.children].forEach((x) => hc.insertBefore(x, hc.querySelector('.admin-esq'))); const v = $('#velo'); v.classList.remove('on'); v.innerHTML = ''; };
 function info() {
   ventana('SYSTEMS', `<p>${esc(T('Calcula la electrónica, la señal, el audio y la videoconferencia de un proyecto con los equipos de las marcas del catálogo.'))}</p><p>${esc(T('Elige arriba el módulo. En SIMPLE te pregunto lo justo y te doy la solución; en PRO ves y cambias todos los datos, el esquema y el despiece.'))}</p><p>${esc(T('También puedes escribir lo que necesitas en la casilla y pulsar CALCULAR.'))}</p><p class="nota">${esc(T('Solo se calcula y se propone con las marcas y los fabricantes de las listas del panel.'))}</p>` +
-    MODS.map((m) => `<p><b>${esc(T(m.nom))}</b> · ${esc(T(m.info))}</p>`).join(''));
+    MODS.map((m) => `<p><b>${esc(T(m.nom))}</b> · ${esc(T(m.info))}</p>`).join('') + accesos());
 }
+/* v3.7 · NORMA ACCESOS DIRECTOS (27-11): al final de la información, la dirección general y la de cada módulo (la del módulo abierto, primero
+   y resaltada); cada línea con su nombre (abre), la dirección entera y COPIAR. Solo direcciones públicas que funcionan */
+const WEB = 'https://systems.mediaservi.com/';
+function accesos() {
+  const act = MODS.find((m) => m.id === G.mod), otros = MODS.filter((m) => m !== act);
+  const ln = (nom, url, on) => `<li class="acc-l${on ? ' on' : ''}"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(nom)}</a><code>${esc(url.replace(/^https:\/\//, ''))}</code><button type="button" class="tog acc-cp" data-copia-url="${esc(url)}" aria-label="${esc(T('Copiar') + ' · ' + url)}"><span>${esc(T('COPIAR'))}</span></button></li>`;
+  return `<div class="accesos"><p class="sub-t">${esc(T('ACCESOS DIRECTOS'))}</p><ul>${act ? ln(T(act.nom), WEB + '?mod=' + act.id, true) : ''}${ln('SYSTEMS', WEB, !act)}${otros.map((m) => ln(T(m.nom), WEB + '?mod=' + m.id)).join('')}</ul></div>`;
+}
+document.addEventListener('click', (e) => { const b = e.target.closest && e.target.closest('[data-copia-url]'); if (!b) return; const u = b.dataset.copiaUrl;
+  const ok = () => { tostada(T('Dirección copiada: {u}', { u })); b.classList.add('hecho'); setTimeout(() => b.classList.remove('hecho'), 1500); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(ok, () => { tostada(u, 6000); }); else tostada(u, 6000); });
 
 /* ---------- SIMPLE: preguntas (una sola o el asistente entero), con la ventana de SCREENS ---------- */
 function raiz() { let r = $('#ss-asis'); if (!r) { r = document.createElement('div'); r.id = 'ss-asis'; r.className = 'ss ss-raiz'; document.body.appendChild(r); } return r; }
