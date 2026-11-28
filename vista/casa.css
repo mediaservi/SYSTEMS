@@ -277,3 +277,34 @@ svg a.prod:hover text { fill: var(--azul); }
 .soft .soft-t { font-size: calc(var(--u) * 11.5); line-height: 1.35; color: var(--tenue); } .soft .soft-t b { color: var(--txt); font-weight: 800; }
 .soft .soft-pie { margin: calc(var(--u) * 3) 0 0; font-size: calc(var(--u) * 10.5); color: var(--tenue); }
 .soft .soft-l.ancho img { max-height: calc(var(--u) * 22); }
+
+/* v3.6 · personalizar la simulación sin ventana (como SCREENS v11.64-65): ELEVACIÓN arriba a la derecha y, debajo y al mismo ancho,
+   CONTENIDO y PARED; con ladrillos, sus tres colores en círculos dentro del grupo. No salen en capturas ni PDF (solo se copia el dibujo) */
+.sim-caja > .simctl { position: absolute; right: calc(var(--u) * 8); top: calc(var(--u) * 8); left: auto; display: flex; flex-direction: column; align-items: stretch; gap: calc(var(--u) * 5); z-index: 3; max-width: calc(100% - var(--u) * 16); transform-origin: top right; }
+.simctl > .elev { position: static !important; inset: auto !important; transform: none !important; max-width: none; display: flex; align-items: center; justify-content: space-between; gap: calc(var(--u) * 5); padding: calc(var(--u) * 4) calc(var(--u) * 6); border-radius: calc(var(--u) * 8); background: rgba(0, 0, 0, .55); color: #fff; font-size: calc(var(--u) * 12); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.simctl > .elev > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.elev b { font-family: 'Share Tech Mono', monospace; font-weight: 400; font-size: calc(var(--u) * 15); min-width: calc(var(--u) * 58); text-align: center; text-transform: none; }
+.elev .elev-fl { flex: none; display: grid; place-items: center; width: calc(var(--u) * 24); height: calc(var(--u) * 22); border-radius: calc(var(--u) * 5); border: 1px solid rgba(255, 255, 255, .45); background: rgba(255, 255, 255, .12); color: #fff; padding: 0; cursor: pointer; }
+.elev .elev-fl:hover:not(:disabled) { border-color: var(--verde); box-shadow: 0 0 0 calc(var(--u) * 2) var(--verde); }
+.elev .elev-fl:disabled { opacity: .35; cursor: default; }
+.elev .elev-fl svg, .simcu button svg { position: static; display: block; margin: auto; width: calc(var(--u) * 16); height: calc(var(--u) * 16); }
+.simcu { display: grid; grid-template-columns: 4fr 5fr; gap: calc(var(--u) * 5); }
+.simcu > .g { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: calc(var(--u) * 4); padding: calc(var(--u) * 4); border-radius: calc(var(--u) * 8); background: rgba(0, 0, 0, .55); }
+.simcu button { position: relative; min-width: 0; height: calc(var(--u) * 26); border-radius: calc(var(--u) * 5); border: 2px solid transparent; padding: 0; background: #2b2c31 center / cover no-repeat; color: #e6e7ea; display: grid; place-items: center; cursor: pointer; }
+.simcu button:hover { box-shadow: 0 0 0 calc(var(--u) * 2) rgba(255, 255, 255, .35); }
+.simcu button[aria-pressed="true"] { border-color: var(--verde); box-shadow: 0 0 0 calc(var(--u) * 1) var(--verde); }
+.simcu .sc-t { font: 800 calc(var(--u) * 9.5)/1 Inter, system-ui, sans-serif; letter-spacing: .1em; color: #fff; text-shadow: 0 1px 2px #000; }
+.simcu .lad3 { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: calc(var(--u) * 2); align-items: center; justify-items: center; min-width: 0; }
+.simcu .lad3 button { width: calc(var(--u) * 22); height: calc(var(--u) * 22); max-width: 100%; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .55); }
+.simcu .lad3 button[aria-pressed="true"] { border-color: var(--verde); }
+.simcu > .g:last-child:has(.lad3) { grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.9fr) minmax(0, 1fr); grid-auto-flow: row; }
+.simctl.apila .simcu { grid-template-columns: 1fr; }
+.simctl.apila .simcu > .g { justify-self: end; width: 100%; }
+@media (max-width: 900px), (max-height: 520px) { .simctl.apila .simcu > .g { width: auto; } }
+.simctl.compacta .simcu button { height: calc(var(--u) * 22); } .simctl.compacta .elev { padding: calc(var(--u) * 2) calc(var(--u) * 5); }
+@media (max-width: 900px), (max-height: 520px) { .sim-caja > .simctl { align-items: flex-end; } .simcu { grid-template-columns: auto auto; } .simcu > .g { grid-auto-columns: calc(var(--u) * 30); } .simcu button { height: calc(var(--u) * 28); } .simcu .sc-t { font-size: calc(var(--u) * 7.5); letter-spacing: .04em; } }
+@media (max-width: 559px) { .simcu button { height: calc(var(--u) * 30); } .elev .elev-fl { width: calc(var(--u) * 32); height: calc(var(--u) * 28); } }
+@media print { .simctl { display: none; } }
+.sim-vpeq { width: min(560px, 94vw); }
+.sim-vpeq .vent-cab { display: flex; align-items: center; gap: 8px; }
+.simctl > .elev > span { flex: 1 1 auto; }

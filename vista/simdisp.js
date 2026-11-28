@@ -6,6 +6,15 @@ import { figuraSVG } from './figura.js';
 import { frenteSVG } from './cuerpos.js';
 
 textos({
+  /* v3.6 · personalizar la simulación sin ventana */
+  'Cemento': ['Concrete', 'Ciment'], 'Ladrillos': ['Bricks', 'Maons'], 'Ladrillo oscuro': ['Dark brick', 'Maó fosc'], 'Ladrillo claro': ['Light brick', 'Maó clar'], 'Color de los ladrillos': ['Brick colour', 'Color dels maons'],
+  'Vídeo de prueba de mediaservi.com, en bucle': ['mediaservi.com test video, looped', 'Vídeo de prova de mediaservi.com, en bucle'], 'VÍDEO': ['VIDEO', 'VÍDEO'],
+  'Tu contenido: sube un vídeo o una foto, o pega un enlace': ['Your content: upload a video or a photo, or paste a link', 'El teu contingut: puja un vídeo o una foto, o enganxa un enllaç'],
+  'Pared propia: sube una foto o pega un enlace': ['Your own wall: upload a photo or paste a link', 'Paret pròpia: puja una foto o enganxa un enllaç'],
+  'Altura del borde inferior de la pantalla sobre el suelo': ['Height of the bottom edge of the screen above the floor', 'Alçada de la vora inferior de la pantalla sobre el terra'],
+  'Elevación desde el suelo': ['Height from the floor', 'Elevació des del terra'], 'Bajar la pantalla 10 cm': ['Lower the screen 10 cm', 'Baixar la pantalla 10 cm'], 'Subir la pantalla 10 cm': ['Raise the screen 10 cm', 'Pujar la pantalla 10 cm'],
+  'Pared propia': ['Your own wall', 'Paret pròpia'], 'Tu contenido': ['Your content', 'El teu contingut'], 'Pega el enlace de una imagen': ['Paste the link of an image', 'Enganxa l\'enllaç d\'una imatge'],
+  'Subir una foto': ['Upload a photo', 'Pujar una foto'], 'La foto de la pared se queda solo en este navegador.': ['The wall photo stays only in this browser.', 'La foto de la paret es queda només en aquest navegador.'], 'Quitar': ['Remove', 'Treure'],
   'A escala': ['To scale', 'A escala'], 'Simulación a escala': ['Simulation to scale', 'Simulació a escala'],
   'Contenido': ['Content', 'Contingut'], 'Contenido de la pantalla': ['Screen content', 'Contingut de la pantalla'], 'Pared': ['Wall', 'Paret'],
   'Hormigón': ['Concrete', 'Formigó'], 'Madera': ['Wood', 'Fusta'], 'Mármol': ['Marble', 'Marbre'], 'Ladrillo rojo': ['Red brick', 'Maó vermell'], 'Ladrillo oscuro': ['Dark brick', 'Maó fosc'], 'Ladrillo claro': ['Light brick', 'Maó clar'], 'Sin pared': ['No wall', 'Sense paret'],
@@ -41,7 +50,21 @@ window.addEventListener('message', (e) => {
 document.addEventListener('load', (e) => { const f = e.target; if (f && f.tagName === 'IFRAME' && f.hasAttribute('data-ms-bucle')) { try { f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'ms' }), '*'); } catch (er) {} } }, true);
 const E = Object.assign({ fondo: 'hormigon' }, lee('systems_sim') || {});
 let CONT = null, FSEL = -1, URLP = '';   /* CONT: { url, tipo: 'img' | 'video' | 'marco' | 'carta' }; null = la foto del fabricante (v3.3) o, sin foto, la carta de ajuste */
-let FC = null;   /* v3.3 · la foto oficial del display que se simula: { url, rec } (rec de comun/fotorec.js: la pantalla dentro de la foto) */
+let FC = null;
+/* v3.6 · personalizar la simulación sin ventana (como SCREENS v11.64-65): ELEVACIÓN arriba a la derecha y, debajo, CONTENIDO y PARED */
+const LADR = ['ladrillo-rojo', 'ladrillo-oscuro', 'ladrillo-claro'];
+const ICSUBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3.5"/><path d="m7.5 8 4.5-4.5L16.5 8"/><path d="M4 13.5v4.5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4.5"/></svg>';
+const ICSUBE_P = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14"/><path d="M12 20V8"/><path d="m7 13 5-5 5 5"/></svg>';
+const ICBAJA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20h14"/><path d="M12 4v12"/><path d="m7 11 5 5 5-5"/></svg>';
+const FPROP_K = 'systems-fondo-propio';
+let FPROP = (() => { try { return localStorage.getItem(FPROP_K) || ''; } catch (e) { return ''; } })();
+if (E.fondo === 'propio' && !FPROP) E.fondo = 'hormigon';
+if (!E.elev || typeof E.elev !== 'object') E.elev = {};
+let ULT = { clave: '', base: 0 };   /* la última simulación pintada: de qué módulo y a qué altura */
+/* la altura del borde de abajo de las pantallas: la que se haya elegido con las flechas o, si no, la del cálculo */
+/* la elección vale mientras el cálculo no cambie de altura (otro sitio, otro modelo…): entonces vuelve la del cálculo */
+const AUTO = {};
+export const elevDe = (clave, auto) => { AUTO[clave] = auto; const o = E.elev[clave]; return o && typeof o === 'object' && o.a === Math.round(auto * 100) ? o.cm / 100 : auto; };   /* v3.3 · la foto oficial del display que se simula: { url, rec } (rec de comun/fotorec.js: la pantalla dentro de la foto) */
 
 function deEnlace(u) {
   u = String(u || '').trim(); if (!u) return null; if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
@@ -107,8 +130,9 @@ export function simEscala(G, foto, o = {}) {
   const k = Math.min((VW - 60 - CW) / (xMax - xMin), (sueloY - arriba) / alto), ox = CW + (VW - CW - (xMax - xMin) * k) / 2 - xMin * k;
   const X = (x) => ox + x * k, Y = (y) => sueloY - y * k;
   let g = `<svg class="sim-esc" viewBox="0 0 ${VW} ${VH}" preserveAspectRatio="${SK ? 'xMinYMax' : 'xMidYMax'} meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(T('Simulación de las pantallas a escala con una persona de 1,75 m'))}">`;
-  const t = PARED[E.fondo];
-  if (t) { const tw = t[0] * k, th = t[1] * k, u = `assets/sim/${E.fondo}.jpg`, im = (tr) => `<image href="${u}" width="${tw + 0.6}" height="${th + 0.6}" preserveAspectRatio="none"${tr ? ` transform="${tr}"` : ''}/>`;
+  const t = E.fondo === 'propio' ? null : PARED[E.fondo];
+  if (E.fondo === 'propio' && FPROP) g += `<rect x="-4000" y="-4000" width="9000" height="${4000 + sueloY}" fill="#3a3b40"/><image href="${esc(FPROP)}" x="0" y="0" width="${VW}" height="${sueloY}" preserveAspectRatio="xMidYMid slice"/>`;   /* la foto propia cubre toda la pared (no tiene escala conocida) */
+  else if (t) { const tw = t[0] * k, th = t[1] * k, u = `assets/sim/${E.fondo}.jpg`, im = (tr) => `<image href="${u}" width="${tw + 0.6}" height="${th + 0.6}" preserveAspectRatio="none"${tr ? ` transform="${tr}"` : ''}/>`;
     g += `<defs><pattern id="sim-pared" patternUnits="userSpaceOnUse" x="${X(0)}" y="${sueloY - th * (t[2] ? 2 : 1)}" width="${tw * (t[2] ? 2 : 1)}" height="${th * (t[2] ? 2 : 1)}">${t[2] ? im() + im(`translate(${2 * tw},0) scale(-1,1)`) + im(`translate(0,${2 * th}) scale(1,-1)`) + im(`translate(${2 * tw},${2 * th}) scale(-1,-1)`) : im()}</pattern></defs>`;
     g += `<rect x="-4000" y="-4000" width="9000" height="${4000 + sueloY}" fill="url(#sim-pared)"/>`; }
   else g += `<rect x="-4000" y="-4000" width="9000" height="${4000 + sueloY}" fill="#2a2b30"/>`;
@@ -125,6 +149,7 @@ export function simEscala(G, foto, o = {}) {
   G.paneles.forEach((p) => { g += p.cu ? frenteSVG(p.cu, X, Y, k, p.x, p.y) : `<rect x="${X(p.x)}" y="${Y(p.y + p.h)}" width="${p.w * k}" height="${p.h * k}" rx="${Math.min(4, mk)}" fill="#0b0b0d" stroke="#2c2d33" stroke-width="1"/>`; });
   if (G.vw) g += `<g clip-path="url(#${id})">${pinta(X(0), Y(G.base + G.H), G.W * k, G.H * k, id)}</g>`;
   else G.paneles.forEach((p, i) => { const iid = id + 'p' + i, v = vent(p); g += `<defs><clipPath id="${iid}"><rect x="${X(v.x)}" y="${Y(v.y + v.h)}" width="${v.w * k}" height="${v.h * k}"/></clipPath></defs><g clip-path="url(#${iid})">${pinta(X(v.x), Y(v.y + v.h), v.w * k, v.h * k, iid)}</g>`; });
+  g += `<rect data-obs x="${X(0)}" y="${Y(G.base + G.H)}" width="${G.W * k}" height="${G.H * k}" fill="none" pointer-events="none"/>`;
   /* reflejo del cristal */
   G.paneles.forEach((p) => { const v = vent(p); g += `<rect x="${X(v.x)}" y="${Y(v.y + v.h)}" width="${v.w * k}" height="${v.h * k * 0.45}" fill="#fff" fill-opacity=".035" pointer-events="none"/>`; });
   /* otros equipos a escala (barra de vídeo, cámara…): rectángulos oscuros con su nombre */
@@ -146,22 +171,53 @@ export function simEscala(G, foto, o = {}) {
   /* la foto oficial del modelo (abre su ficha) y los mandos de pared y contenido, encima del dibujo */
   const fts = [].concat(foto || []).filter((f) => f && f.url && !f.id && !G.disp);
   const ft = fts.length ? `<div class="sim-fotos">${fts.map((f) => `<a class="sim-foto" href="${esc(f.href)}" target="_blank" rel="noopener" title="${esc(T('Ver la ficha'))}"><img src="${esc(f.url)}" alt="${esc(f.nombre || '')}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.sim-foto').remove()"><span>${esc(f.nombre || '')}</span><small>${esc(T('Foto del fabricante'))}</small></a>`).join('')}</div>` : '';
-  const mandos = `<div class="sim-mandos"><label class="sim-sel"><span>${esc(T('Pared'))}</span><select data-sim-fondo aria-label="${esc(T('Pared'))}">${FONDOS.map((f) => `<option value="${f[0]}"${f[0] === E.fondo ? ' selected' : ''}>${esc(T(f[1]))}</option>`).join('')}</select></label><button type="button" class="tog sim-cont" data-acc="sim:contenido"><span>${esc(T('Contenido'))}</span></button></div>`;
-  return `<div class="sim-caja">${g}${ft}${mandos}</div>`;
+  ULT = { clave: o.clave || '', base: G.base };
+  return `<div class="sim-caja">${g}${ft}${simCtl(o.clave, G.base)}</div>`;
 }
 
-/* la ventana de contenido (la de SCREENS): fuentes de prueba, un enlace o un archivo propio */
-function ventana() {
+/* v3.6 · ELEVACIÓN (flechas técnicas, de 10 en 10 cm) y, debajo y al mismo ancho, CONTENIDO (foto del fabricante · carta · vídeo · propio)
+   y PARED (cemento · madera · mármol · ladrillos · propia); con ladrillos, sus tres colores en círculos dentro del grupo. Nada de esto sale en capturas ni PDF */
+function simCtl(clave, base) {
+  const b = (attr, on, tit, estilo, cuerpo, cls = '') => `<button type="button" class="${cls}" ${attr} aria-pressed="${on}" aria-label="${esc(tit)}" title="${esc(tit)}"${estilo ? ` style="${estilo}"` : ''}>${cuerpo || ''}</button>`;
+  const ck = CONT ? (CONT.tipo === 'carta' ? 'carta' : CONT.bucle ? 'video' : 'propio') : FC && FC.url ? 'foto' : 'carta', lad = LADR.includes(E.fondo), lv = lad ? E.fondo : LADR[0];
+  const cont = (FC && FC.url ? b('data-acc="sim:cnt:foto"', ck === 'foto', T('Foto del fabricante'), `background-image:url(&quot;${esc(FC.url)}&quot;);background-color:#fff;background-size:contain`) : '')
+    + b('data-acc="sim:cnt:carta"', ck === 'carta', T('Carta de ajuste'), 'background-image:url(assets/sim/carta-mini.jpg)')
+    + b('data-acc="sim:cnt:video"', ck === 'video', T('Vídeo de prueba de mediaservi.com, en bucle'), `background-image:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),url(https://i.ytimg.com/vi/${MS_VID}/mqdefault.jpg)`, `<span class="sc-t">${esc(T('VÍDEO'))}</span>`)
+    + b('data-acc="sim:cnt:propio"', ck === 'propio', T('Tu contenido: sube un vídeo o una foto, o pega un enlace'), '', ICSUBE, 'fo-ico');
+  const NOM = { hormigon: 'Cemento', madera: 'Madera', marmol: 'Mármol', 'ladrillo-rojo': 'Ladrillo rojo', 'ladrillo-oscuro': 'Ladrillo oscuro', 'ladrillo-claro': 'Ladrillo claro' };
+  const pared = ['hormigon', 'madera', 'marmol'].map((f) => b(`data-acc="sim:pared:${f}"`, E.fondo === f, T(NOM[f]), `background-image:url(assets/sim/${f}-mini.jpg)`)).join('')
+    + (lad ? `<span class="lad3" role="group" aria-label="${esc(T('Color de los ladrillos'))}">${LADR.map((f) => b(`data-acc="sim:pared:${f}"`, E.fondo === f, T(NOM[f]), `background-image:url(assets/sim/${f}-mini.jpg)`)).join('')}</span>`
+      : b(`data-acc="sim:pared:${lv}"`, false, T('Ladrillos'), `background-image:url(assets/sim/${lv}-mini.jpg)`))
+    + b('data-acc="sim:pared:propio"', E.fondo === 'propio', T('Pared propia: sube una foto o pega un enlace'), FPROP ? `background-image:url(&quot;${esc(FPROP)}&quot;)` : '', FPROP ? '' : ICSUBE, 'fo-ico');
+  const cm = Math.round(base * 100);
+  const elev = clave ? `<div class="elev" role="group" aria-label="${esc(T('Altura del borde inferior de la pantalla sobre el suelo'))}"><span>${esc(T('Elevación desde el suelo'))}</span><button type="button" class="elev-fl" data-acc="sim:elev:-1" aria-label="${esc(T('Bajar la pantalla 10 cm'))}" title="${esc(T('Bajar la pantalla 10 cm'))}"${cm <= 0 ? ' disabled' : ''}>${ICBAJA}</button><b>${cm.toLocaleString(lang() === 'en' ? 'en-GB' : 'es-ES')} cm</b><button type="button" class="elev-fl" data-acc="sim:elev:1" aria-label="${esc(T('Subir la pantalla 10 cm'))}" title="${esc(T('Subir la pantalla 10 cm'))}"${cm >= 300 ? ' disabled' : ''}>${ICSUBE_P}</button></div>` : '';
+  return `<div class="simctl">${elev}<div class="simcu"><div class="g" role="group" aria-label="${esc(T('Contenido de la pantalla'))}">${cont}</div><div class="g" role="group" aria-label="${esc(T('Pared'))}">${pared}</div></div></div>`;
+}
+/* v3.6 · los controles nunca pisan el dibujo (cuadros de datos, cotas, rótulos, las pantallas): se prueban tres disposiciones
+   (en fila, en dos filas, compacta) y se queda la primera que no toca nada; si ninguna, se reducen hasta el 70 % */
+export function ajustaSim() {
+  document.querySelectorAll('.sim-caja > .simctl').forEach((sc) => {
+    const cj = sc.parentElement, svg = cj.querySelector(':scope > svg'); if (!svg) return; const L = cj.getBoundingClientRect(); if (!L.width) return;
+    const obs = [...svg.querySelectorAll('rect[rx], text, [data-obs]')].map((e) => e.getBoundingClientRect()).filter((r) => r.width > 2 && r.height > 2 && r.width * r.height < L.width * L.height * .5 && r.right > L.left && r.left < L.right && r.bottom > L.top && r.top < L.bottom);
+    const toca = () => [...sc.querySelectorAll(':scope > .elev, .simcu > .g')].some((c) => { const a = c.getBoundingClientRect(); return a.bottom > L.bottom - 2 || obs.some((o) => a.left < o.right - 1 && a.right > o.left + 1 && a.top < o.bottom - 1 && a.bottom > o.top + 1); });
+    sc.style.transform = ''; for (const m of ['', 'apila', 'apila compacta']) { sc.className = 'simctl ' + m; if (!toca()) return; }
+    for (const k of [0.9, 0.8, 0.7]) { sc.style.transform = `scale(${k})`; if (!toca()) return; }
+  });
+}
+let AJ = 0; const ajLuego = () => { cancelAnimationFrame(AJ); AJ = requestAnimationFrame(() => { ajustaSim(); AJ = requestAnimationFrame(ajustaSim); }); };
+new MutationObserver((ms) => { if (ms.some((m) => [...m.addedNodes].some((n) => n.nodeType === 1 && (n.matches('.sim-caja') || n.querySelector('.sim-caja'))))) ajLuego(); }).observe(document.documentElement, { childList: true, subtree: true });
+addEventListener('resize', ajLuego);
+
+/* la ventana pequeña del contenido propio o de la pared propia: un enlace o un archivo */
+function ventana(que) {
+  const pared = que === 'pared';
   cierra();
   const v = document.createElement('div'); v.className = 'sim-velo'; v.id = 'sim-velo';
-  const L = [['foto', T('Foto del fabricante'), ''], ['carta', T('Carta de ajuste'), ''], ['ms', 'mediaservi', 'YouTube · ' + MS_VID]];
-  v.innerHTML = `<div class="vent ajustes" role="dialog" aria-modal="true" aria-label="${esc(T('Contenido de la pantalla'))}"><div class="vent-cab">${esc(T('Contenido de la pantalla'))}<span class="sep"></span><button type="button" class="tog" data-sim-x>${esc(T('Cerrar'))}</button></div><div class="vent-cu sim-vcu">
-    <p class="sub-t">${esc(T('Contenido de prueba'))}</p>
-    <div class="fila envuelve sim-fuentes">${L.map((f, i) => `<button type="button" class="tog" aria-pressed="${(i === 0 && !CONT) || FSEL === i}" data-sim-fu="${i}" title="${esc(f[2])}"><span>${esc(f[1])}</span></button>`).join('')}</div>
-    <p class="sub-t">${esc(T('O usa tu propio contenido'))}</p>
-    <div class="fila"><input type="url" class="pide" id="sim-url" value="${esc(URLP)}" placeholder="${esc(T('Pega un enlace de YouTube, Vimeo, imagen o vídeo'))}"><button type="button" class="tog" data-sim-sube style="flex:none"><span>${esc(T('Subir imagen / vídeo'))}</span></button><input type="file" id="sim-file" accept="image/*,video/*" hidden></div>
-    <p class="sim-nota">${esc(T('La foto propia se queda solo en este navegador.'))}</p>
-    <div class="fila"><button type="button" class="calcular" data-sim-aplica>${esc(T('Aplicar'))}</button><button type="button" class="tog" data-sim-reinicia><span>${esc(T('Reiniciar'))}</span></button></div>
+  const tit = T(pared ? 'Pared propia' : 'Tu contenido');
+  v.innerHTML = `<div class="vent ajustes sim-vpeq" role="dialog" aria-modal="true" aria-label="${esc(tit)}" data-que="${pared ? 'pared' : 'cont'}"><div class="vent-cab">${ICSUBE.replace('<svg', '<svg style="width:1.2em;height:1.2em;flex:none"')}<span>${esc(tit)}</span><span class="sep"></span><button type="button" class="tog" data-sim-x>${esc(T('Cerrar'))}</button></div><div class="vent-cu sim-vcu">
+    <div class="fila"><input type="url" class="pide" id="sim-url" value="${esc(pared ? (/^data:/.test(FPROP) ? '' : FPROP) : URLP)}" placeholder="${esc(T(pared ? 'Pega el enlace de una imagen' : 'Pega un enlace de YouTube, Vimeo, imagen o vídeo'))}"><button type="button" class="tog" data-sim-sube style="flex:none">${ICSUBE.replace('<svg', '<svg style="width:1.1em;height:1.1em;flex:none"')}<span>${esc(T(pared ? 'Subir una foto' : 'Subir imagen / vídeo'))}</span></button><input type="file" id="sim-file" accept="${pared ? 'image/*' : 'image/*,video/*'}" hidden></div>
+    <p class="sim-nota">${esc(T(pared ? 'La foto de la pared se queda solo en este navegador.' : 'La foto propia se queda solo en este navegador.'))}</p>
+    <div class="fila"><button type="button" class="calcular" data-sim-aplica>${esc(T('Aplicar'))}</button>${pared && FPROP ? `<button type="button" class="tog" data-sim-quita><span>${esc(T('Quitar'))}</span></button>` : ''}</div>
     <button type="button" data-acc="sim:nada" hidden></button></div></div>`;
   document.body.appendChild(v); requestAnimationFrame(() => v.classList.add('on'));
 }
@@ -170,15 +226,28 @@ const repinta = () => { const b = document.querySelector('#sim-velo [data-acc="s
 document.addEventListener('click', (e) => {
   const q = (s) => e.target.closest && e.target.closest(s); let b;
   if (q('[data-sim-x]') || (e.target.id === 'sim-velo')) { cierra(); return; }
-  if ((b = q('[data-sim-fu]'))) { const i = +b.dataset.simFu; suelta(); URLP = ''; FSEL = i; CONT = i === 0 ? null : i === 1 ? { tipo: 'carta' } : { url: MS_URL(), tipo: 'marco', bucle: true }; repinta(); return; }
   if (q('[data-sim-sube]')) { const f = document.getElementById('sim-file'); if (f) f.click(); return; }
-  if (q('[data-sim-aplica]')) { const i = document.getElementById('sim-url'); URLP = i ? i.value.trim() : ''; if (URLP) { suelta(); CONT = deEnlace(URLP); FSEL = -1; } repinta(); return; }
-  if (q('[data-sim-reinicia]')) { suelta(); CONT = null; FSEL = -1; URLP = ''; repinta(); return; }
+  if (q('[data-sim-aplica]')) { const i = document.getElementById('sim-url'), u = i ? i.value.trim() : '';
+    if (enPared()) { if (u && u !== FPROP) ponPared(/^https?:\/\//i.test(u) ? u : 'https://' + u); else if (FPROP) { E.fondo = 'propio'; guarda('systems_sim', E); repinta(); } return; }
+    URLP = u; if (URLP) { suelta(); CONT = deEnlace(URLP); FSEL = -1; } repinta(); return; }
+  if (q('[data-sim-quita]')) { FPROP = ''; try { localStorage.removeItem(FPROP_K); } catch (er) {} if (E.fondo === 'propio') E.fondo = 'hormigon'; guarda('systems_sim', E); repinta(); return; }
 });
 document.addEventListener('change', (e) => {
+  if (e.target.id === 'sim-file' && e.target.files && e.target.files[0] && enPared()) { const f = e.target.files[0]; if (!/^image\//.test(f.type)) return; const u = URL.createObjectURL(f); reduceImg(u).then(ponPared).catch(() => {}).finally(() => URL.revokeObjectURL(u)); return; }
   if (e.target.id === 'sim-file' && e.target.files && e.target.files[0]) { const f = e.target.files[0]; suelta(); CONT = { url: URL.createObjectURL(f), tipo: /^video\//.test(f.type) ? 'video' : 'img' }; FSEL = -1; repinta(); return; }
-  if (e.target.matches && e.target.matches('[data-sim-fondo]')) { E.fondo = e.target.value; guarda('systems_sim', E); const b = document.createElement('button'); b.dataset.acc = 'sim:nada'; b.hidden = true; document.body.appendChild(b); b.click(); b.remove(); }
 });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.getElementById('sim-velo')) cierra(); });
 /* acciones que llegan por data-acc (casa.js repinta después) */
-export function accionSim(a) { if (a === 'sim:contenido') { ventana(); return true; } if (a === 'sim:nada') return true; return false; }
+export function accionSim(a) {
+  if (a === 'reset') { if (ULT.clave) { delete E.elev[ULT.clave]; guarda('systems_sim', E); } return false; }   /* RESTABLECER del módulo: vuelve la altura del cálculo */
+  if (!/^sim:/.test(a)) return false;
+  const [, que, v] = a.split(':');
+  if (que === 'cnt') { if (v === 'propio') { ventana('cont'); return true; } suelta(); URLP = ''; FSEL = -1; CONT = v === 'foto' ? null : v === 'carta' ? { tipo: 'carta' } : { url: MS_URL(), tipo: 'marco', bucle: true }; return true; }
+  if (que === 'pared') { if (v === 'propio' && (!FPROP || E.fondo === 'propio')) { ventana('pared'); return true; } E.fondo = v; guarda('systems_sim', E); return true; }
+  if (que === 'elev' && ULT.clave) { const cm = Math.round(ULT.base * 100 / 10) * 10 + 10 * (+v || 0); E.elev[ULT.clave] = { cm: Math.max(0, Math.min(300, cm)), a: Math.round((AUTO[ULT.clave] ?? ULT.base) * 100) }; guarda('systems_sim', E); return true; }
+  return true;
+}
+const enPared = () => !!document.querySelector('#sim-velo [data-que="pared"]');
+/* la foto de la pared se reduce a 1920 px de lado como mucho y se guarda como JPEG en este navegador */
+const reduceImg = (src) => new Promise((ok, no) => { const im = new Image(); im.onload = () => { const e = Math.min(1, 1920 / Math.max(im.naturalWidth || 1, im.naturalHeight || 1)), c = document.createElement('canvas'); c.width = Math.max(1, Math.round(im.naturalWidth * e)); c.height = Math.max(1, Math.round(im.naturalHeight * e)); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL('image/jpeg', 0.85)); }; im.onerror = no; im.src = src; });
+function ponPared(src) { FPROP = src; try { localStorage.setItem(FPROP_K, src); } catch (e) {} E.fondo = 'propio'; guarda('systems_sim', E); repinta(); }

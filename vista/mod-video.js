@@ -4,7 +4,7 @@
 import { T, N, esc, textos, lee, guarda, togs, num, etq, lang } from './util.js';
 import { equipos, esInterno, P } from './listas.js';
 import { COL, escala, cota, persona, suelo, etiqueta, lienzo, lienzo3D, pestanas, fmt } from './vt.js';
-import { simEscala, accionSim, tex3D } from './simdisp.js';
+import { simEscala, accionSim, tex3D, elevDe } from './simdisp.js';
 import { fotoDe, urlFicha } from './fichaprod.js';
 import { cuerpo } from './cuerpos.js';
 textos({
@@ -180,7 +180,7 @@ function camYmic(r, av) {
 
 /* v2.5 · simulación 3D: pantalla a su altura, cámara o barra con su campo de visión, mesa, público y micrófonos de techo */
 function escena3d(V, r) {
-  const A = S.ancho, F = S.fondo, H = S.alto, p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : r.proy ? r.proy.w : p * 0.0254 * W169, h = cu ? cu.H : r.proy ? r.proy.h : p * 0.0254 * H169, bajo = bajoDe(h);
+  const A = S.ancho, F = S.fondo, H = S.alto, p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : r.proy ? r.proy.w : p * 0.0254 * W169, h = cu ? cu.H : r.proy ? r.proy.h : p * 0.0254 * H169, bajo = elevDe('video', bajoDe(h));
   V.sala(A, F, H);
   for (let i = 0; i < S.np; i++) V.pantalla(w, h, (i - (S.np - 1) / 2) * (w + 0.2), bajo, 0, i === 0 ? (r.disp ? r.disp.modelo + ' · ' : r.proy ? (r.proy.x ? r.proy.x.modelo : T('Proyección')) + ' · ' : '') + p + '″' : '', { tex: tex3D(), cuerpo: cu });
   const hc = bajo + h + 0.1, fh = r.cam ? (r.cam.fovH || (r.cam.fovD ? r.cam.fovD * 0.87 : 80)) : 80;
@@ -193,18 +193,18 @@ function escena3d(V, r) {
 /* v2.8 · simulación a escala (la de SCREENS): la pared frontal con la pantalla a su tamaño y altura, con contenido, la barra o la cámara encima,
    la persona de 1,75 m y la foto oficial de cada equipo, que abre su ficha */
 function aEscala(r, o) {
-  const p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : r.proy ? r.proy.w : p * 0.0254 * W169, h = cu ? cu.H : r.proy ? r.proy.h : p * 0.0254 * H169, bajo = bajoDe(h), gap = 0.2;
+  const p = r.disp ? r.disp.pulgadas : r.pulg, cu = r.disp ? cuerpo(r.disp) : null, w = cu ? cu.W : r.proy ? r.proy.w : p * 0.0254 * W169, h = cu ? cu.H : r.proy ? r.proy.h : p * 0.0254 * H169, bajo = elevDe('video', bajoDe(h)), gap = 0.2;
   const paneles = []; for (let i = 0; i < S.np; i++) paneles.push({ x: i * (w + gap), y: bajo, w, h, cu });
   const W = S.np * w + (S.np - 1) * gap, extras = [];
   if (r.cam) { const cw = r.ptz ? 0.17 : Math.min(0.9, W * 0.6), ch = r.ptz ? 0.17 : 0.075; extras.push({ x: W / 2 - cw / 2, y: bajo + h + 0.05, w: cw, h: ch, txt: r.cam.modelo }); }
   const ft = [r.disp && { id: r.disp.id, url: fotoDe(r.disp), href: urlFicha(r.disp.id), nombre: r.disp.marca + ' ' + r.disp.modelo }, r.cam && { url: fotoDe(r.cam), href: urlFicha(r.cam.id), nombre: r.cam.marca + ' ' + r.cam.modelo }];
-  return simEscala({ paneles, marco: 0.012, W, H: h + (r.cam ? 0.3 : 0), base: bajo, vw: false, extras, disp: r.disp, n: S.np, cols: S.np, filas: 1, etiqueta: (r.disp ? r.disp.marca + ' ' + r.disp.modelo + ' · ' : r.proy ? (r.proy.x ? r.proy.x.modelo : T('Proyección')) + ' · ' : '') + p + '″' + (r.cam ? ' · ' + r.cam.modelo : '') }, ft, o);
+  return simEscala({ paneles, marco: 0.012, W, H: h + (r.cam ? 0.3 : 0), base: bajo, vw: false, extras, disp: r.disp, n: S.np, cols: S.np, filas: 1, etiqueta: (r.disp ? r.disp.marca + ' ' + r.disp.modelo + ' · ' : r.proy ? (r.proy.x ? r.proy.x.modelo : T('Proyección')) + ' · ' : '') + p + '″' + (r.cam ? ' · ' + r.cam.modelo : '') }, ft, Object.assign({}, o, { clave: 'video' }));
 }
 /* v2.3 · vista LATERAL como las de SCREENS: la pantalla a su altura, la cámara encima, la mesa y la mirada del espectador más lejano */
 let VT = 'planta';
 function lateral(r, o = {}) {
   const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, F = S.fondo, AL = S.alto, OJO = 1.2;
-  const p = r.disp ? r.disp.pulgadas : r.pulg, h = r.proy ? r.proy.h : p * 0.0254 * H169, bajo = bajoDe(h), arriba = bajo + h;
+  const p = r.disp ? r.disp.pulgadas : r.pulg, h = r.proy ? r.proy.h : p * 0.0254 * H169, bajo = elevDe('video', bajoDe(h)), arriba = bajo + h;
   const E = escala(VW, VH, { l: 64, r: 64, t: 56, b: 70 }, -0.4, F + 0.3, 0, Math.max(AL, arriba + 0.5)), { X, Y, k } = E;
   let g = suelo(X, Y, -0.4, F + 0.3) + `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(0)}" y2="${Y(Math.max(AL, arriba + 0.4))}" stroke="${COL.pared}" stroke-width="4"/><line x1="${X(F)}" y1="${Y(0)}" x2="${X(F)}" y2="${Y(AL)}" stroke="${COL.linea}" stroke-width="2"/>`;
   g += `<rect x="${X(0.02)}" y="${Y(arriba)}" width="${Math.max(4, 0.07 * k)}" height="${h * k}" fill="${COL.imagenB}"/>`;
