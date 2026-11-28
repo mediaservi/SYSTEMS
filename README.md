@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v3.13** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v3.14** · Dirección definitiva: https://systems.mediaservi.com
 
 
 ## Icono
@@ -52,7 +52,12 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.13)
+## Cambios de la versión actual (v3.14)
+- **ENTRADAS como tarjetas de conector, igual que SCREENS:** 20 tipos (HDMI 1.3/1.4/2.0/2.1, DP 1.1/1.2/1.4, DVI, VGA, CVBS, 3G/6G/12G-SDI, HDBaseT 2K60/4K30, NDI, RJ45 IP, ST 2110 25G, fibra y USB) con su dibujo, el color de su generación (1080p · 4K30 · 4K60 · 8K · IP), contador −/+ y su resolución máxima en la ayuda; la tarjeta «+» añade otro tipo. Se pueden mezclar (p. ej. 2 × HDMI 2.0 + 1 × NDI). Los datos de los conectores están en `comun/conectores.js`, compartido con SCREENS. Avisos por familia: analógicas (conversor), IP (decodificador o tarjeta IP), fibra (conversor en cada extremo), USB (reproductor) y 8K (serie H o MX).
+- **Color 8 / 10 bit:** a 10 bit cada puerto carga menos píxeles y quedan fuera los equipos que solo trabajan a 8 bit (MCTRL300, MCTRL700 y Taurus TB, según la información de los fabricantes).
+- **Correcciones de ficha desde los datos del fabricante:** KU20 y MX20, como máximo 3840 px de ancho y 2560 px de alto.
+
+## Cambios de la v3.13
 - **La electrónica con fotos:** cada procesador recomendado o alternativo lleva la foto oficial de su frontal (y la trasera, con sus conectores, si el catálogo la trae) junto a su despiece; al tocarla se ve en grande.
 - **El esquema dibuja la fuente con su conector:** el icono del conector elegido, con el color de su generación, y cada salida con su nombre («HDMI 2.0 · 1», «DP 1.4 · 2»…).
 

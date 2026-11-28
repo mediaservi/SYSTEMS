@@ -375,3 +375,31 @@ svg a.prod:hover text { fill: var(--azul); }
 .eq-cu > .eq-fotos:not(.mini) { width: calc(var(--u) * 130); }
 .eq-cu .eq-foto { height: calc(var(--u) * 70); }
 @media (max-width: 559px) { .eq-cu { flex-direction: column; } .eq-cu > .eq-fotos { width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* v3.14 · ENTRADAS como tarjetas de conector (copiado de SCREENS v11.71) */
+.cn-rot { margin-top: calc(var(--u) * 4); }
+.cns { display: flex; flex-wrap: wrap; gap: calc(var(--u) * 5); align-items: stretch; }
+.cn { position: relative; flex: 0 0 calc(var(--u) * 76); display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 2); padding: calc(var(--u) * 4) calc(var(--u) * 3) calc(var(--u) * 3); border-radius: calc(var(--u) * 7);
+  background: linear-gradient(180deg, #3a3d44, #24262b); border: 1px solid #0006; box-shadow: inset 0 1px 0 #ffffff22, inset 0 -2px 0 var(--g); color: #e9ebef; }
+.cn svg { width: calc(var(--u) * 32); height: calc(var(--u) * 20); fill: none; stroke: var(--g); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 0 #000a); }
+.cn b { font-size: calc(var(--u) * 11.5); line-height: 1.1; text-align: center; letter-spacing: .02em; white-space: nowrap; text-shadow: 0 1px 0 #000; }
+.cn-g { font: 700 calc(var(--u) * 9.5)/1 'Share Tech Mono', monospace; color: var(--g); }
+.cn-n { display: flex; align-items: center; gap: calc(var(--u) * 3); margin-top: calc(var(--u) * 2); }
+.cn-n button { width: calc(var(--u) * 20); height: calc(var(--u) * 20); border-radius: calc(var(--u) * 5); border: 1px solid #0008; background: #15161a; color: #fff; font-weight: 800; font-size: calc(var(--u) * 14); line-height: 1; cursor: pointer; padding: 0; }
+.cn-n button:hover { border-color: var(--g); }
+.cn-n i { font: 700 calc(var(--u) * 15)/1 'Share Tech Mono', monospace; font-style: normal; min-width: calc(var(--u) * 16); text-align: center; }
+.cn-mas { --g: #ffffff55; justify-content: center; cursor: pointer; border-style: dashed; border-color: #ffffff40; background: #ffffff08; box-shadow: none; }
+.cn-mas span { font: 800 calc(var(--u) * 26)/1 Inter, sans-serif; color: #fff; opacity: .8; }
+.cn-mas:hover { border-color: var(--marca, #d4ff00); }
+.cn-mas select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font-size: 16px; }
+.cn-av { color: var(--ambar); }
+:root[data-tema="claro"] .cn { background: linear-gradient(180deg, #d9dce2, #b9bdc6); color: #15161a; }
+:root[data-tema="claro"] .cn b { text-shadow: none; }
+:root[data-tema="claro"] .cn svg { stroke: #15161a; }
+:root[data-tema="claro"] .cn-g { color: #15161a; }
+@media (max-width: 559px) { .cn { flex-basis: 78px; } .cn svg { width: 34px; height: 22px; } .cn b { font-size: 12px; } .cn-g { font-size: 10px; } .cn-n button { width: 26px; height: 26px; font-size: 16px; } .cn-n i { font-size: 16px; } }
+/* v3.14 · con varias entradas, tarjetas más compactas para que quepan en el bloque */
+:root:not(.ss-apila) #cuerpo.rejilla .cns { gap: calc(var(--u) * 4); }
+:root:not(.ss-apila) #cuerpo.rejilla .cns .cn { flex-basis: calc(var(--u) * 66); padding: calc(var(--u) * 3) calc(var(--u) * 2) calc(var(--u) * 2); gap: calc(var(--u) * 1); }
+:root:not(.ss-apila) #cuerpo.rejilla .cns .cn svg { width: calc(var(--u) * 26); height: calc(var(--u) * 16); }
+:root:not(.ss-apila) #cuerpo.rejilla .cns:has(.cn:nth-child(5)) .cn-g { display: none; }
