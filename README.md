@@ -52,7 +52,11 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.4)
+## Cambios de la versión actual (v3.5)
+- **Software de los reproductores NovaStar (VNNOX y ViPlex)**: en ELECTRÓNICA › LED, la fuente puede ser un **Ordenador** (procesador, como hasta ahora) o un **Reproductor** con la controladora dentro (Taurus TB, TU, TCC…). Con un reproductor NovaStar sale el bloque de SCREENS (`comun/software.js`, logotipos oficiales en `comun/img/soft/`) con la recomendación de sus aplicaciones oficiales, qué permite cada una y el enlace a su página, en pantalla y en el PDF (con la dirección escrita). La petición entiende «reproductor», «player», «Taurus» o «sin ordenador».
+- Fichas: los tipos controladora, reproductor, procesador modular, mediaserver y switcher salen con su nombre traducido.
+
+## Cambios de la v3.4
 - **Icono de la pestaña y de la app**: el símbolo va en un azul más claro (#8ee8ff) para que contraste con la placa magenta (solo en estos dos iconos; el resto de la marca sigue con su azul).
 - **Simulación**: recorte a mano de la imagen de pantalla en las fotos de ambiente o con dos pantallas (Clevertouch CL PRO2, High Bright y tótems; LG UH5Q, UL3Q, UL5Q, UH7Q y PK640): el contenido es lo que el fabricante enseña en la pantalla, sin fondos ni marcos.
 
