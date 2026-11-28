@@ -1,6 +1,6 @@
 // SYSTEMS · ficha de producto (la de SCREENS, comun/ficha.js): foto o dibujo, marca, modelo, datos técnicos de la lista y enlace al fabricante.
 // Sin precios ni stock: es pública (ventana, página ficha.html y PDF). GPL-3.0 · mediaservi.com
-import { T, textos, lang } from './util.js';
+import { T, textos, lang, formato } from './util.js';
 import { marcas } from './listas.js';
 
 textos({
@@ -42,7 +42,7 @@ export function fichaDe(id) {
   const specs = SPEC.filter((s) => x[s[0]] != null && x[s[0]] !== '' && x[s[0]] !== false && typeof x[s[0]] !== 'object').map((s) => [T(s[1]), (x[s[0]] === true ? T('Sí') : x[s[0]]) + s[2]]);
   /* v3.3 · pantallas de proyección: imagen, diagonal, formato y montaje */
   if (x.tipo === 'pantalla-proy' && x.anchoImg) { const nf2 = (v) => (+v).toLocaleString(lang() === 'en' ? 'en-GB' : 'es-ES', { maximumFractionDigits: 2 });
-    specs.push([T('Imagen (an × al)'), nf2(x.anchoImg) + ' × ' + nf2(x.altoImg) + ' m'], [T('Diagonal'), Math.round(Math.hypot(x.anchoImg, x.altoImg) / 0.0254) + '″'], [T('Formato'), x.fmt], [T('Montaje'), T({ electrica: 'Eléctrica', techo: 'Eléctrica de falso techo', marco: 'Marco fijo' }[x.montaje] || x.montaje)]); }
+    specs.push([T('Imagen (an × al)'), nf2(x.anchoImg) + ' × ' + nf2(x.altoImg) + ' m'], [T('Diagonal'), Math.round(Math.hypot(x.anchoImg, x.altoImg) / 0.0254) + '″'], [T('Formato'), formato(x.anchoImg, x.altoImg).std ? formato(x.anchoImg, x.altoImg).txt : x.fmt], [T('Montaje'), T({ electrica: 'Eléctrica', techo: 'Eléctrica de falso techo', marco: 'Marco fijo' }[x.montaje] || x.montaje)]); }
   /* v2.9 · medidas reales del cuerpo (comun/medidas.js) */
   const Md = (globalThis.SC_MEDIDAS || {})[x.id], nf = (v) => (+v).toLocaleString(lang() === 'en' ? 'en-GB' : 'es-ES', { maximumFractionDigits: 1 });
   if (Md) specs.push([T('Medidas (an × al × fo)'), nf(Md[0]) + ' × ' + nf(Md[1]) + ' × ' + nf(Md[2]) + ' mm']);

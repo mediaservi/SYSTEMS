@@ -1,7 +1,7 @@
 // SYSTEMS · simulación a escala de displays (v2.8), heredada de la de SCREENS (vista/una-led.js): la pared con su textura a escala real,
 // el suelo, la persona de 1,75 m, las pantallas a su tamaño real con la carta de ajuste o el contenido que elijas (fuentes de prueba,
 // YouTube, Vimeo, una imagen o un vídeo, o un archivo tuyo) y la foto oficial del modelo, que abre su ficha. GPL-3.0 · mediaservi.com
-import { T, esc, textos, lee, guarda, lang } from './util.js';
+import { T, esc, textos, lee, guarda, lang, formato } from './util.js';
 import { figuraSVG } from './figura.js';
 import { frenteSVG } from './cuerpos.js';
 
@@ -109,7 +109,7 @@ function cajas(G, sk) {
   const cu = G.paneles[0] && G.paneles[0].cu, aw = cu ? cu.scr.w : G.paneles[0] ? G.paneles[0].w : 0, pitch = rw && aw ? aw / rw * 1000 : 0;
   let y = 12, g = `<g transform="scale(${sk})">`;
   g += caja(y, 156) + `<rect x="${X + 34}" y="${y + 12}" width="${AN - 68}" height="80" rx="7" fill="#050506" stroke="${LIMA}" stroke-opacity=".7" stroke-width="1.5"/>`
-    + (rs ? `<text x="${X + AN / 2}" y="${y + 50}" text-anchor="middle" font-size="34" fill="${LIMA}" ${mono}>${rs[2]}</text><text x="${X + AN / 2}" y="${y + 80}" text-anchor="middle" font-size="20" fill="#fff" ${mono}>${rs[3]}</text><text x="${X + AN / 2}" y="${y + 118}" text-anchor="middle" font-size="22" fill="#fff" ${mono}>${rw}x${rh}</text><text x="${X + AN / 2}" y="${y + 143}" text-anchor="middle" font-size="19" fill="#fff" ${mono}>px</text>`
+    + (rs ? `<text x="${X + AN / 2}" y="${y + 50}" text-anchor="middle" font-size="34" fill="${LIMA}" ${mono}>${rs[2]}</text><text x="${X + AN / 2}" y="${y + 80}" text-anchor="middle" font-size="20" fill="#fff" ${mono}>${rs[3]}</text><text x="${X + AN / 2}" y="${y + 118}" text-anchor="middle" font-size="22" fill="#fff" ${mono}>${rw}×${rh} px</text><text x="${X + AN / 2}" y="${y + 143}" text-anchor="middle" font-size="19" fill="#b9bbc4" ${mono}>${esc(formato(rw, rh).std ? formato(rw, rh).std + ' · ' + formato(rw, rh).dec : formato(rw, rh).dec)}</text>`
       : `<text x="${X + AN / 2}" y="${y + 62}" text-anchor="middle" font-size="34" fill="${LIMA}" ${mono}>${d.pulgadas || ''}″</text><text x="${X + AN / 2}" y="${y + 128}" text-anchor="middle" font-size="17" fill="#fff" ${mono}>${esc(T('Resolución en la ficha'))}</text>`);
   y += 168; const fila = (n, ic, t) => `<g transform="translate(${X + 18},${y + 16 + n * 30})" fill="none" stroke="${LIMA}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</g><text x="${X + 50}" y="${y + 33 + n * 30}" font-size="21" fill="#fff" ${mono}>${esc(t)}</text>`;
   const n = G.n || G.paneles.length;
