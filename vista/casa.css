@@ -232,3 +232,36 @@ svg a.prod:hover text { fill: var(--azul); }
 .despiece tr.stk td { background: rgba(0, 150, 255, .08); }
 :root[data-tema="claro"] .equipo.stk { background-image: linear-gradient(rgba(0, 120, 255, .08), rgba(0, 120, 255, .08)); }
 @media print { .equipo.stk, .despiece tr.stk td { background: none !important; } }
+
+/* v3.1 · VIDEOCONF.: la pantalla de proyección (sin ficha) lleva su enlace a SCREENS; la alternativa interactiva en cinco botones */
+.equipo.sin-ficha { cursor: default; } .equipo.sin-ficha:hover { border-color: var(--verde-txt); }
+.equipo .ir-scr { display: inline-block; margin-top: calc(var(--u) * 8); padding: calc(var(--u) * 6) calc(var(--u) * 12); border: 1px solid var(--azul); border-radius: calc(var(--u) * 8); color: var(--azul); font-size: calc(var(--u) * 12); font-weight: 800; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
+.equipo .ir-scr:hover { background: color-mix(in srgb, var(--azul) 14%, transparent); }
+.blk-cu .fila.cinco .tog { flex-basis: calc(20% - var(--u) * 8); padding: 0 calc(var(--u) * 2); letter-spacing: 0; min-width: 0; }
+.blk-cu .par2 { flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--u) * 10); align-items: end; }
+.blk-cu .par2 > div { min-width: 0; display: flex; flex-direction: column; }
+.blk-cu .par2 select.sel { height: calc(var(--u) * 38); font-size: calc(var(--u) * 13); padding: 0 calc(var(--u) * 6); }
+/* v3.1 · SEMÁFORO de cada solución propuesta (verde viable, ámbar casi, rojo no) en el lateral de su ficha */
+.equipo.sem-v { border-left: calc(var(--u) * 5) solid var(--verde); }
+.equipo.sem-a { border-left: calc(var(--u) * 5) solid var(--ambar); }
+.equipo.sem-r { border-left: calc(var(--u) * 5) solid var(--rojo); }
+.blk-cu .pie-b .tog[aria-pressed="true"] { border-color: var(--verde-txt); color: var(--verde-txt); background: color-mix(in srgb, var(--verde) 12%, var(--blk)); box-shadow: inset 0 0 0 1px var(--verde-txt); }
+.blk-cu .pie-b .tog { text-transform: uppercase; }
+
+/* v3.2 · el producto de cada cifra (si cabe): foto oficial con zoom, ficha, PDF y su página */
+.blk.res.con-prod .blk-cu { justify-content: flex-start; gap: calc(var(--u) * 4); }
+.blk.res.con-prod .cif-v { margin-top: auto; }
+.blk.res.con-prod .cp { margin-top: auto; }
+.cp { flex: none; display: flex; align-items: center; gap: calc(var(--u) * 10); min-width: 0; padding-top: calc(var(--u) * 8); border-top: 1px solid var(--linea); }
+.cp-foto { position: relative; flex: none; width: calc(var(--u) * 84); height: calc(var(--u) * 56); padding: calc(var(--u) * 3); border: 1px solid var(--linea); border-radius: calc(var(--u) * 7); background: #fff; cursor: zoom-in; overflow: hidden; }
+.cp-foto img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.cp-ojo { position: absolute; right: calc(var(--u) * 3); bottom: calc(var(--u) * 3); display: grid; place-items: center; width: calc(var(--u) * 20); height: calc(var(--u) * 20); border-radius: 50%; background: rgba(10, 12, 16, .72); color: #fff; }
+.cp-ojo svg, .cp-ojo .ic { width: calc(var(--u) * 13); height: calc(var(--u) * 13); }
+.cp-foto:hover { border-color: var(--azul); }
+.cp-ln { display: flex; flex-wrap: wrap; gap: calc(var(--u) * 5) calc(var(--u) * 6); min-width: 0; }
+.cp-ln a { padding: calc(var(--u) * 3) calc(var(--u) * 8); border: 1px solid var(--linea); border-radius: calc(var(--u) * 6); color: var(--txt); font-size: calc(var(--u) * 11.5); font-weight: 700; letter-spacing: .04em; text-decoration: none; white-space: nowrap; }
+.cp-ln a:hover { border-color: var(--azul); color: var(--azul); }
+.cp.mini { padding-top: calc(var(--u) * 6); }
+.cp-grande { background: #fff; border-radius: 10px; padding: 14px; display: grid; place-items: center; margin-bottom: 12px; }
+.cp-grande img { display: block; max-width: 100%; max-height: 62vh; object-fit: contain; }
+.vent .cp { border-top: 0; justify-content: center; }

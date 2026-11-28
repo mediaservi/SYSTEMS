@@ -6,7 +6,7 @@ import { VERSION } from './version.js';
 
 textos({
   'hoja {a} de {b}': ['page {a} of {b}', 'full {a} de {b}'], 'Lista de material': ['Bill of materials', 'Llista de material'], 'Cant.': ['Qty', 'Quant.'], 'Referencia': ['Reference', 'Referència'], 'Descripción': ['Description', 'Descripció'],
-  'Fichas de los equipos': ['Equipment datasheets', 'Fitxes dels equips'], 'Observaciones': ['Notes', 'Observacions'], 'Resumen': ['Summary', 'Resum'], 'Avisos': ['Notes', 'Avisos'],
+  'Fichas de los equipos': ['Equipment datasheets', 'Fitxes dels equips'], 'Observaciones': ['Notes', 'Observacions'], 'Alternativa para comparar': ['Alternative for comparison', 'Alternativa per comparar'], 'Resumen': ['Summary', 'Resum'], 'Avisos': ['Notes', 'Avisos'],
   'Vista previa del PDF': ['PDF preview', 'Vista prèvia del PDF'], 'Guardar PDF': ['Save PDF', 'Desar PDF'], 'Imprimir': ['Print', 'Imprimir'], 'Cerrar': ['Close', 'Tancar'],
   'Equipos según información de los fabricantes. Sin precios: pídelos a tu distribuidor.': ['Equipment according to the manufacturers’ information. No prices: ask your distributor.', 'Equips segons informació dels fabricants. Sense preus: demana\'ls al teu distribuïdor.'],
   'No se ha podido generar el PDF.': ['The PDF could not be generated.', 'No s\'ha pogut generar el PDF.'],
@@ -62,7 +62,7 @@ async function dibujo(caja, esqHtml) {
 /* la lista de material: las filas del despiece del resultado (cantidad, referencia y descripción), juntando las repetidas */
 function material(htmlRes) {
   const d = document.createElement('div'); d.innerHTML = htmlRes; const L = new Map();
-  d.querySelectorAll('.equipo').forEach((eq) => { if (eq.closest('.alt, .alternativas')) return;
+  d.querySelectorAll('.equipo').forEach((eq) => { if (eq.closest('.alt, .alternativas') || eq.classList.contains('alt-pres')) return;
     eq.querySelectorAll('table.despiece tr').forEach((tr) => { const td = tr.querySelectorAll('td'); if (td.length < 3) return; const n = parseFloat(td[0].textContent) || 1, ref = td[1].textContent.trim(), des = td[2].childNodes[0] ? td[2].childNodes[0].textContent.trim() : td[2].textContent.trim(); if (!ref) return;
       const y = L.get(ref); if (y) y.n += n; else L.set(ref, { n, ref, des }); }); });
   return [...L.values()];
@@ -89,11 +89,17 @@ export async function hacePDF({ m, R, caja, esqHtml, cifras, nombreMod, proyecto
       (PR.obs && PR.obs.trim() ? `<div style="border:1px solid ${G};border-radius:6px;padding:6px 10px;margin-bottom:8px">${rot(T('Observaciones'))}<div style="font:400 9.5px/1.45 Inter,Arial,sans-serif;white-space:pre-wrap">${esc(PR.obs.trim())}</div></div>` : '') +
       (av.length ? `<div style="border:1px solid ${G};border-radius:6px;padding:6px 10px">${rot(T('Avisos'))}<ul style="margin:0;padding-left:1.2em;font:400 9.5px/1.45 Inter,Arial,sans-serif">${av.map((a) => `<li>${esc(a)}</li>`).join('')}</ul></div>` : '');
     const mat = material(sinAlternativas(htmlRes));
-    const fichas = mat.map((x) => fichaDe(x.ref)).filter(Boolean).slice(0, 12);
+    /* v3.1 · la alternativa que se presupuesta para comparar (p. ej. interactiva frente a proyección) va en su propia lista, con su semáforo */
+    const dA = document.createElement('div'); dA.innerHTML = htmlRes; const altEq = dA.querySelector('.equipo.alt-pres');
+    const matA = altEq ? (() => { const tr = altEq.querySelector('table.despiece tr'), td = tr ? tr.querySelectorAll('td') : []; return td.length < 3 ? [] : [{ n: parseFloat(td[0].textContent) || 1, ref: td[1].textContent.trim(), des: (td[2].childNodes[0] ? td[2].childNodes[0].textContent : td[2].textContent).trim(), sem: (/sem-([var])/.exec(altEq.className) || [])[1] }]; })() : [];
+    const SEMC = { v: '#14a83b', a: '#c98a00', r: '#d0283a' };
+    const fichas = mat.concat(matA).map((x) => fichaDe(x.ref)).filter(Boolean).slice(0, 12);
+    const tablaA = matA.length ? rot(T('Alternativa para comparar')) + `<table style="width:100%;border-collapse:collapse;font:400 9.5px/1.4 Inter,Arial,sans-serif;margin-bottom:10px;border-left:4px solid ${SEMC[matA[0].sem] || '#6b7280'}"><tbody>` +
+      matA.map((x) => `<tr><td style="text-align:right;padding:3px 6px;border-bottom:1px solid #e3e5ea;font-weight:700;width:34px">${x.n}</td><td style="padding:3px 6px;border-bottom:1px solid #e3e5ea;font-family:'Share Tech Mono',monospace;white-space:nowrap">${esc(x.ref)}</td><td style="padding:3px 6px;border-bottom:1px solid #e3e5ea">${esc(traduceDes(x.des, l))}</td></tr>`).join('') + '</tbody></table>' : '';
     const p2 = cab(2) + (mat.length ? rot(T('Lista de material')) +
       `<table style="width:100%;border-collapse:collapse;font:400 9.5px/1.4 Inter,Arial,sans-serif;margin-bottom:6px"><thead><tr>${[T('Cant.'), T('Referencia'), T('Descripción')].map((s, i) => `<th style="text-align:${i ? 'left' : 'right'};padding:3px 6px;border-bottom:1.5px solid ${TI};font-weight:800">${esc(s)}</th>`).join('')}</tr></thead><tbody>` +
       mat.map((x) => `<tr><td style="text-align:right;padding:3px 6px;border-bottom:1px solid #e3e5ea;font-weight:700">${x.n}</td><td style="padding:3px 6px;border-bottom:1px solid #e3e5ea;font-family:'Share Tech Mono',monospace;white-space:nowrap">${esc(x.ref)}</td><td style="padding:3px 6px;border-bottom:1px solid #e3e5ea">${esc(traduceDes(x.des, l))}</td></tr>`).join('') + '</tbody></table>' : '') +
-      `<div style="font:400 8.5px/1.4 Inter,Arial,sans-serif;color:#555;margin-bottom:10px">${esc(T('Equipos según información de los fabricantes. Sin precios: pídelos a tu distribuidor.'))}</div>` +
+      tablaA + `<div style="font:400 8.5px/1.4 Inter,Arial,sans-serif;color:#555;margin-bottom:10px">${esc(T('Equipos según información de los fabricantes. Sin precios: pídelos a tu distribuidor.'))}</div>` +
       (fichas.length ? rot(T('Fichas de los equipos')) + `<div class="pdf-fichas" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">${fichas.map((f) => f.html).join('')}</div>` : '');
     hoja.id = 'hoja-pdf'; hoja.style.cssText = `position:fixed;left:-20000px;top:0;width:702px;background:#fff;color:${TI};font:400 10px/1.4 Inter,Arial,sans-serif`;
     hoja.innerHTML = `<div class="pdf-p1"><div style="padding:0 0 6px">${p1}</div></div><div style="height:60px"></div><div class="pdf-p2"><div style="padding:0 0 6px">${p2}</div></div>`;
