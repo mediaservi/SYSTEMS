@@ -6,6 +6,7 @@ import { figuraSVG } from './figura.js';
 import { frenteSVG } from './cuerpos.js';
 
 textos({
+  'ANCHO': ['WIDTH', 'AMPLE'], 'ALTO': ['HEIGHT', 'ALT'], 'Elevación': ['Height', 'Elevació'],
   /* v3.6 · personalizar la simulación sin ventana */
   'Cemento': ['Concrete', 'Ciment'], 'Ladrillos': ['Bricks', 'Maons'], 'Ladrillo oscuro': ['Dark brick', 'Maó fosc'], 'Ladrillo claro': ['Light brick', 'Maó clar'], 'Color de los ladrillos': ['Brick colour', 'Color dels maons'],
   'Vídeo de prueba de mediaservi.com, en bucle': ['mediaservi.com test video, looped', 'Vídeo de prova de mediaservi.com, en bucle'], 'VÍDEO': ['VIDEO', 'VÍDEO'],
@@ -55,6 +56,7 @@ let FC = null;
 const LADR = ['ladrillo-rojo', 'ladrillo-oscuro', 'ladrillo-claro'];
 const ICSUBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3.5"/><path d="m7.5 8 4.5-4.5L16.5 8"/><path d="M4 13.5v4.5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4.5"/></svg>';
 const ICSUBE_P = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14"/><path d="M12 20V8"/><path d="m7 13 5-5 5 5"/></svg>';
+const IC_CIRC = 'M12.68,12L9.6,15.08L11,16.5L15.5,12L11,7.5L9.6,8.92L12.68,12ZM12,22q-2.07,0-3.9-0.79q-1.82-0.79-3.17-2.14Q3.58,17.73 2.79,15.9T2,12Q2,9.92 2.79,8.1Q3.58,6.27 4.93,4.93Q6.28,3.57 8.1,2.79Q9.93,2 12,2t3.9,0.79t3.17,2.14q1.35,1.35 2.14,3.17Q22,9.92 22,12t-0.79,3.9t-2.14,3.17q-1.35,1.35-3.17,2.14T12,22Zm0-2q3.35,0 5.68-2.32T20,12T17.68,6.32T12,4T6.33,6.32T4,12t2.33,5.68T12,20Zm0-8Z';
 const ICBAJA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20h14"/><path d="M12 4v12"/><path d="m7 11 5 5 5-5"/></svg>';
 const FPROP_K = 'systems-fondo-propio';
 let FPROP = (() => { try { return localStorage.getItem(FPROP_K) || ''; } catch (e) { return ''; } })();
@@ -129,12 +131,12 @@ function svgEsc(G, foto, o, med) {
   const cR = { x1: VW * (1 - (med.cw || 0.42)) - 6, y2: VH * (med.ch || 0.13) + 8 };
   /* si los controles quedan encima de los cuadros de datos (cajas estrechas), los cuadros bajan justo debajo de los controles */
   const DY = CW && cR.x1 < CW + 18 ? Math.ceil(cR.y2 + 4) : 0;
-  const xMin = -0.98, xMax = Math.max(G.W + 0.04, 0.9), alto = Math.max(1.9, G.base + G.H + 0.12), cotaD = G.base > 0.05 ? 66 : 42;
+  const xMin = -0.98, xMax = Math.max(G.W + 0.04, 0.9), alto = Math.max(1.9, G.base + G.H + 0.12), cotaD = 58;
   const kMax = Math.min((VW - 30 - cotaD) / (xMax - xMin), (sueloY - 14) / alto);
   const choca = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
   let k = kMax, ox = 0;
   for (let i = 0; i < 60; i++, k *= 0.975) {
-    const anchoE = (xMax - xMin) * k + cotaD, top = sueloY - (G.base + G.H) * k - 40, pTop = sueloY - 1.85 * k;
+    const anchoE = (xMax - xMin) * k + cotaD, top = sueloY - (G.base + G.H) * k - 52 - (G.base * k > 44 ? 0 : 64), pTop = sueloY - 1.85 * k;
     const prueba = (o2) => { const X = (x) => o2 + x * k; if (X(xMin) < 8 || X(xMax) + cotaD > VW - 8 || top < 6 || DY + CH > sueloY) return false;
       const pant = [X(-0.02), top, X(G.W) + cotaD, sueloY], pers = [X(-0.92), pTop, X(-0.32), sueloY];
       const cajas = [0, DY, CW + 18, DY + CH], ctl = [cR.x1, 0, VW, cR.y2];
@@ -174,11 +176,17 @@ function svgEsc(G, foto, o, med) {
   g += fig + `<text x="${X(hx)}" y="${sueloY + 20}" text-anchor="middle" font-size="13" font-weight="700" fill="#1c1d22" font-family="Inter, sans-serif">1,75 m</text>`;
   /* cotas en azul, como en SCREENS */
   const cm = (v) => (Math.round(v * 100)).toLocaleString(lang() === 'en' ? 'en-GB' : 'es-ES') + ' cm';
-  const cota = (x1, y1, x2, y2, txt, vert) => { const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, tw = txt.length * 8.6 + 16; return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#37c8ff" stroke-width="1.6" stroke-dasharray="5 4"/><g transform="translate(${mx},${my})${vert ? ' rotate(90)' : ''}"><rect x="${-tw / 2}" y="-11" width="${tw}" height="22" rx="5" fill="#0e1f2a" fill-opacity=".9"/><text x="0" y="5" text-anchor="middle" font-size="13" fill="#bdeeff" font-family="Share Tech Mono, monospace">${esc(txt)}</text></g>`; };
+  /* v3.11 · cotas y elevación como SCREENS v11.68-69: carteles blancos «ANCHO 124 cm» y «ALTO 71 cm»; la elevación, «Elevación 120 cm» en texto
+     blanco con halo oscuro sobre la línea morada que baja al suelo, con sus flechas redondas para subir y bajar 10 cm (no salen en el PDF) */
+  const cota = (x1, y1, x2, y2, txt, vert) => { const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, tw = txt.length * 13.4 + 22; return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#37c8ff" stroke-width="1.6" stroke-dasharray="5 4"/><g transform="translate(${mx},${my})${vert ? ' rotate(90)' : ''}"><rect x="${-tw / 2}" y="-18" width="${tw}" height="36" rx="7" fill="#fff" stroke="#0090d0" stroke-width="2"/><text y="8" text-anchor="middle" font-size="24" fill="#005a8a" font-family="Share Tech Mono, monospace">${esc(txt)}</text></g>`; };
   const top = Y(G.base + G.H);
-  g += cota(X(0), top - 22, X(G.W), top - 22, cm(G.W));
-  g += cota(X(G.W) + 24, top, X(G.W) + 24, Y(G.base), cm(G.H), true);
-  if (G.base > 0.05) g += cota(X(G.W) + 52, Y(G.base), X(G.W) + 52, sueloY, cm(G.base), true);
+  g += cota(X(0), top - 30, X(G.W), top - 30, T('ANCHO') + ' ' + cm(G.W));
+  g += cota(X(G.W) + 34, top, X(G.W) + 34, Y(G.base), T('ALTO') + ' ' + cm(G.H), true);
+  { const ex = X(G.W / 2), hueco = sueloY - Y(G.base), ey = hueco > 44 ? (Y(G.base) + sueloY) / 2 : Math.max(20, top - 74), et = T('Elevación') + ' ' + cm(G.base), ew = et.length * 14.8;
+    const btn = (x, y, rot, a, tit) => `<g class="no-cap sim-bt" transform="translate(${x},${y})" data-acc="${a}" role="button" tabindex="0" aria-label="${esc(tit)}"><title>${esc(tit)}</title><circle r="17" fill="transparent"/><g transform="rotate(${rot}) scale(1.25) translate(-12,-12)"><path fill="#fff" stroke="#000" stroke-opacity=".85" stroke-width="2.2" paint-order="stroke" d="${IC_CIRC}"/></g></g>`;
+    if (G.base > 0.05) g += `<line x1="${ex}" y1="${Y(G.base) + 5}" x2="${ex}" y2="${sueloY}" stroke="#fff" stroke-width="4.2"/><line x1="${ex}" y1="${Y(G.base) + 5}" x2="${ex}" y2="${sueloY}" stroke="#7a14d6" stroke-width="2" stroke-dasharray="6 4"/>`;
+    g += `<text class="elev-t" x="${ex}" y="${ey + 8}" text-anchor="middle" font-size="23" fill="#fff" stroke="#000" stroke-opacity=".85" stroke-width="5" paint-order="stroke" stroke-linejoin="round" letter-spacing="1" font-family="Share Tech Mono, monospace">${esc(et)}</text>`
+      + (o.clave ? btn(ex - ew / 2 - 24, ey, 90, 'sim:elev:-1', T('Bajar la pantalla 10 cm')) + btn(ex + ew / 2 + 24, ey, -90, 'sim:elev:1', T('Subir la pantalla 10 cm')) : ''); }
   if (G.etiqueta) g += `<text x="${X(G.W / 2)}" y="${sueloY + 34}" text-anchor="middle" font-size="15" font-weight="800" fill="#1c1d22" font-family="Inter, sans-serif">${esc(G.etiqueta)}</text>`;
   if (SK) g += DY ? `<g transform="translate(0,${DY})">${cajas(G, SK)}</g>` : cajas(G, SK);
   return g + '</svg>';
@@ -214,7 +222,7 @@ function simCtl(clave, base) {
     + b('data-acc="sim:pared:propio"', E.fondo === 'propio', T('Pared propia: sube una foto o pega un enlace'), FPROP ? `background-image:url(&quot;${esc(FPROP)}&quot;)` : '', FPROP ? '' : ICSUBE, 'fo-ico');
   const cm = Math.round(base * 100);
   const elev = clave ? `<div class="elev" role="group" aria-label="${esc(T('Altura del borde inferior de la pantalla sobre el suelo'))}"><span>${esc(T('Elevación desde el suelo'))}</span><button type="button" class="elev-fl" data-acc="sim:elev:-1" aria-label="${esc(T('Bajar la pantalla 10 cm'))}" title="${esc(T('Bajar la pantalla 10 cm'))}"${cm <= 0 ? ' disabled' : ''}>${ICBAJA}</button><b>${cm.toLocaleString(lang() === 'en' ? 'en-GB' : 'es-ES')} cm</b><button type="button" class="elev-fl" data-acc="sim:elev:1" aria-label="${esc(T('Subir la pantalla 10 cm'))}" title="${esc(T('Subir la pantalla 10 cm'))}"${cm >= 300 ? ' disabled' : ''}>${ICSUBE_P}</button></div>` : '';
-  return `<div class="simctl">${elev}<div class="simcu"><div class="g" role="group" aria-label="${esc(T('Contenido de la pantalla'))}">${cont}</div><div class="g" role="group" aria-label="${esc(T('Pared'))}">${pared}</div></div></div>`;
+  return `<div class="simctl"><div class="simcu"><div class="g" role="group" aria-label="${esc(T('Contenido de la pantalla'))}">${cont}</div><div class="g" role="group" aria-label="${esc(T('Pared'))}">${pared}</div></div></div>`;
 }
 /* v3.6 · los controles nunca pisan el dibujo (cuadros de datos, cotas, rótulos, las pantallas): se prueban tres disposiciones
    (en fila, en dos filas, compacta) y se queda la primera que no toca nada; si ninguna, se reducen hasta el 70 % */

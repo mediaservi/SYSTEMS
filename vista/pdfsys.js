@@ -39,7 +39,8 @@ async function dibujo(caja, esqHtml) {
   /* el dibujo se rehace en horizontal (el del bloque puede estar en vertical si el bloque es estrecho) */
   let s0 = null; if (esqHtml) { const t = document.createElement('div'); t.innerHTML = esqHtml; s0 = t.querySelector('svg'); }
   if (!s0 && caja) s0 = caja.querySelector('svg'); if (!s0) return '';
-  const s = s0.cloneNode(true), vb = (s.getAttribute('viewBox') || '0 0 960 520').split(/\s+/).map(Number), W = vb[2], H = vb[3];
+  const s = s0.cloneNode(true); s.querySelectorAll('.no-cap').forEach((n) => n.remove());   /* v3.11 · sin los botones de la simulación */
+  const vb = (s.getAttribute('viewBox') || '0 0 960 520').split(/\s+/).map(Number), W = vb[2], H = vb[3];
   s.setAttribute('xmlns', 'http://www.w3.org/2000/svg'); s.setAttribute('width', W); s.setAttribute('height', H); s.removeAttribute('class');
   const cs = raizCS(); [s, ...s.querySelectorAll('*')].forEach((el) => { [...el.attributes].forEach((a) => { if (a.value.includes('var(')) el.setAttribute(a.name, sinVars(a.value, cs)); }); });
   const vt = s0.classList.contains('vt-svg'); if (vt) s.setAttribute('class', 'vt-svg');
