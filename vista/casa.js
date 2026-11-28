@@ -22,7 +22,7 @@ const ADMIN_URL = 'https://script.google.com/macros/s/AKfycbwkc12y4LODbFe-kQidnR
 const MODS = [ELEC, DISP, SENAL, AUDIO, SONIDO, VIDEO, CAMARAS, CONTROL];   // v1.4 · DISPLAYS, pestaña propia para señalética y digital signage · v2.0 · SONORIZACIÓN · v2.2 · CÁMARAS y CONTROL
 fijarIdioma(idiomaInicial());
 
-textos({ 'No puedo usar {x}: revisa la resolución (de 8 a 65.536 px por lado).': ['I cannot use {x}: check the resolution (8 to 65,536 px per side).', 'No puc fer servir {x}: revisa la resolució (de 8 a 65.536 px per costat).'], 'ACCESOS DIRECTOS': ['DIRECT LINKS', 'ACCESSOS DIRECTES'], 'COPIAR': ['COPY', 'COPIAR'], 'Copiar': ['Copy', 'Copiar'], 'Dirección copiada: {u}': ['Address copied: {u}', 'Adreça copiada: {u}'] });
+textos({ 'Ficha del recomendado': ['Recommended unit datasheet', 'Fitxa del recomanat'], 'No puedo usar {x}: revisa la resolución (de 8 a 65.536 px por lado).': ['I cannot use {x}: check the resolution (8 to 65,536 px per side).', 'No puc fer servir {x}: revisa la resolució (de 8 a 65.536 px per costat).'], 'ACCESOS DIRECTOS': ['DIRECT LINKS', 'ACCESSOS DIRECTES'], 'COPIAR': ['COPY', 'COPIAR'], 'Copiar': ['Copy', 'Copiar'], 'Dirección copiada: {u}': ['Address copied: {u}', 'Adreça copiada: {u}'] });
 textos({
   'Nuevo cálculo: lo deja todo como al empezar': ['New calculation: back to the start', 'Nou càlcul: ho deixa tot com al començar'],
   'Qué es esto y cómo se usa': ['What this is and how to use it', 'Què és això i com es fa servir'],
@@ -158,7 +158,7 @@ function pinta() {
   if (m.despues) m.despues(c, R);
   if (idioma() !== 'es') c.querySelectorAll('.despiece td.des').forEach((d) => { [...d.childNodes].forEach((n) => { if (n.nodeType === 3) n.nodeValue = traduceDes(n.nodeValue, idioma()); }); });   /* v2.8 · descripciones de las listas en el idioma */
   marcaStock(c);
-  pintaRes(); guardaCasa(); ajusta(); try { enlaza(); } catch (e) {} try { prodCifras(); } catch (e) {} monta3D(m, R);
+  pintaRes(); guardaCasa(); ajusta(); try { enlaza(); } catch (e) {} try { prodCifras(); } catch (e) {} try { resFicha(); } catch (e) {} monta3D(m, R);
 }
 /* v2.5 · simulación 3D: se monta cuando el dibujo trae su lienzo y se suelta entera al repintar (sin contextos WebGL colgando) */
 let S3 = null, n3 = 0;
@@ -175,10 +175,11 @@ function pintaRes() {
   if (!EDITA && txt) { r.hidden = false; r.innerHTML = `<span>${esc(txt)}</span>`; } else r.hidden = true;
 }
 /* ningún texto de una línea se corta: si no cabe, se reduce la letra */
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { try { ajusta(); } catch (e) {} });   /* v3.9 · otra vez con la letra ya cargada */
 function ajusta() {
   document.querySelectorAll('.ss-fit, [data-mod] span, .blk-cab b, .cif-v, .f-cred, #pie-l .nota span, .pide-res span, .fila.envuelve .tog span, .lista-c .tog span, .calcular').forEach((el) => {
-    if (!el.offsetWidth) return; el.style.removeProperty('font-size'); let fs = parseFloat(getComputedStyle(el).fontSize), k = 0; const min = fs * .45;
-    while (el.scrollWidth > el.clientWidth + .5 && fs > min && k++ < 60) { fs -= .5; el.style.setProperty('font-size', fs + 'px'); }
+    if (!el.offsetWidth) return; el.style.removeProperty('font-size'); let fs = parseFloat(getComputedStyle(el).fontSize), k = 0; const min = fs * .3;
+    while (el.scrollWidth > el.clientWidth + .5 && fs > min && k++ < 80) { fs = Math.max(min, fs - Math.max(.5, fs * .03)); el.style.setProperty('font-size', fs + 'px'); }
   });
 }
 addEventListener('resize', () => { const a = document.documentElement.classList.contains('ss-apila'); if (a !== MQ.matches) pinta(); else requestAnimationFrame(ajusta); });
@@ -227,6 +228,21 @@ function prodHtml(x, mini) {
   const W = webDe(x) || {}, f = fotoDe(x), nom = (x.marca || x.fab || '') + ' ' + (x.modelo || x.id);
   const ln = [[urlFicha(x.id), T('Ficha')], W.pdf ? [W.pdf, 'PDF'] : null, W.web ? [W.web, W.charmex ? 'charmex.net' : T('Fabricante')] : null].filter(Boolean);
   return `<div class="cp${mini ? ' mini' : ''}">${f && !mini ? `<button type="button" class="cp-foto" data-zoom="${esc(x.id)}" title="${esc(T('Ver la foto en grande'))}" aria-label="${esc(T('Ver la foto en grande') + ' · ' + nom)}"><img src="${esc(f)}" alt="" loading="lazy" onerror="this.closest('.cp-foto').remove()"><span class="cp-ojo">${icb('ojo')}</span></button>` : ''}<div class="cp-ln">${ln.map(([u, t]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join('')}</div></div>`;
+}
+/* v3.9 · el hueco libre de RESULTADO se llena con la ficha resumida del equipo recomendado: su foto (con el ojo), sus datos y sus enlaces;
+   salen las filas que caben, nunca menos de tres (si no caben, no sale) */
+function resFicha() {
+  const b = document.querySelector('#cuerpo.rejilla [data-blk="S1B"]'), cu = b && b.querySelector('.blk-cu'); if (!cu || cu.querySelector('.rf')) return;
+  if (matchMedia('(max-width: 559px)').matches) return;
+  const a = cu.querySelector('.equipo a.prod, a.prod'); if (!a) return;
+  const id = decodeURIComponent((/[?&]ref=([^&]+)/.exec(a.getAttribute('href')) || [])[1] || ''), f = fichaDe(id), bx = busca(id); if (!f || !bx) return;
+  const x = Object.assign({ marca: bx.mk }, bx.x), foto = fotoDe(x), filas = (f.specs || []).filter((r) => r[1] !== '' && r[1] != null);
+  if (filas.length < 3) return;
+  const pinta = (n) => { const o = cu.querySelector('.rf'); if (o) o.remove();
+    cu.insertAdjacentHTML('beforeend', `<div class="rf"><p class="sub-t">${esc(T('Ficha del recomendado'))} · <b>${esc(f.tit)}</b></p><div class="rf-c">${foto ? `<button type="button" class="rf-foto" data-zoom="${esc(id)}" title="${esc(T('Ver la foto en grande'))}" aria-label="${esc(T('Ver la foto en grande') + ' · ' + f.tit)}"><img src="${esc(foto)}" alt="" loading="lazy" onerror="this.closest('.rf-foto').remove()"><span class="cp-ojo">${icb('ojo')}</span></button>` : ''}<dl class="rf-d">${filas.slice(0, n).map((r) => `<div><dt>${esc(r[0])}</dt><dd>${esc(String(r[1]))}</dd></div>`).join('')}</dl></div>${prodHtml(x, true)}</div>`);
+    return cu.scrollHeight <= cu.clientHeight + 1; };
+  for (let n = Math.min(filas.length, 14); n >= 3; n--) if (pinta(n)) return;
+  const o = cu.querySelector('.rf'); if (o) o.remove();
 }
 function prodCifras() {
   if (document.documentElement.classList.contains('ss-apila') && matchMedia('(max-width: 559px)').matches) return;

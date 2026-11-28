@@ -5,7 +5,7 @@ import { traduceDes } from './fichaprod.js';
 import { T, N, esc, textos, lee, guarda, togs, num, etq, lang } from './util.js';
 import { equipos, P } from './listas.js';
 import { tramo, conmutador, RES } from './conectividad.js';
-textos({
+textos({ 'Hasta los destinos': ['To the destinations', 'Fins als destins'],
   'SEÑAL': ['SIGNAL', 'SENYAL'], 'Con USB': ['With USB', 'Amb USB'], '4K60': ['4K60', '4K60'], '8K': ['8K', '8K'], 'Señal y conectividad': ['Signal and connectivity', 'Senyal i connectivitat'],
   'Selector, distribuidor o matriz, y el cable o extensor de cada tramo según la distancia y la resolución.': ['Selector, splitter or matrix, and the cable or extender for each run according to distance and resolution.', 'Selector, distribuïdor o matriu, i el cable o extensor de cada tram segons la distància i la resolució.'],
   'Escríbela: «4 portátiles a 2 pantallas, distintas, 4K, a 30 m»': ['Type it: “4 laptops to 2 screens, different, 4K, 30 m away”', 'Escriu-la: «4 portàtils a 2 pantalles, diferents, 4K, a 30 m»'],
@@ -98,7 +98,9 @@ const cifras = (r) => { const c = r.conm || r.dist; return [
   { t: 'Destinos', v: String(S.nd), s: T(S.modo === 'espejo' ? 'Iguales (espejo)' : 'Independientes'), ic: 'tele', c: 'var(--azul)' },
   { t: 'Conmutador', v: c ? c.modelo : '—', s: c ? traduceDes(c.descripcion.split(' ').slice(0, 5).join(' '), lang()) : '', ic: 'chip', c: 'var(--verde-txt)' },
   { t: 'Resolución', v: RES[S.res].nom, s: RES[S.res].gbps + ' Gbps', ic: 'calidad', c: 'var(--ambar)' },
-  { t: 'Tramos', v: String(S.nf + S.nd), s: T(r.vuelta[0].txt), ic: 'dist', c: 'var(--magenta, #e24bf0)' }]; };
+  { t: 'Tramos', v: String(S.nf + S.nd), s: T(r.vuelta[0].txt), ic: 'dist', c: 'var(--magenta, #e24bf0)' },
+  /* v3.9 · el sexto hueco: el tramo más largo hasta los destinos */
+  { t: 'Hasta los destinos', v: String(S.dD), u: 'm', s: T((r.vuelta[r.vuelta.length - 1] || {}).txt || ''), ic: 'regla', c: 'var(--verde)' }]; };
 function datos() {
   return [{ tit: 'Fuentes', ic: 'media', ac: 'var(--violeta)', html: num('nf', 'Fuentes', S.nf, '', 1, 1, 32) + etq('Tipo de fuente') + togs('tipo', [['HDMI', 'HDMI'], ['USB-C', 'USB-C'], ['DP', 'DP']], S.tipo) + etq('USB y KVM') + togs('usb', [[false, 'Sin USB'], [true, 'Con USB']], S.usb, 'dos') },
     { tit: 'Destinos', ic: 'tele', ac: 'var(--azul)', html: num('nd', 'Destinos', S.nd, '', 1, 1, 32) + etq('Salidas') + togs('modo', [['espejo', 'Iguales (espejo)'], ['independiente', 'Independientes']], S.modo, 'uno') },

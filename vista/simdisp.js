@@ -120,16 +120,30 @@ function cajas(G, sk) {
     g += caja(y, 62) + `<g transform="translate(${X + 14},${y + 9}) scale(.8)" fill="none" stroke="${LIMA}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></g><text x="${X + 40}" y="${y + 24}" font-size="15.5" fill="#fff" ${mono}>${esc(T('Distancia visionado'))}</text><text x="${X + 14}" y="${y + 49}" font-size="${Math.min(15.5, (AN - 26) / (lin.length * .56)).toFixed(1)}" fill="#fff" ${mono}>${esc(lin)}</text>`; }
   return g + '</g>';
 }
-export function simEscala(G, foto, o = {}) {
-  /* v3.3 · la foto oficial del display (la primera con id) es el contenido por defecto; ya no hay tarjeta de foto (el nombre del modelo, abajo, enlaza a la ficha) */
-  const fd = [].concat(foto || []).find((f) => f && f.url && f.id); FC = fd ? { url: fd.url, rec: (globalThis.SC_FOTO_REC || {})[fd.id] || null } : null;
-  const VW = o.vertical ? 600 : 1000, VH = o.vertical ? 760 : 560, sueloY = VH - 54, arriba = 70;
-  /* v3.3 · con los cuadros de datos, la escena se corre a la derecha para dejarles su sitio */
-  const SK = G.disp ? (o.vertical ? 0.8 : 1.1) : 0, CW = SK ? Math.ceil(246 * SK) : 0;
-  const xMin = -1.15, xMax = Math.max(G.W + 0.5, 1.6), alto = Math.max(2.05, G.base + G.H + 0.25);
-  const k = Math.min((VW - 60 - CW) / (xMax - xMin), (sueloY - arriba) / alto), ox = CW + (VW - CW - (xMax - xMin) * k) / 2 - xMin * k;
+let ULTARGS = null;   /* v3.9 · lo último que se ha simulado: al medir la caja se vuelve a dibujar a su forma exacta */
+/* v3.9 · el dibujo toma la forma real de su caja (med: asp = ancho / alto de la caja; cw, ch = ancho y alto de los controles, en fracción
+   de la caja) y la escena (persona, pantallas y cotas) crece todo lo que puede sin tocar los cuadros de datos ni los controles */
+function svgEsc(G, foto, o, med) {
+  const asp = Math.max(0.45, Math.min(3.2, med.asp || (o.vertical ? 0.8 : 1.6))), VW = 1000, VH = Math.round(VW / asp), sueloY = VH - 54;
+  const SK = G.disp ? 1.1 : 0, CW = SK ? Math.ceil(240 * SK) : 0, CH = SK ? Math.ceil(cajasAlto(G) * SK) + 6 : 0;
+  const cR = { x1: VW * (1 - (med.cw || 0.42)) - 6, y2: VH * (med.ch || 0.13) + 8 };
+  /* si los controles quedan encima de los cuadros de datos (cajas estrechas), los cuadros bajan justo debajo de los controles */
+  const DY = CW && cR.x1 < CW + 18 ? Math.ceil(cR.y2 + 4) : 0;
+  const xMin = -0.98, xMax = Math.max(G.W + 0.04, 0.9), alto = Math.max(1.9, G.base + G.H + 0.12), cotaD = G.base > 0.05 ? 66 : 42;
+  const kMax = Math.min((VW - 30 - cotaD) / (xMax - xMin), (sueloY - 14) / alto);
+  const choca = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
+  let k = kMax, ox = 0;
+  for (let i = 0; i < 60; i++, k *= 0.975) {
+    const anchoE = (xMax - xMin) * k + cotaD, top = sueloY - (G.base + G.H) * k - 40, pTop = sueloY - 1.85 * k;
+    const prueba = (o2) => { const X = (x) => o2 + x * k; if (X(xMin) < 8 || X(xMax) + cotaD > VW - 8 || top < 6 || DY + CH > sueloY) return false;
+      const pant = [X(-0.02), top, X(G.W) + cotaD, sueloY], pers = [X(-0.92), pTop, X(-0.32), sueloY];
+      const cajas = [0, DY, CW + 18, DY + CH], ctl = [cR.x1, 0, VW, cR.y2];
+      return ![pant, pers].some((r) => (CH && choca(r, cajas)) || choca(r, ctl)); };
+    const centro = (VW - anchoE) / 2 - xMin * k, izq = CW + 22 - xMin * k, der = VW - 14 - cotaD - xMax * k;
+    const op = [centro, (izq + der) / 2, izq, der].find(prueba); if (op != null) { ox = op; break; }
+  }
   const X = (x) => ox + x * k, Y = (y) => sueloY - y * k;
-  let g = `<svg class="sim-esc" viewBox="0 0 ${VW} ${VH}" preserveAspectRatio="${SK ? 'xMinYMax' : 'xMidYMax'} meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(T('Simulación de las pantallas a escala con una persona de 1,75 m'))}">`;
+  let g = `<svg class="sim-esc" data-med="${medClave(med)}" viewBox="0 0 ${VW} ${VH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(T('Simulación de las pantallas a escala con una persona de 1,75 m'))}">`;
   const t = E.fondo === 'propio' ? null : PARED[E.fondo];
   if (E.fondo === 'propio' && FPROP) g += `<rect x="-4000" y="-4000" width="9000" height="${4000 + sueloY}" fill="#3a3b40"/><image href="${esc(FPROP)}" x="0" y="0" width="${VW}" height="${sueloY}" preserveAspectRatio="xMidYMid slice"/>`;   /* la foto propia cubre toda la pared (no tiene escala conocida) */
   else if (t) { const tw = t[0] * k, th = t[1] * k, u = `assets/sim/${E.fondo}.jpg`, im = (tr) => `<image href="${u}" width="${tw + 0.6}" height="${th + 0.6}" preserveAspectRatio="none"${tr ? ` transform="${tr}"` : ''}/>`;
@@ -166,8 +180,17 @@ export function simEscala(G, foto, o = {}) {
   g += cota(X(G.W) + 24, top, X(G.W) + 24, Y(G.base), cm(G.H), true);
   if (G.base > 0.05) g += cota(X(G.W) + 52, Y(G.base), X(G.W) + 52, sueloY, cm(G.base), true);
   if (G.etiqueta) g += `<text x="${X(G.W / 2)}" y="${sueloY + 34}" text-anchor="middle" font-size="15" font-weight="800" fill="#1c1d22" font-family="Inter, sans-serif">${esc(G.etiqueta)}</text>`;
-  if (SK) g += cajas(G, SK);
-  g += '</svg>';
+  if (SK) g += DY ? `<g transform="translate(0,${DY})">${cajas(G, SK)}</g>` : cajas(G, SK);
+  return g + '</svg>';
+}
+const medClave = (m) => [m.asp, m.cw, m.ch].map((v) => (v || 0).toFixed(2)).join(',');
+const cajasAlto = (G) => { const d = G.disp; if (!d) return 0; const rs = RES[String(d.res || '').toUpperCase()], cu = G.paneles[0] && G.paneles[0].cu, aw = cu ? cu.scr.w : G.paneles[0] ? G.paneles[0].w : 0; return 12 + 168 + 140 + (rs && aw ? 152 - 140 + 62 + 4 : 0); };
+let MED = {};   /* las últimas medidas de cada clase de caja */
+export function simEscala(G, foto, o = {}) {
+  /* v3.3 · la foto oficial del display (la primera con id) es el contenido por defecto; ya no hay tarjeta de foto (el nombre del modelo, abajo, enlaza a la ficha) */
+  const fd = [].concat(foto || []).find((f) => f && f.url && f.id); FC = fd ? { url: fd.url, rec: (globalThis.SC_FOTO_REC || {})[fd.id] || null } : null;
+  ULTARGS = { G, foto, o };
+  const g = svgEsc(G, foto, o, MED[o.vertical ? 'v' : 'h'] || {});
   /* la foto oficial del modelo (abre su ficha) y los mandos de pared y contenido, encima del dibujo */
   const fts = [].concat(foto || []).filter((f) => f && f.url && !f.id && !G.disp);
   const ft = fts.length ? `<div class="sim-fotos">${fts.map((f) => `<a class="sim-foto" href="${esc(f.href)}" target="_blank" rel="noopener" title="${esc(T('Ver la ficha'))}"><img src="${esc(f.url)}" alt="${esc(f.nombre || '')}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.sim-foto').remove()"><span>${esc(f.nombre || '')}</span><small>${esc(T('Foto del fabricante'))}</small></a>`).join('')}</div>` : '';
@@ -196,12 +219,15 @@ function simCtl(clave, base) {
 /* v3.6 · los controles nunca pisan el dibujo (cuadros de datos, cotas, rótulos, las pantallas): se prueban tres disposiciones
    (en fila, en dos filas, compacta) y se queda la primera que no toca nada; si ninguna, se reducen hasta el 70 % */
 export function ajustaSim() {
-  document.querySelectorAll('.sim-caja > .simctl').forEach((sc) => {
-    const cj = sc.parentElement, svg = cj.querySelector(':scope > svg'); if (!svg) return; const L = cj.getBoundingClientRect(); if (!L.width) return;
-    const obs = [...svg.querySelectorAll('rect[rx], text, [data-obs]')].map((e) => e.getBoundingClientRect()).filter((r) => r.width > 2 && r.height > 2 && r.width * r.height < L.width * L.height * .5 && r.right > L.left && r.left < L.right && r.bottom > L.top && r.top < L.bottom);
-    const toca = () => [...sc.querySelectorAll(':scope > .elev, .simcu > .g')].some((c) => { const a = c.getBoundingClientRect(); return a.bottom > L.bottom - 2 || obs.some((o) => a.left < o.right - 1 && a.right > o.left + 1 && a.top < o.bottom - 1 && a.bottom > o.top + 1); });
-    sc.style.transform = ''; for (const m of ['', 'apila', 'apila compacta']) { sc.className = 'simctl ' + m; if (!toca()) return; }
-    for (const k of [0.9, 0.8, 0.7]) { sc.style.transform = `scale(${k})`; if (!toca()) return; }
+  document.querySelectorAll('.sim-caja').forEach((cj) => {
+    const sc = cj.querySelector(':scope > .simctl'), svg = cj.querySelector(':scope > svg.sim-esc'), L = cj.getBoundingClientRect(); if (!svg || !L.width || !L.height) return;
+    /* los controles en una fila si caben; si no, en dos (nunca se esconden ni se encogen) */
+    if (sc) { sc.style.transform = ''; sc.className = 'simctl'; if (sc.getBoundingClientRect().width > L.width - 12) sc.className = 'simctl apila'; }
+    const C = sc ? sc.getBoundingClientRect() : { width: 0, bottom: L.top };
+    const med = { asp: L.width / L.height, cw: Math.min(1, (C.width + 10) / L.width), ch: Math.max(0, (C.bottom - L.top) / L.height) };
+    const clave = medClave(med); if (svg.dataset.med === clave || !ULTARGS) return;
+    MED[ULTARGS.o.vertical ? 'v' : 'h'] = med;
+    const t = document.createElement('div'); t.innerHTML = svgEsc(ULTARGS.G, ULTARGS.foto, ULTARGS.o, med); svg.replaceWith(t.firstElementChild);
   });
 }
 let AJ = 0; const ajLuego = () => { cancelAnimationFrame(AJ); AJ = requestAnimationFrame(() => { ajustaSim(); AJ = requestAnimationFrame(ajustaSim); }); };

@@ -52,7 +52,13 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.8)
+## Cambios de la versión actual (v3.9)
+- **La simulación a escala llena su caja:** el dibujo toma la forma real del recuadro y la escena (persona, pantallas y cotas) crece todo lo que puede sin tocar los cuadros de datos ni los controles. Los controles ya no se encogen ni se esconden (si no caben en una fila, van en dos) y, en cajas estrechas, los cuadros de datos bajan bajo los controles.
+- **RESULTADO sin hueco:** debajo, la ficha resumida del equipo recomendado (foto con zoom, sus datos y los enlaces a ficha, PDF y página), con las filas que quepan.
+- **Cifras de abajo más grandes:** el número y su texto crecen con el bloque; ELECTRÓNICA y SEÑAL llenan sus seis bloques (conexión, refresco, backup; tramo hasta los destinos).
+- **Bloques de datos sin huecos al pie:** las filas de botones reparten el alto libre.
+
+## Cambios de la v3.8
 - **Salidas de la fuente por ancho de banda** (ELECTRÓNICA › LED), no con un tope fijo de 3840 px: «Máximo por salida» es ahora Full HD (HDMI 1.4 · DVI · 3G-SDI), **4K60** (HDMI 2.0 · DP 1.2 · 12G-SDI, unos 8,85 Mpx: 4096 × 2160 cabe en una) u **8K** (HDMI 2.1 · DP 1.4, 7680 × 4320 por un cable). Menos píxeles por salida a más hercios. Las tiras estrechas se **pliegan** en una sola salida (7680 × 540 o 25600 × 64 van por un cable), con su aviso.
 - **Cada petición escrita parte de cero** (60 Hz, sin backup, cable de red, una salida HDMI 4K60, ordenador), salvo lo que diga el texto.
 - **Nunca se ignora en silencio:** una resolución fuera de rango se dice en el aviso; se aceptan lienzos pequeños o muy alargados (128 × 64, 25600 × 64).

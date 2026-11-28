@@ -50,7 +50,7 @@ export function fichaDe(id) {
   if (Md && Md[4]) specs.push(['VESA', Md[4].replace('x', ' × ') + ' mm']);
   const W = webDe(Object.assign({ marca: mk }, x)), enl = W ? W.web : '';
   const html = window.SC_FICHA.fichaHTML({ cat: T(TIPO[x.tipo] || x.tipo || ''), icono: ICONO[x.tipo] || 'elec', marca: x.marca || mk, modelo: x.modelo || x.id, foto: fotoDe(x), fotoTrasera: x.urlFotoTrasera, specs: [[T('Referencia'), x.id]].concat(specs), notas: x.descripcion ? [traduceDes(x.descripcion, lang())] : [], enlace: enl, enlaceTxt: T(W && W.charmex ? 'Página del producto' : 'Web del fabricante'), enlaces: W && W.pdf ? [[W.pdf, T('Ficha técnica (PDF)')]] : [], acento: '#00b4ff', sel: true });
-  return { tit: (x.marca || mk) + ' ' + (x.modelo || x.id), html, x, mk };
+  return { tit: (x.marca || mk) + ' ' + (x.modelo || x.id), html, x, mk, specs };
 }
 /* v2.8 · nombres de producto que se enlazan a su ficha: modelo e id de cada referencia (de 3 caracteres o más) → id */
 let NOMS = null, NOMSk = null;
