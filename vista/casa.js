@@ -256,6 +256,7 @@ function prodCifras() {
     const o = cu.querySelector('.cp'); if (o) o.remove(); b.classList.remove('con-prod');
   });
 }
+document.addEventListener('click', (e) => { const v = e.target.closest && e.target.closest('[data-ver-img]'); if (!v) return; e.preventDefault(); ventana(v.dataset.tit || '', `<div class="cp-grande"><img src="${esc(v.dataset.verImg)}" alt="${esc(v.dataset.tit || '')}" referrerpolicy="no-referrer"></div>`); });   /* v3.13 · fotos de la electrónica en grande */
 document.addEventListener('click', (e) => {
   const z = e.target.closest && e.target.closest('[data-zoom]'); if (!z) return; e.preventDefault();
   const bx = busca(z.dataset.zoom); if (!bx) return; const x = Object.assign({ marca: bx.mk }, bx.x), f = fotoDe(x);
