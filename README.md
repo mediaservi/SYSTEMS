@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v2.5 (beta, en pruebas)** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v3.11** · Dirección definitiva: https://systems.mediaservi.com
 
 
 ## Icono
@@ -52,7 +52,15 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.9)
+## Cambios de la versión actual (v3.11)
+- **Elevación como en SCREENS:** se quita la barra ELEVACIÓN DESDE EL SUELO de arriba (solo queda la línea de contenido y paredes). La elevación es ahora un cartel técnico dentro del dibujo, «Elevación 120 cm», en texto blanco con halo oscuro sobre la línea morada que baja de la pantalla al suelo, con sus flechas redondas para subir y bajar 10 cm. Si no cabe bajo la pantalla, va encima de la cota de ANCHO.
+- **Cotas como en SCREENS:** carteles blancos «ANCHO 124 cm» y «ALTO 71 cm».
+- Las flechas no salen en el PDF.
+
+## Cambios de la v3.10
+- **Formato estándar primero** (igual que SCREENS): donde se da la proporción, primero el formato estándar y luego el decimal, «16:9 (1,78:1)». Se reduce la resolución en píxeles (o la medida) y, a menos del 0,5 % de 16:9, 4:3, 21:9, 32:9, 16:10, 1:1 o sus verticales, se usa el estándar. Sale en el cuadro de resolución de la simulación, en la resolución total de ELECTRÓNICA › LED, en la medida del videowall y en el formato de las pantallas de proyección.
+
+## Cambios de la v3.9
 - **La simulación a escala llena su caja:** el dibujo toma la forma real del recuadro y la escena (persona, pantallas y cotas) crece todo lo que puede sin tocar los cuadros de datos ni los controles. Los controles ya no se encogen ni se esconden (si no caben en una fila, van en dos) y, en cajas estrechas, los cuadros de datos bajan bajo los controles.
 - **RESULTADO sin hueco:** debajo, la ficha resumida del equipo recomendado (foto con zoom, sus datos y los enlaces a ficha, PDF y página), con las filas que quepan.
 - **Cifras de abajo más grandes:** el número y su texto crecen con el bloque; ELECTRÓNICA y SEÑAL llenan sus seis bloques (conexión, refresco, backup; tramo hasta los destinos).

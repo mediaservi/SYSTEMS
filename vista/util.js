@@ -24,3 +24,14 @@ export const tog = (on, attrs, txt, extra = '') => `<button type="button" class=
 export const togs = (k, ops, val, cls = '') => `<div class="fila envuelve ${cls}">${ops.map((o) => tog(String(val) === String(o[0]), `data-set="${k}" data-v="${esc(String(o[0]))}"`, esc(T(o[1])))).join('')}</div>`;
 export const num = (k, lab, val, uni, paso = 1, min = 0, max = 99999) => (T(lab).length > 15 ? etq(lab) : '') + `<div class="num">${lab && T(lab).length <= 15 ? `<label for="n-${k}">${esc(T(lab))}</label>` : ''}<input id="n-${k}" type="number" inputmode="decimal" data-num="${k}" value="${esc(val)}" step="${paso}" min="${min}" max="${max}"><span>${esc(uni || '')}</span><div class="pm"><button type="button" data-pm="${k}" data-d="1" tabindex="-1" aria-label="+">▲</button><button type="button" data-pm="${k}" data-d="-1" tabindex="-1" aria-label="−">▼</button></div></div>`;
 export const etq = (t) => `<p class="sub-t">${esc(T(t))}</p>`;
+/* v3.10 · formato estándar primero (como SCREENS v11.70): se reduce la resolución en píxeles (o la medida); si queda a menos del 0,5 %
+   de un formato estándar, se da ese («16:9») y además el decimal («1,78:1») */
+const STD = [[16, 9], [4, 3], [21, 9], [32, 9], [16, 10], [1, 1], [9, 16], [3, 4], [10, 16]];
+export function formato(w, h) {
+  w = +w; h = +h; if (!(w > 0 && h > 0)) return { std: '', dec: '', txt: '' };
+  const r = w / h, dec = N(r, 2) + ':1', mcd = (a, b) => (b ? mcd(b, a % b) : a);
+  let std = ''; const ew = Math.round(w), eh = Math.round(h), q = ew && eh && ew === w && eh === h ? mcd(ew, eh) : 0;
+  if (q && ew / q <= 32 && eh / q <= 32) std = ew / q + ':' + eh / q;
+  const s = STD.find(([a, b]) => Math.abs(r / (a / b) - 1) < 0.005); if (s) std = s[0] + ':' + s[1];
+  return { std, dec, txt: std ? std + ' (' + dec + ')' : dec };
+}

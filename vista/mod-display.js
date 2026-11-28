@@ -2,7 +2,7 @@
 // el tamaño, las horas al día, la orientación y el reproductor, el display de las listas del panel (SAMSUNG, LG y CLEVER) que lo cumple.
 // Elección: el que cumple y está en stock; a igualdad, el orden de marcas SAMSUNG > LG > CLEVER (o la marca que se elija).
 // Solo con equipos de las listas del panel. GPL-3.0 · mediaservi.com
-import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
+import { T, N, esc, textos, lee, guarda, togs, num, etq, formato } from './util.js';
 import { equipos, esInterno, P as BP } from './listas.js';
 import { COL, escala, cota, persona, suelo, etiqueta, lienzo, lienzo3D, pestanas, fmt } from './vt.js';
 import { simEscala, accionSim, tex3D, elevDe } from './simdisp.js';
@@ -161,7 +161,7 @@ function resultado(r) {
 const cifras = (r) => [
   { t: 'Display', v: r.disp ? r.disp.modelo : '—', s: r.disp ? r.disp.marca : '', ic: 'display', c: 'var(--verde-txt)' },
   { t: 'Pantallas', v: String(r.n), u: '×', s: S.sitio === 'videowall' ? S.cols + ' × ' + S.filas : T(S.orient === 'v' ? 'Vertical' : 'Horizontal'), ic: 'tele', c: 'var(--azul)' },
-  { t: 'Pulgadas', v: r.disp ? String(r.disp.pulgadas) : String(S.pulg), u: '″', s: r.vw ? N(r.vw.a, 2) + ' × ' + N(r.vw.h, 2) + ' m' : T('Pulgadas pedidas') + ' ' + S.pulg + '″', ic: 'regla', c: 'var(--violeta)' },
+  { t: 'Pulgadas', v: r.disp ? String(r.disp.pulgadas) : String(S.pulg), u: '″', s: r.vw ? N(r.vw.a, 2) + ' × ' + N(r.vw.h, 2) + ' m · ' + formato(r.vw.a, r.vw.h).txt : T('Pulgadas pedidas') + ' ' + S.pulg + '″', ic: 'regla', c: 'var(--violeta)' },
   { t: 'Brillo', v: r.disp && r.disp.nits ? N(r.disp.nits) : '—', u: 'nits', s: T((SITIOS.find((x) => x[0] === S.sitio) || SITIOS[0])[1]), ic: 'sol', c: 'var(--ambar)' },
   { t: 'Horas al día', v: r.disp ? r.disp.horas : S.horas, s: r.disp && r.disp.res ? r.disp.res : '', ic: 'reloj', c: 'var(--verde)' },
   { t: 'Reproductor', v: r.disp ? T(r.disp.soc ? 'Integrado' : 'Externo') : '—', s: r.player ? r.player.modelo : '', ic: 'chip', c: 'var(--magenta, #e24bf0)' }];

@@ -340,3 +340,7 @@ svg a.prod:hover text { fill: var(--azul); }
 /* v3.9 · bloques de datos: las filas de botones crecen y reparten el alto libre (botones más grandes, sin huecos al pie) */
 :root:not(.ss-apila) #cuerpo.rejilla .blk:not(.res):not(.pant) > .blk-cu > .fila { flex: 1 1 auto; min-height: min-content; align-content: stretch; align-items: stretch; }
 :root:not(.ss-apila) #cuerpo.rejilla .blk:not(.res):not(.pant) > .blk-cu > .fila > .tog { height: auto; max-height: calc(var(--u) * 80); }
+/* v3.11 · flechas de la elevación dentro del dibujo (como SCREENS) */
+.sim-caja svg .sim-bt { cursor: pointer; pointer-events: all; }
+.sim-caja svg .sim-bt circle { pointer-events: all; }
+.sim-caja svg .sim-bt:hover path, .sim-caja svg .sim-bt:focus path { filter: drop-shadow(0 0 3px rgba(212, 255, 0, .9)); }

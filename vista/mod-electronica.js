@@ -2,7 +2,7 @@
 // LED: procesador, líneas, reparto de la señal, fibra con sus conversores CVT10 y backup (motor común de SCREENS, comun/electronica.js).
 // PROYECCIÓN y DISPLAYS: conmutador (selector, distribuidor o matriz), blending, videowall y el cable o extensor de cada tramo.
 // Solo con las marcas de las listas del panel. GPL-3.0 · mediaservi.com
-import { T, TM, N, esc, textos, lee, guarda, togs, num, etq, lang } from './util.js';
+import { T, TM, N, esc, textos, lee, guarda, togs, num, etq, lang, formato } from './util.js';
 import { equipos, esInterno, P as BP } from './listas.js';
 import { tramo, conmutador, RES } from './conectividad.js';
 import { TR_ELEC } from './tr-electronica.js';
@@ -301,7 +301,7 @@ function resultado(r) {
 }
 function cifras(r) {
   if (S.dest === 'led') { if (!r.pant || !r.pant.length) return [];
-    return [{ t: 'Resolución total', v: N(r.px / 1e6, 2), u: 'Mpx', s: (r.pant.length > 1 ? r.pant.length + ' × ' : '') + N(r.W) + ' × ' + N(r.H) + ' px · ' + r.hz + ' Hz', ic: 'res', c: 'var(--verde-txt)' },
+    return [{ t: 'Resolución total', v: N(r.px / 1e6, 2), u: 'Mpx', s: (r.pant.length > 1 ? r.pant.length + ' × ' : '') + N(r.W) + ' × ' + N(r.H) + ' px · ' + (r.pant.length === 1 ? formato(r.W, r.H).txt + ' · ' : '') + r.hz + ' Hz', ic: 'res', c: 'var(--verde-txt)' },
       { t: 'Líneas de datos', v: String(r.lines * r.bk), s: S.backup ? r.lines + ' + ' + r.lines + ' backup' : S.cab ? '' : T('mínimo teórico'), ic: 'red', c: 'var(--azul)' },
       r.repro ? { t: 'Contenidos', v: 'VNNOX', s: 'ViPlex Express · ViPlex Handy', ic: 'media', c: 'var(--violeta)' } : { t: 'Señal de entrada', v: String(r.n), u: '× ' + S.tipo, s: r.eq ? r.eq + ' px' : '', ic: 'media', c: 'var(--violeta)' },
       { t: r.repro ? 'Reproductor' : 'Procesador', v: r.rec ? r.rec.modelo : '—', s: r.rec ? TM(r.rec.capacidad) : '', ic: 'chip', c: 'var(--ambar)' },
