@@ -5,7 +5,7 @@
 import { T, N, esc, textos, lee, guarda, togs, num, etq } from './util.js';
 import { equipos, esInterno, P as BP } from './listas.js';
 import { COL, escala, cota, persona, suelo, etiqueta, lienzo, lienzo3D, pestanas, fmt } from './vt.js';
-import { simEscala, accionSim, tex3D } from './simdisp.js';
+import { simEscala, accionSim, tex3D, elevDe } from './simdisp.js';
 import { fotoDe, urlFicha } from './fichaprod.js';
 import { cuerpo } from './cuerpos.js';
 textos({
@@ -97,7 +97,7 @@ const geo = (r) => { const p = r.disp ? r.disp.pulgadas : S.pulg, vert = S.orien
   const w1 = cu ? cu.W : vert ? alto16(p) : ancho16(p), h1 = cu ? cu.H : vert ? ancho16(p) : alto16(p);
   const vw = S.sitio === 'videowall', cols = vw ? S.cols : Math.min(nPant(), 6), fil = vw ? S.filas : 1, gap = vw ? (cu ? 0 : 0.006) : 0.25;
   const base = cu && cu.totem ? 0 : S.sitio === 'totem' ? BP('display.base.totem', 0.3) : S.sitio === 'tactil' ? BP('display.base.tactil', 0.9) : vw ? BP('display.base.videowall', 0.8) : S.sitio === 'escaparate' ? BP('display.base.escaparate', 0.9) : BP('display.base.pared', 1.2);
-  return { p, w1, h1, vw, cols, fil, gap, base, cu, W: cols * w1 + (cols - 1) * gap, H: fil * h1 + (fil - 1) * gap }; };
+  return { p, w1, h1, vw, cols, fil, gap, base: elevDe('display', base), cu, W: cols * w1 + (cols - 1) * gap, H: fil * h1 + (fil - 1) * gap }; };
 function frontal(r, o) {
   const mov = !!o.vertical, VW = mov ? 480 : 960, VH = 520, G = geo(r), top = G.base + G.H;
   const xMin = -1.0, xMax = G.W + 0.4, E = escala(VW, VH, { l: 56, r: 56, t: 44, b: 40 }, xMin, xMax, 0, Math.max(2.0, top + 0.35)), { X, Y, k } = E;
@@ -147,7 +147,7 @@ function aEscala(r, o) {
   for (let f = 0; f < G.fil; f++) for (let c = 0; c < G.cols; c++) paneles.push({ x: c * (G.w1 + G.gap), y: G.base + f * (G.h1 + G.gap), w: G.w1, h: G.h1, cu: G.cu });
   const d = r.disp, et = (d ? d.marca + ' ' + d.modelo + ' · ' : '') + G.p + '″' + (G.vw ? ' · ' + S.cols + ' × ' + S.filas : nPant() > 6 ? ' · ' + T('se dibujan 6 de {n}', { n: nPant() }) : nPant() > 1 ? ' · ' + nPant() + ' ×' : '');
   return simEscala({ paneles, marco: G.vw ? 0.0018 : 0.012, W: G.W, H: G.H, base: G.base, vw: G.vw, totem: S.sitio === 'totem' && !(G.cu && G.cu.totem), etiqueta: et, disp: d, n: nPant(), cols: G.vw ? S.cols : nPant(), filas: G.vw ? S.filas : 1, vertical: S.orient === 'v' },
-    d ? { id: d.id, url: fotoDe(d), href: urlFicha(d.id), nombre: d.marca + ' ' + d.modelo } : null, o);
+    d ? { id: d.id, url: fotoDe(d), href: urlFicha(d.id), nombre: d.marca + ' ' + d.modelo } : null, Object.assign({}, o, { clave: 'display' }));
 }
 const esquema = (r, o = {}) => (VT === 'escala' ? aEscala(r, o) : VT === 'lateral' ? lateral(r, o) : VT === '3d' ? lienzo3D() : frontal(r, o));
 const eq = (x, n, tit, rec, extra = '') => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${x.prioritario ? '⭐ ' : ''}${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${n}×</td><td class="ref">${esc(x.id)}</td><td class="des">${esc(x.descripcion || '')}${extra}</td></tr></table></div>` : '';

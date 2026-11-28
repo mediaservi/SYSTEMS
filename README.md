@@ -52,7 +52,32 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.5)
+## Cambios de la versión actual (v3.9)
+- **La simulación a escala llena su caja:** el dibujo toma la forma real del recuadro y la escena (persona, pantallas y cotas) crece todo lo que puede sin tocar los cuadros de datos ni los controles. Los controles ya no se encogen ni se esconden (si no caben en una fila, van en dos) y, en cajas estrechas, los cuadros de datos bajan bajo los controles.
+- **RESULTADO sin hueco:** debajo, la ficha resumida del equipo recomendado (foto con zoom, sus datos y los enlaces a ficha, PDF y página), con las filas que quepan.
+- **Cifras de abajo más grandes:** el número y su texto crecen con el bloque; ELECTRÓNICA y SEÑAL llenan sus seis bloques (conexión, refresco, backup; tramo hasta los destinos).
+- **Bloques de datos sin huecos al pie:** las filas de botones reparten el alto libre.
+
+## Cambios de la v3.8
+- **Salidas de la fuente por ancho de banda** (ELECTRÓNICA › LED), no con un tope fijo de 3840 px: «Máximo por salida» es ahora Full HD (HDMI 1.4 · DVI · 3G-SDI), **4K60** (HDMI 2.0 · DP 1.2 · 12G-SDI, unos 8,85 Mpx: 4096 × 2160 cabe en una) u **8K** (HDMI 2.1 · DP 1.4, 7680 × 4320 por un cable). Menos píxeles por salida a más hercios. Las tiras estrechas se **pliegan** en una sola salida (7680 × 540 o 25600 × 64 van por un cable), con su aviso.
+- **Cada petición escrita parte de cero** (60 Hz, sin backup, cable de red, una salida HDMI 4K60, ordenador), salvo lo que diga el texto.
+- **Nunca se ignora en silencio:** una resolución fuera de rango se dice en el aviso; se aceptan lienzos pequeños o muy alargados (128 × 64, 25600 × 64).
+- La petición entiende «N salidas» o «4 HDMI», NDI (con su aviso: decodificador o entrada IP), 12G-SDI, 3G-SDI, HDMI 2.1, DP 1.4 y la distancia en metros (a más de 100 m, fibra). «Pantalla LED … DisplayPort» se queda en LED.
+- Si ningún equipo solo cubre la pantalla, se reparte en varias controladoras (motor común de electrónica LED, igual que SCREENS).
+- Errata: «con una entrada» en lugar de «1 entradas».
+
+## Cambios de la v3.7
+- **ACCESOS DIRECTOS** al final de la información (botón «i»): la dirección del módulo abierto, la primera y resaltada; después la general de SYSTEMS y la de cada módulo (`systems.mediaservi.com/?mod=elec`, `disp`, `senal`, `audio`, `sonido`, `video`, `camaras`, `control`). Cada línea lleva su nombre (abre la dirección), la dirección entera y COPIAR, en español, inglés y catalán.
+- Las direcciones de CÁMARAS y CONTROL ya abren su módulo.
+
+## Cambios de la v3.6
+- **Personalizar la simulación sin ventanas** (DISPLAYS y VIDEOCONF., «A escala»), con el mismo esquema que SCREENS: arriba a la derecha, **ELEVACIÓN DESDE EL SUELO** con flechas técnicas (de 10 en 10 cm; cambia también las vistas frontal, lateral y 3D, y RESTABLECER vuelve a la altura del cálculo) y, debajo y al mismo ancho, dos grupos de botones:
+  - **CONTENIDO:** foto del fabricante (la de siempre por defecto), carta de ajuste, vídeo de prueba de mediaservi.com en bucle y contenido propio (vídeo, foto o enlace: solo este abre su pequeña ventana).
+  - **PARED:** cemento, madera, mármol, ladrillos (con sus tres colores en círculos dentro del grupo) y pared propia (foto o enlace, guardada solo en este navegador).
+- Lo elegido lleva el borde verde. Los controles **nunca pisan el dibujo**: prueban en fila, en dos filas y compactos, y si no caben se reducen. No salen en capturas ni en el PDF.
+- Se quitan el desplegable de pared y el botón de contenido de la simulación.
+
+## Cambios de la v3.5
 - **Software de los reproductores NovaStar (VNNOX y ViPlex)**: en ELECTRÓNICA › LED, la fuente puede ser un **Ordenador** (procesador, como hasta ahora) o un **Reproductor** con la controladora dentro (Taurus TB, TU, TCC…). Con un reproductor NovaStar sale el bloque de SCREENS (`comun/software.js`, logotipos oficiales en `comun/img/soft/`) con la recomendación de sus aplicaciones oficiales, qué permite cada una y el enlace a su página, en pantalla y en el PDF (con la dirección escrita). La petición entiende «reproductor», «player», «Taurus» o «sin ordenador».
 - Fichas: los tipos controladora, reproductor, procesador modular, mediaserver y switcher salen con su nombre traducido.
 

@@ -277,3 +277,66 @@ svg a.prod:hover text { fill: var(--azul); }
 .soft .soft-t { font-size: calc(var(--u) * 11.5); line-height: 1.35; color: var(--tenue); } .soft .soft-t b { color: var(--txt); font-weight: 800; }
 .soft .soft-pie { margin: calc(var(--u) * 3) 0 0; font-size: calc(var(--u) * 10.5); color: var(--tenue); }
 .soft .soft-l.ancho img { max-height: calc(var(--u) * 22); }
+
+/* v3.6 · personalizar la simulación sin ventana (como SCREENS v11.64-65): ELEVACIÓN arriba a la derecha y, debajo y al mismo ancho,
+   CONTENIDO y PARED; con ladrillos, sus tres colores en círculos dentro del grupo. No salen en capturas ni PDF (solo se copia el dibujo) */
+.sim-caja > .simctl { position: absolute; right: calc(var(--u) * 8); top: calc(var(--u) * 8); left: auto; display: flex; flex-direction: column; align-items: stretch; gap: calc(var(--u) * 5); z-index: 3; max-width: calc(100% - var(--u) * 16); transform-origin: top right; }
+.simctl > .elev { position: static !important; inset: auto !important; transform: none !important; max-width: none; display: flex; align-items: center; justify-content: space-between; gap: calc(var(--u) * 5); padding: calc(var(--u) * 4) calc(var(--u) * 6); border-radius: calc(var(--u) * 8); background: rgba(0, 0, 0, .55); color: #fff; font-size: calc(var(--u) * 12); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.simctl > .elev > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.elev b { font-family: 'Share Tech Mono', monospace; font-weight: 400; font-size: calc(var(--u) * 15); min-width: calc(var(--u) * 58); text-align: center; text-transform: none; }
+.elev .elev-fl { flex: none; display: grid; place-items: center; width: calc(var(--u) * 24); height: calc(var(--u) * 22); border-radius: calc(var(--u) * 5); border: 1px solid rgba(255, 255, 255, .45); background: rgba(255, 255, 255, .12); color: #fff; padding: 0; cursor: pointer; }
+.elev .elev-fl:hover:not(:disabled) { border-color: var(--verde); box-shadow: 0 0 0 calc(var(--u) * 2) var(--verde); }
+.elev .elev-fl:disabled { opacity: .35; cursor: default; }
+.elev .elev-fl svg, .simcu button svg { position: static; display: block; margin: auto; width: calc(var(--u) * 16); height: calc(var(--u) * 16); }
+.simcu { display: grid; grid-template-columns: 4fr 5fr; gap: calc(var(--u) * 5); }
+.simcu > .g { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: calc(var(--u) * 4); padding: calc(var(--u) * 4); border-radius: calc(var(--u) * 8); background: rgba(0, 0, 0, .55); }
+.simcu button { position: relative; min-width: 0; height: calc(var(--u) * 26); border-radius: calc(var(--u) * 5); border: 2px solid transparent; padding: 0; background: #2b2c31 center / cover no-repeat; color: #e6e7ea; display: grid; place-items: center; cursor: pointer; }
+.simcu button:hover { box-shadow: 0 0 0 calc(var(--u) * 2) rgba(255, 255, 255, .35); }
+.simcu button[aria-pressed="true"] { border-color: var(--verde); box-shadow: 0 0 0 calc(var(--u) * 1) var(--verde); }
+.simcu .sc-t { font: 800 calc(var(--u) * 9.5)/1 Inter, system-ui, sans-serif; letter-spacing: .1em; color: #fff; text-shadow: 0 1px 2px #000; }
+.simcu .lad3 { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: calc(var(--u) * 2); align-items: center; justify-items: center; min-width: 0; }
+.simcu .lad3 button { width: calc(var(--u) * 22); height: calc(var(--u) * 22); max-width: 100%; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .55); }
+.simcu .lad3 button[aria-pressed="true"] { border-color: var(--verde); }
+.simcu > .g:last-child:has(.lad3) { grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.9fr) minmax(0, 1fr); grid-auto-flow: row; }
+.simctl.apila .simcu { grid-template-columns: 1fr; }
+.simctl.apila .simcu > .g { justify-self: end; width: 100%; }
+@media (max-width: 900px), (max-height: 520px) { .simctl.apila .simcu > .g { width: auto; } }
+.simctl.compacta .simcu button { height: calc(var(--u) * 22); } .simctl.compacta .elev { padding: calc(var(--u) * 2) calc(var(--u) * 5); }
+@media (max-width: 900px), (max-height: 520px) { .sim-caja > .simctl { align-items: flex-end; } .simcu { grid-template-columns: auto auto; } .simcu > .g { grid-auto-columns: calc(var(--u) * 30); } .simcu button { height: calc(var(--u) * 28); } .simcu .sc-t { font-size: calc(var(--u) * 7.5); letter-spacing: .04em; } }
+@media (max-width: 559px) { .simcu button { height: calc(var(--u) * 30); } .elev .elev-fl { width: calc(var(--u) * 32); height: calc(var(--u) * 28); } }
+@media print { .simctl { display: none; } }
+.sim-vpeq { width: min(560px, 94vw); }
+.sim-vpeq .vent-cab { display: flex; align-items: center; gap: 8px; }
+.simctl > .elev > span { flex: 1 1 auto; }
+/* v3.7 · ACCESOS DIRECTOS al final de la información */
+.accesos { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--linea); }
+.accesos ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; }
+.acc-l { display: grid; grid-template-columns: minmax(0, 13em) minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 6px 8px; border: 1px solid var(--linea); border-radius: 8px; }
+.acc-l.on { border-color: var(--verde); box-shadow: inset 3px 0 0 var(--verde); }
+.acc-l a { color: var(--txt); font-weight: 800; text-decoration: none; overflow-wrap: anywhere; }
+.acc-l a:hover { color: var(--azul); text-decoration: underline; }
+.acc-l code { font-family: 'Share Tech Mono', monospace; font-size: .92em; color: var(--tenue); overflow-wrap: anywhere; min-width: 0; }
+.acc-l .acc-cp { flex: none; width: auto; min-height: 0; padding: 5px 12px; font-size: 11px; letter-spacing: .08em; }
+.acc-l .acc-cp.hecho { border-color: var(--verde); color: var(--verde); }
+@media (max-width: 559px) { .acc-l { grid-template-columns: minmax(0, 1fr) auto; } .acc-l code { grid-column: 1 / -1; grid-row: 2; } .acc-l .acc-cp { grid-row: 1; grid-column: 2; } }
+/* v3.9 · ficha resumida del recomendado en el hueco de RESULTADO */
+.rf { margin-top: auto; padding-top: calc(var(--u) * 10); border-top: 1px solid var(--linea); display: flex; flex-direction: column; gap: calc(var(--u) * 8); min-height: 0; }
+.rf .sub-t b { color: var(--txt); letter-spacing: 0; text-transform: none; }
+.rf-c { display: grid; grid-template-columns: calc(var(--u) * 150) minmax(0, 1fr); gap: calc(var(--u) * 12); align-items: start; }
+.rf-c:not(:has(.rf-foto)) { grid-template-columns: minmax(0, 1fr); }
+.rf-foto { position: relative; height: calc(var(--u) * 112); width: 100%; padding: calc(var(--u) * 6); border: 1px solid var(--linea); border-radius: calc(var(--u) * 9); background: #fff; cursor: zoom-in; }
+.rf-foto img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.rf-foto:hover { border-color: var(--azul); }
+.rf-d { margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(calc(var(--u) * 190), 1fr)); gap: calc(var(--u) * 4) calc(var(--u) * 14); }
+.rf-d > div { display: flex; justify-content: space-between; gap: calc(var(--u) * 8); padding: calc(var(--u) * 4) 0; border-bottom: 1px dashed var(--linea); min-width: 0; }
+.rf-d dt { color: var(--tenue); font-size: calc(var(--u) * 12.5); white-space: nowrap; }
+.rf-d dd { margin: 0; font: 400 calc(var(--u) * 14)/1.2 'Share Tech Mono', monospace; color: var(--txt); text-align: right; overflow-wrap: anywhere; min-width: 0; }
+.rf .cp { border-top: 0; padding-top: 0; }
+/* v3.9 · cifras de abajo: el número y su texto crecen con el bloque (sin franja vacía) */
+:root:not(.ss-apila) #cuerpo.rejilla .blk.res[data-blk^="M3"] > .blk-cu { container-type: size; }
+:root:not(.ss-apila) #cuerpo.rejilla .blk.res[data-blk^="M3"] .cif-v { font-size: clamp(calc(var(--u) * 40), min(44cqh, 24cqw), calc(var(--u) * 150)); }
+:root:not(.ss-apila) #cuerpo.rejilla .blk.res[data-blk^="M3"] .cif-s { font-size: clamp(calc(var(--u) * 13.5), 6cqh, calc(var(--u) * 22)); margin-top: calc(var(--u) * 6); }
+:root:not(.ss-apila) #cuerpo.rejilla .blk.res.con-prod[data-blk^="M3"] .cif-v { font-size: clamp(calc(var(--u) * 48), 22cqh, calc(var(--u) * 110)); }
+/* v3.9 · bloques de datos: las filas de botones crecen y reparten el alto libre (botones más grandes, sin huecos al pie) */
+:root:not(.ss-apila) #cuerpo.rejilla .blk:not(.res):not(.pant) > .blk-cu > .fila { flex: 1 1 auto; min-height: min-content; align-content: stretch; align-items: stretch; }
+:root:not(.ss-apila) #cuerpo.rejilla .blk:not(.res):not(.pant) > .blk-cu > .fila > .tog { height: auto; max-height: calc(var(--u) * 80); }
