@@ -2,7 +2,7 @@
 
 **SYSTEMS** es el apartado de [AVHUB](https://avhub.mediaservi.com) (mediaservi.com) que ayuda a técnicos e ingenieros a dar con la configuración correcta de cualquier proyecto: audio, vídeo, conectividad o videoconferencia.
 
-**Versión actual: v3.12** · Dirección definitiva: https://systems.mediaservi.com
+**Versión actual: v3.13** · Dirección definitiva: https://systems.mediaservi.com
 
 
 ## Icono
@@ -52,7 +52,11 @@ HTML, CSS y JavaScript sin dependencias externas. `index.html` carga la casa (`v
 - `beta`: última entrega en pruebas.
 - `beta-anterior`: la beta previa.
 
-## Cambios de la versión actual (v3.12)
+## Cambios de la versión actual (v3.13)
+- **La electrónica con fotos:** cada procesador recomendado o alternativo lleva la foto oficial de su frontal (y la trasera, con sus conectores, si el catálogo la trae) junto a su despiece; al tocarla se ve en grande.
+- **El esquema dibuja la fuente con su conector:** el icono del conector elegido, con el color de su generación, y cada salida con su nombre («HDMI 2.0 · 1», «DP 1.4 · 2»…).
+
+## Cambios de la v3.12
 - **Conector de la salida en tarjetas** (ELECTRÓNICA › LED): HDMI 1.4, HDMI 2.0, HDMI 2.1, DP 1.2, DP 1.4, 3G-SDI, 12G-SDI y NDI, cada uno con su dibujo y el color de su generación (verde Full HD · azul 4K60 · violeta 8K · ámbar IP). La ayuda de cada tarjeta dice su resolución máxima. Sustituye al desplegable de tipo y a «Máximo por salida».
 - **Soluciones comparables:** cada alternativa lleva ELEGIR; la elegida pasa arriba (con su esquema y sus cifras) y «Volver a la recomendada» la deshace.
 - **«Sin solución» explicado:** tabla con los equipos más cercanos y lo que les falta (capacidad, ancho o alto máximo, puertos, fibra) y qué probar.

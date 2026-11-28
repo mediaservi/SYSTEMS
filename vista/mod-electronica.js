@@ -19,6 +19,7 @@ textos({
   'Elegido': ['Chosen', 'Triat'], 'Elegir': ['Choose', 'Triar'], 'Volver a la recomendada': ['Back to the recommended one', 'Tornar a la recomanada'], 'Por qué no hay solución': ['Why there is no solution', 'Per què no hi ha solució'], 'Equipo': ['Unit', 'Equip'], 'Le falta': ['What it lacks', 'Què li falta'],
   'capacidad {c} Mpx': ['capacity {c} Mpx', 'capacitat {c} Mpx'], 'ancho máximo {w} px': ['maximum width {w} px', 'amplada màxima {w} px'], 'alto máximo {h} px': ['maximum height {h} px', 'alçada màxima {h} px'], '{p} puertos RJ45': ['{p} RJ45 ports', '{p} ports RJ45'], 'sin salida de fibra': ['no fibre output', 'sense sortida de fibra'],
   'Prueba con fibra, con menos píxeles por salida o repartiendo la pantalla en varias zonas.': ['Try fibre, fewer pixels per output or splitting the screen into several zones.', 'Prova amb fibra, amb menys píxels per sortida o repartint la pantalla en diverses zones.'], 'Prueba repartiendo la pantalla en varias zonas o con otra marca.': ['Try splitting the screen into several zones or another brand.', 'Prova repartint la pantalla en diverses zones o amb una altra marca.'],
+  'Frontal': ['Front', 'Frontal'], 'Trasera': ['Rear', 'Posterior'], 'Ver en grande': ['View large', 'Veure en gran'],
   'Fuente': ['Source', 'Font'], 'Un reproductor con controladora': ['A player with built-in controller', 'Un reproductor amb controladora'], 'Guarda los contenidos, sin ordenador': ['Stores the content, no computer', 'Desa els continguts, sense ordinador'], 'Ordenador': ['Computer', 'Ordinador'], 'Reproductor': ['Player', 'Reproductor'], 'Contenidos': ['Content', 'Continguts'],
   'Reproductor: guarda y reproduce los contenidos y lleva la controladora dentro, sin ordenador ni otro procesador.': ['Player: it stores and plays the content and has the controller built in, with no computer or other processor.', 'Reproductor: desa i reprodueix els continguts i porta la controladora a dins, sense ordinador ni cap altre processador.'],
   'Con un ordenador como fuente y un procesador, sí.': ['With a computer as the source and a processor, yes.', 'Amb un ordinador com a font i un processador, sí.'],
@@ -82,6 +83,9 @@ const CONS = [['HDMI', '2K', 'HDMI 1.4', '1920 × 1080 a 60 Hz'], ['HDMI', '4K',
   ['DP', '4K', 'DP 1.2', '4096 × 2160 a 60 Hz'], ['DP', '8K', 'DP 1.4', '7680 × 4320 a 60 Hz'], ['SDI', '2K', '3G-SDI', '1920 × 1080 a 60 Hz'], ['SDI', '4K', '12G-SDI', '3840 × 2160 a 60 Hz'], ['NDI', '4K', 'NDI', 'Por la red (IP): hasta 4K60']];
 const GENC = { '2K': '#4fdc62', '4K': '#00b4ff', '8K': '#a033ff', IP: '#ffb000' };
 const CONIC = { HDMI: '<path d="M3 8h18v4.5l-2.5 3.5h-13L3 12.5z"/><path d="M7 11h10"/>', DP: '<path d="M3 8h15l3 3v5H3z"/><path d="M7 12h9"/>', SDI: '<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.2"/><path d="M12 3v2M5.5 6l1.3 1.3"/>', NDI: '<rect x="4" y="5" width="16" height="13" rx="1.5"/><path d="M8 18v-4h8v4M9 9h1M12 9h1M15 9h0"/>' };
+const conNom = () => { const c = CONS.find(([t, g]) => t === S.tipo && (t === 'NDI' || g === S.maxSal)); return c ? c[2] : S.tipo; };
+/* el dibujo del conector dentro del esquema (en la caja de la fuente) */
+const conSVG = (x, y, z) => { const c = CONS.find(([t]) => t === S.tipo), g = S.tipo === 'NDI' ? 'IP' : S.maxSal; return c ? `<g transform="translate(${x},${y}) scale(${z})" fill="none" stroke="${GENC[g] || GENC['4K']}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${CONIC[S.tipo]}</g>` : ''; };
 function conectores() {
   return `<div class="cons" role="group" aria-label="${esc(T('Conector de la salida'))}">${CONS.map(([t, g, nom, max]) => { const on = S.tipo === t && (t === 'NDI' || S.maxSal === g), c = GENC[t === 'NDI' ? 'IP' : g];
     return `<button type="button" class="con" data-acc="con:${t}:${g}" aria-pressed="${on}" style="--gc:${c}" title="${esc(nom + ' · ' + T('máximo') + ' ' + T(max))}"><svg viewBox="0 0 24 24" aria-hidden="true">${CONIC[t]}</svg><span>${esc(nom)}</span></button>`; }).join('')}</div>`;
@@ -208,8 +212,8 @@ function esqLED(r, mov) {
   const fib = S.conexion === 'fibra' && r.cvt, P = r.pant, k = r.n;
   if (mov) {   /* de arriba abajo en el móvil */
     const VW = 400; let y = 10, s = '';
-    s += `<rect x="10" y="${y}" width="${VW - 20}" height="96" rx="10" fill="var(--blk2)" stroke="var(--linea)"/><text x="${VW / 2}" y="${y + 26}" text-anchor="middle" font-size="18" font-weight="800" class="t">${esc(T(r.repro ? 'Contenidos' : 'Fuente'))}</text>`;
-    for (let i = 0; i < k; i++) { const x = 10 + (VW - 20) * (i + .5) / k, c = COLS[i % 6]; s += `<text x="${x}" y="${y + 56}" text-anchor="middle" font-size="${k > 4 ? 12 : 15}" class="t-mono">${esc(r.repro ? 'VNNOX · ViPlex' : S.tipo + ' ' + (i + 1))}</text><circle cx="${x}" cy="${y + 84}" r="6" fill="${c}"/><path d="M${x} ${y + 90} C ${x} ${y + 130}, ${VW / 2} ${y + 150}, ${VW / 2} ${y + 186}" fill="none" stroke="${c}" stroke-width="3"/>`; }
+    s += `<rect x="10" y="${y}" width="${VW - 20}" height="96" rx="10" fill="var(--blk2)" stroke="var(--linea)"/><text x="${VW / 2 + (r.repro ? 0 : 14)}" y="${y + 26}" text-anchor="middle" font-size="18" font-weight="800" class="t">${esc(T(r.repro ? 'Contenidos' : 'Fuente'))}</text>` + (r.repro ? '' : conSVG(VW / 2 - 52, y + 7, 1.05));
+    for (let i = 0; i < k; i++) { const x = 10 + (VW - 20) * (i + .5) / k, c = COLS[i % 6]; s += `<text x="${x}" y="${y + 56}" text-anchor="middle" font-size="${k > 4 ? 12 : 15}" class="t-mono">${esc(r.repro ? 'VNNOX · ViPlex' : conNom() + ' · ' + (i + 1))}</text><circle cx="${x}" cy="${y + 84}" r="6" fill="${c}"/><path d="M${x} ${y + 90} C ${x} ${y + 130}, ${VW / 2} ${y + 150}, ${VW / 2} ${y + 186}" fill="none" stroke="${c}" stroke-width="3"/>`; }
     y = 196; s += `<rect x="40" y="${y}" width="${VW - 80}" height="92" rx="10" fill="var(--blk2)" stroke="${r.rec ? 'var(--verde-txt)' : 'var(--rojo)'}" stroke-width="2"/><text x="${VW / 2}" y="${y + 26}" text-anchor="middle" font-size="13" font-weight="800" class="t-ten">${esc(T(r.repro ? 'Reproductor' : 'Procesador').toUpperCase())}</text><text x="${VW / 2}" y="${y + 62}" text-anchor="middle" font-size="24" font-weight="800" class="t-mar">${esc(r.rec ? r.rec.modelo : '—')}</text>`;
     y += 92;
     if (fib) { s += `<path d="M${VW / 2} ${y} L ${VW / 2} ${y + 50}" stroke="var(--azul)" stroke-width="3" stroke-dasharray="10 6"/><text x="${VW / 2 + 12}" y="${y + 32}" font-size="14" class="t-mono">${esc(T('fibra'))}</text>`; y += 50; s += svgCaja(60, y, VW - 120, 64, r.cvt.n + ' × ' + r.cvt.ref, T('junto a la pantalla'), 'var(--azul)', 19); y += 64; }
@@ -223,10 +227,10 @@ function esqLED(r, mov) {
   const fx = 8, fw = 160, fh = Math.min(460, 80 + k * 46), fy = cy - fh / 2;
   const px0 = 250, pw = 180, ph = Math.max(150, Math.min(440, 70 + k * 44)), py = cy - ph / 2;
   const cvx = 520, cvw = 150, sx0 = fib ? 730 : 600, sw = VW - sx0 - 10;
-  let s = svgCaja(fx, fy, fw, fh, '', '').replace('<text', '<text style="display:none"') + `<text x="${fx + fw / 2}" y="${fy + 28}" text-anchor="middle" font-size="20" font-weight="800" class="t">${esc(T(r.repro ? 'Contenidos' : 'Fuente'))}</text>`;
+  let s = svgCaja(fx, fy, fw, fh, '', '').replace('<text', '<text style="display:none"') + `<text x="${fx + fw / 2 + (r.repro ? 0 : 14)}" y="${fy + 28}" text-anchor="middle" font-size="20" font-weight="800" class="t">${esc(T(r.repro ? 'Contenidos' : 'Fuente'))}</text>` + (r.repro ? '' : conSVG(fx + fw / 2 - 56, fy + 9, 1.15));
   const lab = (p, i) => p.anchos[i % p.cols] + '×' + p.altos[Math.floor(i / p.cols)];
   let i = 0; P.forEach((p) => { for (let z = 0; z < p.n; z++, i++) { const y = fy + 58 + i * ((fh - 70) / Math.max(1, k)) + ((fh - 70) / Math.max(1, k)) / 2, ty = py + 44 + i * ((ph - 56) / k) + ((ph - 56) / k) / 2, c = COLS[i % 6];
-    s += `<circle cx="${fx + fw - 14}" cy="${y}" r="6" fill="${c}"/><text x="${fx + 14}" y="${y + 6}" font-size="17" class="t-mono">${esc(r.repro ? 'VNNOX' : S.tipo + ' ' + (i + 1))}</text><path d="M${fx + fw - 8} ${y} C ${fx + fw + 50} ${y}, ${px0 - 50} ${ty}, ${px0} ${ty}" fill="none" stroke="${c}" stroke-width="3"/>`;
+    s += `<circle cx="${fx + fw - 14}" cy="${y}" r="6" fill="${c}"/><text x="${fx + 14}" y="${y + 6}" font-size="17" class="t-mono">${esc(r.repro ? 'VNNOX' : conNom() + ' · ' + (i + 1))}</text><path d="M${fx + fw - 8} ${y} C ${fx + fw + 50} ${y}, ${px0 - 50} ${ty}, ${px0} ${ty}" fill="none" stroke="${c}" stroke-width="3"/>`;
     if (k <= 6) s += `<text x="${(fx + fw + px0) / 2}" y="${(y + ty) / 2 - 8}" text-anchor="middle" font-size="13" class="t-mono t-ten">${esc(lab(p, z))}</text>`; } });
   const nombre = r.rec ? r.rec.modelo : '—';
   s += `<rect x="${px0}" y="${py}" width="${pw}" height="${ph}" rx="10" fill="var(--blk2)" stroke="${r.rec ? 'var(--verde-txt)' : 'var(--rojo)'}" stroke-width="2"/><text x="${px0 + pw / 2}" y="${py + 28}" text-anchor="middle" font-size="13" font-weight="800" class="t-ten">${esc(T(r.repro ? 'Reproductor' : 'Procesador').toUpperCase())}</text><text x="${px0 + pw / 2}" y="${cy + 8}" text-anchor="middle" font-size="${nombre.length > 13 ? 18 : 22}" font-weight="800" class="t-mar">${esc(nombre)}</text>`;
@@ -301,12 +305,19 @@ function porQue(st, W, H, n) {
     if (S.conexion === 'directo' && d.rj && st.lines * (S.backup ? 2 : 1) > d.rj) f.push(T('{p} puertos RJ45', { p: d.rj })); if (S.conexion === 'fibra' && !d.opt) f.push(T('sin salida de fibra'));
     return { d, f, k: (d.capPx ? st.totalPix / d.capPx : 1) }; }).filter((x) => x.f.length).sort((a, b) => Math.abs(1 - a.k) - Math.abs(1 - b.k)).slice(0, 4);
 }
+/* v3.13 · (bloque 1) la electrónica con fotos: el frontal y la trasera (sus conectores) del equipo, con zoom */
+function fotosEq(x, rec) {
+  const nz = (v) => String(v || '').toUpperCase().replace(/[^A-Z0-9]/g, ''), FO = globalThis.SC_FOTOS || {}, fr = x.front || FO[nz(x.modelo)] || FO[nz(x.id)] || FO[nz(x.key)];
+  const F = [[fr, 'Frontal'], [x.back, 'Trasera']].filter((f) => f[0] && /^https?:|^assets\//.test(f[0])); if (!F.length) return '';
+  return `<div class="eq-fotos${rec && F.length > 1 ? '' : ' mini'}">${(rec ? F : F.slice(0, 1)).map(([u, t]) => `<button type="button" class="eq-foto" data-ver-img="${esc(u)}" data-tit="${esc(x.modelo + ' · ' + T(t))}" title="${esc(T('Ver en grande') + ' · ' + T(t))}"><img src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.eq-foto').remove()"><span>${esc(T(t))}</span></button>`).join('')}</div>`;
+}
 function equipoHTML(x, rec, sel) {
   const filas = [[1, x.modular ? '' : x.modelo, x.resumen || '']].concat((x.equipos || []).filter((e) => e.cant > 0).map((e) => [e.cant, e.ref, e.desc]));
   const k = esc(x.key || x.modelo);
   return `<div class="equipo${rec ? ' rec' : ' elegible'}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${x.serie ? ' · ' + esc(x.serie) : ''}</span>${rec ? `<span class="etq">${T(sel ? 'Elegido' : 'Recomendado').toUpperCase()}</span>${sel ? `<button type="button" class="tog eq-sel" data-acc="proc:">${esc(T('Volver a la recomendada'))}</button>` : ''}` : `<button type="button" class="tog eq-sel" data-acc="proc:${k}">${esc(T('Elegir'))}</button>`}</div>
     <div class="eq-sub">${esc(TM(x.puertos))} · ${T('Capacidad')} ${esc(TM(x.capacidad))}</div>
-    <table class="despiece">${filas.filter((f) => f[1]).map((f) => `<tr><td>${f[0]}×</td><td class="ref">${esc(f[1])}</td><td class="des">${esc(TM(f[2]))}</td></tr>`).join('')}</table>
+    <div class="eq-cu">${fotosEq(x, rec)}
+    <table class="despiece">${filas.filter((f) => f[1]).map((f) => `<tr><td>${f[0]}×</td><td class="ref">${esc(f[1])}</td><td class="des">${esc(TM(f[2]))}</td></tr>`).join('')}</table></div>
     ${(x.urlFab || x.pdf) ? `<div class="eq-links">${x.urlFab ? `<a href="${esc(x.urlFab)}" target="_blank" rel="noopener">${T('Página del producto')} ↗</a>` : ''}${x.pdf ? `<a href="${esc(x.pdf)}" target="_blank" rel="noopener">${T('Ficha técnica')} ↗</a>` : ''}</div>` : ''}</div>`;
 }
 const eqSimple = (x, cant, tit, rec) => x ? `<div class="equipo${rec ? ' rec' : ''}"><div class="eq-cab"><b>${esc(x.modelo)}</b><span class="serie">${esc(x.marca)}${tit ? ' · ' + esc(T(tit)) : ''}</span>${rec ? `<span class="etq">${T('Recomendado').toUpperCase()}</span>` : ''}</div><table class="despiece"><tr><td>${cant}×</td><td class="ref">${esc(x.id || x.modelo)}</td><td class="des">${esc(x.descripcion || x.resumen || '')}${x.stock && esInterno() ? '<span class="st-int"> · ' + esc(T('En stock')) + '</span>' : ''}</td></tr></table></div>` : '';
